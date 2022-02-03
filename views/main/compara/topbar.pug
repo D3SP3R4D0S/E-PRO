@@ -1,0 +1,7 @@
+nav(class="navbar bg-white mb-2 static-top shadow")
+    button(id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3")
+        i(class="text-dark fa fa-bars")
+    if name
+        a(class="ml-auto mr-2 text-dark" href="account")= name
+    else
+        a(class="ml-auto mr-2 text-dark" href="login") Login

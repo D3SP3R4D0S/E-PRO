@@ -1,0 +1,27 @@
+head
+    include ../compara/head.pug
+body(id="bg-gradient-dark")
+    div(id="wrapper")
+        include ../compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include ../compara/topbar.pug
+                div(class='container-fluid')
+                    H2(class="m-4 text-dark") Account information & Edit
+                    div(class="col-lg-12")
+                        div(class='card shadow')
+                            div(class='card-body text-center')
+                                    table(class="table table-borderless text-center")
+                                        tr
+                                            th name
+                                            td= name
+                                        tr
+                                            th id
+                                            td= id
+                                        tr
+                                            th Permission Level
+                                            td= permission
+                                    a(href='logout') click to Log out
+
+            include ../compara/footer.pug
+    include ../compara/footer_script.pug

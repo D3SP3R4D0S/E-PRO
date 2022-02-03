@@ -1,0 +1,12 @@
+head
+    include main/compara/head.pug
+body(id="page-top")
+    div(id="wrapper")
+        include main/compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include main/compara/topbar.pug
+                div(class='container-fluid')
+                  h1= message
+                  h2= error.status
+                  pre #{error.stack}

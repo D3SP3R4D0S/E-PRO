@@ -1,0 +1,69 @@
+head
+    include ../compara/head.pug
+body(id="bg-gradient-dark")
+    div(id="wrapper")
+        include ../compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include ../compara/topbar.pug
+                div(class='container-fluid')
+                    H2(class="m-4 text-dark") Purchase or Save
+                    div(class="row")
+                        div(class="col-lg-12")
+                            div(class="row ")
+                                div(class="col-lg-6 mb-2")
+                                    div(class="card border-left-warning shadow h-100 py-2")
+                                        div(class="card-body")
+                                            div(class="row no-gutters align-items-center")
+                                                div(class="col mr-2")
+                                                    div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") Requested
+                                                    div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= "KRW " + summary.req_total.toLocaleString()
+                                                div(class="col-auto")
+                                                    i(class="fas fa-money-check-alt fa-2x text-gray-300")
+                                div(class="col-lg-6 mb-2")
+                                    div(class="card border-left-danger shadow h-100 py-2")
+                                        div(class="card-body")
+                                            div(class="row no-gutters align-items-center")
+                                                div(class="col mr-2")
+                                                    div(class="text-xs font-weight-bold text-danger text-uppercase mb-1") High priorty
+                                                    div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= "KRW " + summary.high_total.toLocaleString()
+                                                div(class="col-auto")
+                                                    i(class="fas fa-receipt fa-2x text-gray-300")
+                            div(class='card shadow mb-2')
+                                div(class='card-body')
+                                    div(class='row')
+                                        table(class="table")
+                                            thead(class="text-center")
+                                                tr(class="text-center")
+                                                    th Title
+                                                    th Cost
+                                                    th Priorty
+                                                    th Status
+                                                    th Due date
+                                            tbody(class="text-center")
+                                                for line in result
+                                                    tr
+                                                        td= line.title
+                                                        td= line.cost.toLocaleString() + " KRW"
+                                                        td(class="text-light text-center")
+                                                            if line.priorty === 1
+                                                                span(class="badge bg-danger") EXTREME
+                                                            else if line.priorty === 2
+                                                                span(class="badge bg-warning") HIGH
+                                                            else if line.priorty === 3
+                                                                span(class="badge bg-success") MEDIUM
+                                                            else if line.priorty === 4
+                                                                span(class="badge bg-info") LOW
+                                                        td(class="text-light text-center")
+                                                            if line.stat === 'requested'
+                                                                span(class="badge bg-warning") REQUESTED
+                                                            else if line.stat === 'purchased'
+                                                                span(class="badge bg-success") PURCHASED
+                                                            else if line.stat === 'pending'
+                                                                span(class="badge bg-info") PENDING
+                                                            else if line.stat === 'denied'
+                                                                span(class="badge bg-secondary") DENIED
+                                                        td= line.duedate
+                                        a(class="btn btn-dark text-light ml-auto mr-4" href="addwish") Add data
+            include ../compara/footer.pug
+    include ../compara/footer_script.pug

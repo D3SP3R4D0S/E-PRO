@@ -1,0 +1,76 @@
+head
+    include compara/head.pug
+body(id="bg-gradient-dark")
+    div(id="wrapper")
+        include compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include compara/topbar.pug
+                div(class='container-fluid')
+                    H2(class="m-4 text-dark")= "Financial Index - " + result1[0].month
+                    div(class="row")
+                        div(class="col-lg-6")
+                            div(class="row")
+                                div(class="col-md-6 col-xs-12")
+                                    div(class="card mb-2 border-left-primary shadow")
+                                        div(class="card-body")
+                                            div(class="row no-gutters align-items-center")
+                                                div(class="col mr-2")
+                                                    div(class="text-xs font-weight-bold text-primary text-uppercase mb-1") Total account
+                                                    div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= result2[0].total.toLocaleString() + " KRW"
+                                                div(class="col-auto")
+                                                    i(class="fas fa-money-check-alt fa-2x text-gray-300")
+                                div(class="col-md-6 col-xs-12")
+                                    div(class="card mb-2 border-left-info shadow")
+                                        div(class="card-body")
+                                            div(class="row no-gutters align-items-center")
+                                                div(class="col mr-2")
+                                                    div(class="text-xs font-weight-bold text-info text-uppercase mb-1") This month
+                                                    div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= result3[0].total.toLocaleString() + " KRW"
+                                                div(class="col-auto")
+                                                    i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                                div(class="col-md-6 col-xs-12")
+                                    div(class="card mb-2 border-left-success shadow")
+                                        div(class="card-body")
+                                            div(class="row no-gutters align-items-center")
+                                                div(class="col mr-2")
+                                                    div(class="text-xs font-weight-bold text-success text-uppercase mb-1") This month income
+                                                    div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= result3[0].income.toLocaleString() + " KRW"
+                                                div(class="col-auto")
+                                                    i(class="fas fa-angle-double-up fa-2x text-gray-300")
+                                div(class="col-md-6 col-xs-12")
+                                    div(class="card mb-2 border-left-warning shadow")
+                                        div(class="card-body")
+                                            div(class="row no-gutters align-items-center")
+                                                div(class="col mr-2")
+                                                    div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") This month outcome
+                                                    div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= result3[0].outcome.toLocaleString() + " KRW"
+                                                div(class="col-auto")
+                                                    i(class="fas fa-angle-double-down fa-2x text-gray-300")
+                            div(class='card shadow mb-2')
+                                div(class='card-body')
+                                    canvas(id="myChart")
+                            
+                                
+                        div(class="col-lg-6")
+                            div(class='card shadow mb-2')
+                                div(class='card-body')
+                                    canvas(id="myChart2")
+                            div(class='card shadow')
+                                div(class='card-body')
+                                    table(class="table table-hover")
+                                        tr
+                                            th Sort
+                                            th Summary
+                                        for data in result1
+                                            tr
+                                                td= data.alligner
+                                                td= data.total
+                                        tr
+                                            td total
+                                            td= result3[0].total
+            script(src="https://cdn.jsdelivr.net/npm/chart.js")
+            script(src="/chartjs/index_chart.js")
+            //- script(src="/chartjs/index_chart2.js")
+            include compara/footer.pug
+    include compara/footer_script.pug

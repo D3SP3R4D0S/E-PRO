@@ -1,0 +1,33 @@
+head
+    include compara/head.pug
+body(id="page-top")
+    div(id="wrapper")
+        include compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include compara/topbar.pug
+                div(class='container-fluid')
+                    div(class="col-lg-12")
+                        div(class='card shadow')
+                            div(class='card-header py-3')
+                                h6(class="m-0 font-weight-bold") Latest List
+                            div(class='card-body')
+                                table(class="table table-bordered table-sm")
+                                    thead(class="table-dark")
+                                        tr(class="text-center")
+                                            th Assortment
+                                            th Cost
+                                            th Count
+                                            th Example
+                                            th Date
+                                    tbody(class="text-center")
+                                        for line in result
+                                            tr  
+                                                td= line.alligner
+                                                td(class="text-right")= line.cost + '₩'
+                                                td= line.times
+                                                td= line.detail
+                                                td= line.date
+                                a(class="btn btn-dark" href="index") Go Back
+            include compara/footer.pug
+    include compara/footer_script.pug

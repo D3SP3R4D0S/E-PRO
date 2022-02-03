@@ -1,0 +1,23 @@
+head
+    include ../compara/head.pug
+body(id="bg-gradient-dark")
+    div(id="wrapper")
+        include ../compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include ../compara/topbar.pug
+                div(class='container-fluid')
+                    H2(class="m-4 text-dark") Future Life Index
+                    div(class="row")
+                        div(class="col-lg-6")
+                            div(class='card shadow mb-2')
+                                div(class='card-body')
+                                    canvas(id="myChart")
+                            div(class='card shadow mb-2')
+                                div(class='card-body')
+                                    canvas(id="myChart2")
+            script(src="https://cdn.jsdelivr.net/npm/chart.js")
+            script(src="/chartjs/index_chart.js")
+            //- script(src="/chartjs/index_chart2.js")
+            include ../compara/footer.pug
+    include ../compara/footer_script.pug

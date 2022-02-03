@@ -1,0 +1,35 @@
+head
+    include ../compara/head.pug
+body(id="page-top")
+    div(id="wrapper")
+        include ../compara/sidebar.pug
+        div(id="content-wrapper" class="d-flex flex-column")
+            div(id="content")
+                include ../compara/topbar.pug
+                div(class='container-fluid')
+                    row(class="row justify-content-center")
+                        H2(class="m-4 text-dark") Detail
+                        div(class="col-12")
+                            div(class='card border-0 shadow-lg')
+                                div(class='card-body')
+                                    div(class="container col-lg-8 text-center")           
+                                        table(class="table table-borderless table-hover table-sm")
+                                            tr
+                                                th title
+                                                td= result[0].detail
+                                            tr
+                                                th cost
+                                                td= result[0].cost
+                                            tr
+                                                th method
+                                                td= result[0].title
+                                            tr
+                                                th alligner
+                                                td= result[0].alligner
+                                            tr
+                                                th Subgroup
+                                                td= result[0].subord
+                                        a(class="btn btn-dark text-light col-6" href="javascript:history.back()") go back
+
+            include ../compara/footer.pug
+    include ../compara/footer_script.pug
