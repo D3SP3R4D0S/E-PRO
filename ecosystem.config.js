@@ -1,10 +1,10 @@
 module.exports = {
     apps: [
         {
-            name: 'nodejs-sequelize-pm2',
+            name: 'EPRO',
             script: './bin/www',
-            instances: 3,
-            exec_mode: 'cluster',
+            instances: 1,
+            exec_mode: 'fork',
             merge_logs: true,
             autorestart: true,
         }

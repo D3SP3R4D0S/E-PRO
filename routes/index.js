@@ -19,11 +19,11 @@ router.get('/index', function(req, res, next) {
   let idnum = req.session.idn
   if(req.session.user){
     console.log(req.session.user, idnum)
-    let sql = 'SELECT DATE_FORMAT(now(), "%M") as month, alligner,sum(cost) as total FROM finance.account'+
-    ' where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10") group by alligner order by alligner;'+
-    'SELECT sum(if(income=1, cost, -cost)) as total from finance.account where userid = ?;' + 
-    'SELECT sum(if(income=1, cost, -cost)) as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome'+
-    ' from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10");'
+    let sql = `SELECT DATE_FORMAT(now(), "%M") as month, alligner,sum(cost) as total FROM finance.account
+      where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10") group by alligner order by alligner
+      SELECT sum(if(income=1, cost, -cost)) as total from finance.account where userid = ?
+      SELECT sum(if(income=1, cost, -cost)) as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome
+      from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10");`
     connection.query(sql, [idnum,idnum,idnum], function (error, results, fields) {
       res.render('main/index', {result1:results[0], result2:results[1], result3:results[2], name:req.session.user});
     });
@@ -163,7 +163,7 @@ router.post('/login', function(req, res, next) {
 });
 router.get('/logout', function(req, res, next){
     if (req.session.user) {
-        console.log('Log out '+ req.session.user);
+        console.log('로그아웃');
         req.session.destroy(
             function (err) {
                 if (err) {
@@ -174,6 +174,7 @@ router.get('/logout', function(req, res, next){
             }
         );
     } else {
+        console.log('Not Loged in');
         res.redirect('/Login');
     }
 })
