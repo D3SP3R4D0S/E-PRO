@@ -19,12 +19,13 @@ router.get('/index', function(req, res, next) {
   let idnum = req.session.idn
   if(req.session.user){
     console.log(req.session.user, idnum)
-    let sql = `SELECT DATE_FORMAT(now(), "%M") as month, alligner,sum(cost) as total FROM finance.account
-      where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10") group by alligner order by alligner
-      SELECT sum(if(income=1, cost, -cost)) as total from finance.account where userid = ?
-      SELECT sum(if(income=1, cost, -cost)) as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome
-      from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10");`
+    let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
+      where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-%m") group by alligner order by alligner;
+      SELECT sum(if(income=1, cost, -cost))+0 as total from finance.account where userid = ?;
+      SELECT sum(if(income=1, cost, -cost))+0 as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome
+      from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-%m");`
     connection.query(sql, [idnum,idnum,idnum], function (error, results, fields) {
+      console.log(results)
       res.render('main/index', {result1:results[0], result2:results[1], result3:results[2], name:req.session.user});
     });
   }else{
@@ -109,6 +110,46 @@ router.post('/adddata', function(req, res, next) {
       }
     });
     res.redirect('/latestdata');
+  }else{
+    res.redirect('login')
+  }
+});
+
+router.get('/fixedexpense', function(req, res, next) {
+  if(req.session.user){
+    let sql = `SELECT * FROM finance.fixedexpense where userid = ?; 
+        SELECT sum(payment_num * price) as totalbill, sum(payment_num * price/12) as divbill,
+        sum(if(payment_num=12, price, 0)) as monthbill, sum(if(payment_num=1, price, 0)) as yearbill
+        FROM finance.fixedexpense where userid = ?;`
+    connection.query(sql, [req.session.idn, req.session.idn] , function (error, results, fields) {
+      console.log(results);
+      res.render('main/finance/fixedexpense', {result:results[0], sum:results[1], name:req.session.user});
+    });
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/fixedexpenseadd', function(req, res, next) {
+  if(req.session.user){
+    res.render('main/finance/fixedexpenseadd', {name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpenseadd', function(req, res, next) {
+  let rb = req.body
+  if(req.session.user){
+    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, price, userid)VALUES(?,?,?,?,?,?);"
+    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, req.session.idn];
+    console.log(params);
+    connection.query(sql,params,function (err, results, fields) {
+      if(err){
+        console.log(err);
+      }else{
+        console.log(results.insertId);
+      }
+    });
+    res.redirect('/fixedexpense');
   }else{
     res.redirect('login')
   }
