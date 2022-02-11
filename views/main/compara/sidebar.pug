@@ -1,39 +1,18 @@
-ul(class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar")
-    a(class="sidebar-brand d-flex align-items-center justify-content-center" href="index")
-        div(class="sidebar-brand-text mx-3") E-PRO
-    hr(class="sidebar-divider my-0")
-    li(class="nav-item")
-        a(class="nav-link" href="index")
-            i(class="fas fa-fw fa-chart-line")
-            span 대시보드
-        
-    li(class="nav-item")
-        a(class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne")
-            i(class="fas fa-fw fa-file-invoice-dollar")
-            span 수입&지출
-        div(id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar")
-            div(class="bg-white py-2 collapse-inner rounded")
-                h6(class="collapse-header") Manage data
-                a(class="collapse-item" href="latestdata") latestdata
-                a(class="collapse-item" href="adddata") Add data
-    li(class="nav-item")
-        a(class="nav-link" href="fixedexpense")
-            i(class="fas fa-fw fa-chart-line")
-            span 고정 지출
-    li(class="nav-item")
-        a(class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo")
-            i(class="fas fa-fw fa-gifts")
-            span 구매예정항목
-        div(id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar")
-            div(class="bg-white py-2 collapse-inner rounded")
-                h6(class="collapse-header") TO BUY OR NOT
-                a(class="collapse-item" href="futurefinance") Dashboard
-                a(class="collapse-item" href="tobuylist") Craving list
-    li(class="nav-item")
-        a(class="nav-link" href="sitemap")
-            i(class="fas fa-fw fa-list")
-            span SITE MAP
-    hr(class="sidebar-divider d-none d-md-block")
-
-    div(class="text-center d-none d-md-inline")
-        button(class="rounded-circle border-0" id="sidebarToggle")
+nav#sidebar.sidebar.js-sidebar
+    .sidebar-content.js-simplebar
+        a.sidebar-brand(href='index')
+            //span.align-middle E-PRO
+            img(src="images/logo_white.png" alt="homepage")
+        ul.sidebar-nav
+            li.sidebar-header
+                | Main functions
+            li.sidebar-item.active
+                a.sidebar-link(href='index')
+                    i.align-middle(data-feather='sliders')
+                    span.align-middle Dashboard
+            li.sidebar-header
+                | Experimental
+            li.sidebar-item
+                a.sidebar-link(href='ui-buttons.html')
+                    i.align-middle(data-feather='square')
+                    span.align-middle Others

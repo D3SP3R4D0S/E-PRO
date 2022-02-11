@@ -1,0 +1,30 @@
+nav.navbar.navbar-expand.navbar-light.navbar-bg.shadow
+    a.sidebar-toggle.js-sidebar-toggle
+        i.hamburger.align-self-center
+    .navbar-collapse.collapse
+        ul.navbar-nav.navbar-align
+            li.nav-item.dropdown
+                a.nav-icon.dropdown-toggle.d-inline-block.d-sm-none(href='#' data-bs-toggle='dropdown')
+                    i.align-middle(data-feather='settings')
+                a.nav-link.dropdown-toggle.d-none.d-sm-inline-block(href='#' data-bs-toggle='dropdown')
+                    //img.avatar.img-fluid.rounded.me-1(src='img/avatars/avatar.jpg' alt='Charles Hall')
+                    if name
+                        span.text-dark= name
+                    else
+                        a(class="ml-auto mr-2 text-dark" href="login") Login
+                .dropdown-menu.dropdown-menu-end
+                    a.dropdown-item(href='profile')
+                        i.align-middle.me-1(data-feather='user')
+                        |  Profile
+                    //a.dropdown-item(href='#')
+                    //    i.align-middle.me-1(data-feather='pie-chart')
+                    //    |  Analytics
+                    .dropdown-divider
+                    a.dropdown-item(href='index')
+                        i.align-middle.me-1(data-feather='settings')
+                        |  Settings &amp; Privacy
+                    a.dropdown-item(href='about')
+                        i.align-middle.me-1(data-feather='help-circle')
+                        |  Help Center
+                    .dropdown-divider
+                    a.dropdown-item(href='logout') Log out

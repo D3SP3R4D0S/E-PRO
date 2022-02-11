@@ -1,14 +1,17 @@
 const express = require('express');
+const app = express()
 const router = express.Router();
 const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
+// const bodyParser = require('body-parser')
+// app.use(bodyParser.json());
 
 connection.connect(function(err){
   if(err) {                                     // or restarting (takes a while sometimes).
     console.log('error when connecting to db:', err);
     setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
-  }     
+  }
 });
 
 // main page( index - if not logged in go to log in page directly)
@@ -17,16 +20,27 @@ router.get('/', function(req, res, next) {
 });
 router.get('/index', function(req, res, next) {
   let idnum = req.session.idn
+  let selector = req.query.yearmonth // 연-월 (YYYY-MM) 형식
+  if(!selector){
+    let today = new Date()
+    let month = today.getMonth() + 1 // JS 에서는 월이 기본적으로 0부터 시작
+    if(month < 10){ // 10이하일 경우 앞자리수가 0 으로 mysql 과 호환되지않음
+      month ='0' + month
+    }
+    selector = today.getFullYear() + "-" + month
+  }
+  req.session.indexdate = selector
+  let controldate = new Date(selector.split('-')[0], parseInt(selector.split('-')[1])-1);
   if(req.session.user){
     console.log(req.session.user, idnum)
     let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
-      where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-%m") group by alligner order by alligner;
+      where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? group by alligner order by alligner;
       SELECT sum(if(income=1, cost, -cost))+0 as total from finance.account where userid = ?;
       SELECT sum(if(income=1, cost, -cost))+0 as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome
-      from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-%m");`
-    connection.query(sql, [idnum,idnum,idnum], function (error, results, fields) {
+      from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ?;`
+    connection.query(sql, [idnum,selector,idnum,idnum, selector], function (error, results, fields) {
       console.log(results)
-      res.render('main/index', {result1:results[0], result2:results[1], result3:results[2], name:req.session.user});
+      res.render('main/index', {controldate, yearmonth:selector, result1:results[0], result2:results[1], result3:results[2], name:req.session.user});
     });
   }else{
     res.redirect('login')
@@ -35,11 +49,13 @@ router.get('/index', function(req, res, next) {
 router.post('/alpha', function(req, res, next){
   let responseData = {};
   let responseData1 = {};
-  let query =  connection.query('SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account '+
-  'where userid = ? and DATE_FORMAT(time, "%Y-%m") = date_format(now(), "%Y-10") and income = 0 group by alligner order by alligner; '+
-  'select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA '+
-  'left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , date_format(now(), "%Y-10"), "%") ;',
-  [req.session.idn, req.session.idn], function(err,rows){
+  let idn = req.session.idn
+  let indexdate = req.session.indexdate
+  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
+    where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
+    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA 
+    left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
+  connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
     responseData.title = [];
     responseData.score = [];
     responseData1.title = [];
@@ -65,12 +81,42 @@ router.post('/alpha', function(req, res, next){
     res.json([responseData, responseData1]);
   });
 });
+router.get('/indexpmonth', function (req,res){
+  let indexdate = req.session.indexdate.split('-');
+  let newdate = new Date(indexdate[0], parseInt(indexdate[1])-1);
+  newdate.setMonth(newdate.getMonth() - 1);
+  let month = newdate.getMonth() + 1
+  if(month<10){
+    month = '0' + month;
+  }
+  let selector = newdate.getFullYear() + '-' + month
+  if(req.session.user){
+    res.redirect('index?yearmonth=' + selector);
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/indexnmonth', function (req,res){
+  let indexdate = req.session.indexdate.split('-');
+  let newdate = new Date(indexdate[0], parseInt(indexdate[1])-1);
+  newdate.setMonth(newdate.getMonth() + 1);
+  let month = newdate.getMonth() + 1
+  if(month<10){
+    month = '0' + month;
+  }
+  let selector = newdate.getFullYear() + '-' + month
+  if(req.session.user){
+    res.redirect('index?yearmonth=' + selector);
+  }else{
+    res.redirect('login')
+  }
+});
 
 // From here is latest data
 router.get('/latestdata', function(req, res, next) {
   if(req.session.user){
     let sql = 'SELECT id, title, cost, alligner, detail, subord, DATE_FORMAT(time, "%y-%m-%d") as date '+
-    'FROM finance.account where userid = ? order by id desc'
+        'FROM finance.account where userid = ? order by id desc'
     connection.query(sql, req.session.idn, function (error, results, fields) {
       res.render('main/finance/latestdata', {result:results, name:req.session.user});
     });
@@ -159,7 +205,7 @@ router.post('/fixedexpenseadd', function(req, res, next) {
 router.get('/tobuylist', function(req, res, next) {
   if(req.session.user){
     let sql = 'SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate FROM finance.crave where userid = ? order by id;'+
-    'SELECT sum(if(stat = "requested", cost, 0)) as req_total, sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total FROM finance.crave where userid = ? order by id;'
+        'SELECT sum(if(stat = "requested", cost, 0)) as req_total, sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total FROM finance.crave where userid = ? order by id;'
     let val = [req.session.idn, req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
@@ -192,7 +238,7 @@ router.post('/login', function(req, res, next) {
           req.session.user = results[0].name;
           req.session.permission = results[0].permission;
           req.session.save();
-          res.redirect('/index');  
+          res.redirect('/index');
         }
         else{
           console.log("Wrong PW", key.toString('base64'), results[0].password)
@@ -203,21 +249,21 @@ router.post('/login', function(req, res, next) {
   });
 });
 router.get('/logout', function(req, res, next){
-    if (req.session.user) {
-        console.log('로그아웃');
-        req.session.destroy(
-            function (err) {
-                if (err) {
-                    console.log('세션 삭제 에러');
-                    return;
-                }
-                res.redirect('/index');
-            }
-        );
-    } else {
-        console.log('Not Loged in');
-        res.redirect('/Login');
-    }
+  if (req.session.user) {
+    console.log('로그아웃');
+    req.session.destroy(
+        function (err) {
+          if (err) {
+            console.log('세션 삭제 에러');
+            return;
+          }
+          res.redirect('/index');
+        }
+    );
+  } else {
+    console.log('Not Loged in');
+    res.redirect('/Login');
+  }
 })
 
 router.get('/account', function(req, res, next){
