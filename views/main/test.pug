@@ -1,0 +1,211 @@
+doctype html
+include compara/head
+.wrapper
+    include compara/sidebar
+    .main
+        include compara/navbar
+        main.content
+            .container-fluid.p-0
+                h1.h3.mb-3
+                    strong Analytics
+                    |  Dashboard
+                .row
+                    .col-xl-6.col-xxl-5.d-flex
+                        .w-100
+                            .row
+                                .col-sm-6
+                                    .card
+                                        .card-body
+                                            .row
+                                                .col.mt-0
+                                                    h5.card-title Sales
+                                                .col-auto
+                                                    .stat.text-primary
+                                                        i.align-middle(data-feather='truck')
+                                            h1.mt-1.mb-3 2.382
+                                            .mb-0
+                                                span.text-danger
+                                                    i.mdi.mdi-arrow-bottom-right
+                                                    |  -3.65%
+                                                span.text-muted Since last week
+                                    .card
+                                        .card-body
+                                            .row
+                                                .col.mt-0
+                                                    h5.card-title Visitors
+                                                .col-auto
+                                                    .stat.text-primary
+                                                        i.align-middle(data-feather='users')
+                                            h1.mt-1.mb-3 14.212
+                                            .mb-0
+                                                span.text-success
+                                                    i.mdi.mdi-arrow-bottom-right
+                                                    |  5.25%
+                                                span.text-muted Since last week
+                                .col-sm-6
+                                    .card
+                                        .card-body
+                                            .row
+                                                .col.mt-0
+                                                    h5.card-title Earnings
+                                                .col-auto
+                                                    .stat.text-primary
+                                                        i.align-middle(data-feather='dollar-sign')
+                                            h1.mt-1.mb-3 $21.300
+                                            .mb-0
+                                                span.text-success
+                                                    i.mdi.mdi-arrow-bottom-right
+                                                    |  6.65%
+                                                span.text-muted Since last week
+                                    .card
+                                        .card-body
+                                            .row
+                                                .col.mt-0
+                                                    h5.card-title Orders
+                                                .col-auto
+                                                    .stat.text-primary
+                                                        i.align-middle(data-feather='shopping-cart')
+                                            h1.mt-1.mb-3 64
+                                            .mb-0
+                                                span.text-danger
+                                                    i.mdi.mdi-arrow-bottom-right
+                                                    |  -2.25%
+                                                span.text-muted Since last week
+                    .col-xl-6.col-xxl-7
+                        .card.flex-fill.w-100
+                            .card-header
+                                h5.card-title.mb-0 Recent Movement
+                            .card-body.py-3
+                                .chart.chart-sm
+                                    canvas#chartjs-dashboard-line
+                .row
+                    .col-12.col-md-6.col-xxl-3.d-flex.order-2.order-xxl-3
+                        .card.flex-fill.w-100
+                            .card-header
+                                h5.card-title.mb-0 Browser Usage
+                            .card-body.d-flex
+                                .align-self-center.w-100
+                                    .py-3
+                                        .chart.chart-xs
+                                            canvas#chartjs-dashboard-pie
+                                    table.table.mb-0
+                                        tbody
+                                            tr
+                                                td Chrome
+                                                td.text-end 4306
+                                            tr
+                                                td Firefox
+                                                td.text-end 3801
+                                            tr
+                                                td IE
+                                                td.text-end 1689
+                    .col-12.col-md-12.col-xxl-6.d-flex.order-3.order-xxl-2
+                        .card.flex-fill.w-100
+                            .card-header
+                                h5.card-title.mb-0 Real-Time
+                            .card-body.px-4
+                                #world_map(style='height:350px;')
+                    .col-12.col-md-6.col-xxl-3.d-flex.order-1.order-xxl-1
+                        .card.flex-fill
+                            .card-header
+                                h5.card-title.mb-0 Calendar
+                            .card-body.d-flex
+                                .align-self-center.w-100
+                                    .chart
+                                        #datetimepicker-dashboard
+                .row
+                    .col-12.col-lg-8.col-xxl-9.d-flex
+                        .card.flex-fill
+                            .card-header
+                                h5.card-title.mb-0 Latest Projects
+                            table.table.table-hover.my-0
+                                thead
+                                    tr
+                                        th Name
+                                        th.d-none.d-xl-table-cell Start Date
+                                        th.d-none.d-xl-table-cell End Date
+                                        th Status
+                                        th.d-none.d-md-table-cell Assignee
+                                tbody
+                                    tr
+                                        td Project Apollo
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-success Done
+                                        td.d-none.d-md-table-cell Vanessa Tucker
+                                    tr
+                                        td Project Fireball
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-danger Cancelled
+                                        td.d-none.d-md-table-cell William Harris
+                                    tr
+                                        td Project Hades
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-success Done
+                                        td.d-none.d-md-table-cell Sharon Lessman
+                                    tr
+                                        td Project Nitro
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-warning In progress
+                                        td.d-none.d-md-table-cell Vanessa Tucker
+                                    tr
+                                        td Project Phoenix
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-success Done
+                                        td.d-none.d-md-table-cell William Harris
+                                    tr
+                                        td Project X
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-success Done
+                                        td.d-none.d-md-table-cell Sharon Lessman
+                                    tr
+                                        td Project Romeo
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-success Done
+                                        td.d-none.d-md-table-cell Christina Mason
+                                    tr
+                                        td Project Wombat
+                                        td.d-none.d-xl-table-cell 01/01/2021
+                                        td.d-none.d-xl-table-cell 31/06/2021
+                                        td
+                                            span.badge.bg-warning In progress
+                                        td.d-none.d-md-table-cell William Harris
+                    .col-12.col-lg-4.col-xxl-3.d-flex
+                        .card.flex-fill.w-100
+                            .card-header
+                                h5.card-title.mb-0 Monthly Sales
+                            .card-body.d-flex.w-100
+                                .align-self-center.chart.chart-lg
+                                    canvas#chartjs-dashboard-bar
+        footer.footer
+            .container-fluid
+                .row.text-muted
+                    .col-6.text-start
+                        p.mb-0
+                            a.text-muted(href='https://adminkit.io/' target='_blank')
+                                strong AdminKit
+                            |  &copy;
+                    .col-6.text-end
+                        ul.list-inline
+                            li.list-inline-item
+                                a.text-muted(href='https://adminkit.io/' target='_blank') Support
+                            li.list-inline-item
+                                a.text-muted(href='https://adminkit.io/' target='_blank') Help Center
+                            li.list-inline-item
+                                a.text-muted(href='https://adminkit.io/' target='_blank') Privacy
+                            li.list-inline-item
+                                a.text-muted(href='https://adminkit.io/' target='_blank') Terms
+include compara/footer_script

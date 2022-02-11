@@ -1,12 +1,36 @@
-head
-    include main/compara/head.pug
-body(id="page-top")
-    div(id="wrapper")
-        include main/compara/sidebar.pug
-        div(id="content-wrapper" class="d-flex flex-column")
-            div(id="content")
-                include main/compara/topbar.pug
-                div(class='container-fluid')
-                  h1= message
-                  h2= error.status
-                  pre #{error.stack}
+doctype html
+include main/compara/head.pug
+.wrapper
+    nav#sidebar.sidebar.js-sidebar
+        .sidebar-content.js-simplebar
+            a.sidebar-brand(href='index')
+                span.align-middle E-PRO
+                //img(src="images/logo_white.png" alt="homepage" width="90")
+            ul.sidebar-nav
+                li.sidebar-header
+                    | Main functions
+                li.sidebar-item
+                    a.sidebar-link(href='index')
+                        i.align-middle(data-feather='sliders')
+                        span.align-middle Dashboard
+                li.sidebar-header
+                    | Experimental
+                li.sidebar-item
+                    a.sidebar-link(href='latestdata')
+                        i.align-middle(data-feather='bar-chart-2')
+                        span.align-middle 수입 지출 관리
+                li.sidebar-item
+                    a.sidebar-link(href='fixedexpense')
+                        i.align-middle(data-feather='grid')
+                        span.align-middle 고정 지출
+                li.sidebar-item
+                    a.sidebar-link(href="tobuylist")
+                        i.align-middle(data-feather='check-square')
+                        span.align-middle 지출 예정 항목
+    .main
+        include main/compara/navbar
+        main.content
+            .container-fluid.p-0
+                h1= message
+                h2= error.status
+                pre #{error.stack}

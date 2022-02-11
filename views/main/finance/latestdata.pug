@@ -1,39 +1,61 @@
 head
     include ../compara/head.pug
     script.
-        $(document).ready(function() {
-            $('#exampletable').DataTable({
-            });
+        $(document).ready(function () {
+            $('#table1').DataTable();
         });
-body(id="page-top")
-    div(id="wrapper")
-        include ../compara/sidebar.pug
-        div(id="content-wrapper" class="d-flex flex-column")
-            div(id="content")
-                include ../compara/topbar.pug
-                div(class='container-fluid')
-                    div(class="col-lg-12")
-                        H2(class="m-4 text-dark") Latest List
-                        div(class='card shadow')
-                            div(class='card-body')
-                                table(id="exampletable" class="display table table-bordered table-sm")
-                                    thead(class="table-dark")
-                                        tr(class="text-center")
-                                            th Title
-                                            th Method
-                                            th Date
-                                            th Subord
-                                            th Cost
-                                    tbody(class="text-center")
-                                        for line in result
-                                            tr
-                                                td
-                                                    a(href="detail?id="+line.id)= line.detail
-                                                td= line.title
-                                                td= line.date
-                                                td= line.subord
-                                                td(class="text-right")= line.cost.toLocaleString() + '₩'
-                                div(class="row")
-                                    a(class="btn btn-dark text-light ml-auto mr-4" href="adddata") Add data
-            include ../compara/footer.pug
+.wrapper
+    nav#sidebar.sidebar.js-sidebar
+        .sidebar-content.js-simplebar
+            a.sidebar-brand(href='index')
+                span.align-middle E-PRO
+                //img(src="images/logo_white.png" alt="homepage" width="90")
+            ul.sidebar-nav
+                li.sidebar-header
+                    | Main functions
+                li.sidebar-item
+                    a.sidebar-link(href='index')
+                        i.align-middle(data-feather='sliders')
+                        span.align-middle Dashboard
+                li.sidebar-header
+                    | Experimental
+                li.sidebar-item.active
+                    a.sidebar-link(href='latestdata')
+                        i.align-middle(data-feather='bar-chart-2')
+                        span.align-middle 수입 지출 관리
+                li.sidebar-item
+                    a.sidebar-link(href='fixedexpense')
+                        i.align-middle(data-feather='grid')
+                        span.align-middle 고정 지출
+                li.sidebar-item
+                    a.sidebar-link(href="tobuylist")
+                        i.align-middle(data-feather='check-square')
+                        span.align-middle 지출 예정 항목
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                div(class="col-lg-12")
+                    H2(class="m-4 text-dark") Latest List
+                        a.btn.btn-dark.ms-4(href="adddata") Add data
+                    div(class='card shadow')
+                        div(class='card-body')
+                            table.table.table-sm#table1
+                                thead(class="table-dark")
+                                    tr(class="text-center")
+                                        th Title
+                                        th Method
+                                        th Date
+                                        th Subord
+                                        th Cost
+                                tbody(class="text-center")
+                                    for line in result
+                                        tr
+                                            td
+                                                a(href="detail?id="+line.id)= line.detail
+                                            td= line.title
+                                            td= line.date
+                                            td= line.subord
+                                            td(class="text-right")= line.cost.toLocaleString() + '₩'
+        include ../compara/footer.pug
     include ../compara/footer_script.pug
