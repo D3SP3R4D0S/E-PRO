@@ -287,6 +287,14 @@ router.post('/fixedexpenseadd', function(req, res, next) {
   }
 });
 
+router.get('/report', function (req, res,next){
+  if(req.session.user){
+    res.render('main/compara/underconstruction',{name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+
 // to but list ( wish list )
 router.get('/tobuylist', function(req, res, next) {
   if(req.session.user){
