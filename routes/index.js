@@ -312,6 +312,14 @@ router.get('/tobuylist', function(req, res, next) {
   }
 });
 
+router.get('/addwish', function (req, res,next){
+  if(req.session.user){
+    res.render('main/compara/underconstruction',{name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+
 // Login
 router.get('/login', function(req, res, next) {
   res.render('main/login/login');

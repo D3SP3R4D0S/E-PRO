@@ -47,5 +47,13 @@ router.get('/projects', function(req, res, next) {
     }
 });
 
+router.get('/analysis', function (req, res,next){
+    if(req.session.user){
+        res.render('main/compara/underconstruction',{name:req.session.user});
+    }else{
+        res.redirect('login')
+    }
+})
+
 
 module.exports = router;
