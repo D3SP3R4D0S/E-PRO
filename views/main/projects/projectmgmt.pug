@@ -1,0 +1,36 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#projects').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col
+                        h1
+                            strong Project Management
+                            a.btn.btn-dark.ms-3.disabled(href="projectadd") new project
+                        h6 프로젝트 관리
+                .row
+                    if result1
+                        for line in result1
+                            .col-lg-6
+                                .card
+                                    .card-body
+                                        h3= line.title
+                                        h6= line.description
+                    .col-lg-6
+                        .card
+                            .card-body
+                                a.h3 +
+                                h6 Add new project
+
+
+
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug

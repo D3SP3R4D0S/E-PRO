@@ -42,7 +42,7 @@ include ../compara/head.pug
                                         div(class="text-xs font-weight-bold text-success text-uppercase mb-1") Monthly bill
                                         div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].monthbill.toLocaleString() + " KRW"
                                     div(class="col-auto")
-                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                                        .fa-solid.fa-calendar-days.fa-2x
                     div(class="col-md-3 col-xs-6")
                         div(class="card mb-2 border-left-warning shadow")
                             div(class="card-body")
@@ -51,7 +51,7 @@ include ../compara/head.pug
                                         div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") Year bill
                                         div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].yearbill.toLocaleString() + " KRW"
                                     div(class="col-auto")
-                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                                        .fa-solid.fa-earth-americas.fa-2x
                     div(class='col-md-12 card shadow')
                         div(class='card-body')
                             table(id="exampletable" class="display table table-bordered table-sm")

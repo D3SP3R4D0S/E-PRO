@@ -6,13 +6,13 @@ const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
-
 connection.connect(function(err){
   if(err) {                                     // or restarting (takes a while sometimes).
     console.log('error when connecting to db:', err);
     setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
   }
 });
+connection.close
 
 // main page( index - if not logged in go to log in page directly)
 router.get('/', function(req, res, next) {
@@ -114,14 +114,23 @@ router.get('/indexnmonth', function (req,res){
 // From here is latest data
 router.get('/latestdata', function(req, res, next) {
   let idnum = req.session.idn
-  let selector = req.query.yearmonth // 연-월 (YYYY-MM) 형식
-  if(!selector){
-    let today = new Date()
-    let month = today.getMonth() + 1 // JS 에서는 월이 기본적으로 0부터 시작
-    if(month < 10){ // 10이하일 경우 앞자리수가 0 으로 mysql 과 호환되지않음
-      month ='0' + month
+  let selector
+  if(req.session.yearmonth) {
+    selector = req.session.yearmonth
+  }
+  else {
+    if (!selector) {
+      if (req.query.yearmonth) {
+        selector = req.query.yearmonth
+      } else {
+        let today = new Date()
+        let month = today.getMonth() + 1 // JS 에서는 월이 기본적으로 0부터 시작
+        if (month < 10) { // 10이하일 경우 앞자리수가 0 으로 mysql 과 호환되지않음
+          month = '0' + month
+        }
+        selector = today.getFullYear() + "-" + month
+      }
     }
-    selector = today.getFullYear() + "-" + month
   }
   req.session.indexdate = selector
   if(req.session.user){
@@ -278,7 +287,7 @@ router.post('/fixedexpenseadd', function(req, res, next) {
   }
 });
 
-// to but list ( Carving )
+// to but list ( wish list )
 router.get('/tobuylist', function(req, res, next) {
   if(req.session.user){
     let sql = 'SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate FROM finance.crave where userid = ? order by id;'+
