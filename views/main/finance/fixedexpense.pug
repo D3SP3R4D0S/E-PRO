@@ -1,32 +1,11 @@
 doctype html
 include ../compara/head.pug
 .wrapper
-    nav#sidebar.sidebar.js-sidebar
-        .sidebar-content.js-simplebar
-            a.sidebar-brand(href='index')
-                span.align-middle E-PRO
-                //img(src="images/logo_white.png" alt="homepage" width="90")
-            ul.sidebar-nav
-                li.sidebar-header
-                    | Main functions
-                li.sidebar-item
-                    a.sidebar-link(href='index')
-                        i.align-middle(data-feather='sliders')
-                        span.align-middle Dashboard
-                li.sidebar-header
-                    | Experimental
-                li.sidebar-item
-                    a.sidebar-link(href='latestdata')
-                        i.align-middle(data-feather='bar-chart-2')
-                        span.align-middle 수입 지출 관리
-                li.sidebar-item.active
-                    a.sidebar-link(href='fixedexpense')
-                        i.align-middle(data-feather='grid')
-                        span.align-middle 고정 지출
-                li.sidebar-item
-                    a.sidebar-link(href="tobuylist")
-                        i.align-middle(data-feather='check-square')
-                        span.align-middle 지출 예정 항목
+    include ../compara/sidebar
+        script.
+            $(document).ready(function () {
+                $('#fixedexpense').addClass('active');
+            });
     .main
         include ../compara/navbar
         main.content
@@ -63,7 +42,7 @@ include ../compara/head.pug
                                         div(class="text-xs font-weight-bold text-success text-uppercase mb-1") Monthly bill
                                         div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].monthbill.toLocaleString() + " KRW"
                                     div(class="col-auto")
-                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                                        .fa-solid.fa-calendar-days.fa-2x
                     div(class="col-md-3 col-xs-6")
                         div(class="card mb-2 border-left-warning shadow")
                             div(class="card-body")
@@ -72,7 +51,7 @@ include ../compara/head.pug
                                         div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") Year bill
                                         div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].yearbill.toLocaleString() + " KRW"
                                     div(class="col-auto")
-                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                                        .fa-solid.fa-earth-americas.fa-2x
                     div(class='col-md-12 card shadow')
                         div(class='card-body')
                             table(id="exampletable" class="display table table-bordered table-sm")

@@ -1,68 +1,101 @@
 head
-    include ../compara/head.pug
+    include ../compara/head
     script.
         $(document).ready(function () {
-            $('#table1').DataTable({
-                "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "All"]]
+            var groupColumn = 2;
+            var table = $('#table1').DataTable({
+                "columnDefs": [
+                    {"visible": false, "targets": groupColumn}
+                ],
+                "order": [[groupColumn, 'desc']],
+                "displayLength": 10,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({page: 'current'}).nodes();
+                    var last = null;
+
+                    api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
+
+            // Order by the grouping
+            $('#example tbody').on('click', 'tr.group', function () {
+                var currentOrder = table.order()[0];
+                if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                    table.order([groupColumn, 'desc']).draw();
+                } else {
+                    table.order([groupColumn, 'asc']).draw();
+                }
             });
         });
 .wrapper
-    nav#sidebar.sidebar.js-sidebar
-        .sidebar-content.js-simplebar
-            a.sidebar-brand(href='index')
-                //span.align-middle E-PRO
-                img(src="images/logo_white.png" alt="homepage" width="90")
-            ul.sidebar-nav
-                li.sidebar-header
-                    | Main functions
-                li.sidebar-item
-                    a.sidebar-link(href='index')
-                        i.align-middle(data-feather='sliders')
-                        span.align-middle Dashboard
-                li.sidebar-header
-                    | Experimental
-                li.sidebar-item.active
-                    a.sidebar-link(href='latestdata')
-                        i.align-middle(data-feather='bar-chart-2')
-                        span.align-middle 수입 지출 관리
-                li.sidebar-item
-                    a.sidebar-link(href='fixedexpense')
-                        i.align-middle(data-feather='grid')
-                        span.align-middle 고정 지출
-                li.sidebar-item
-                    a.sidebar-link(href="tobuylist")
-                        i.align-middle(data-feather='check-square')
-                        span.align-middle 지출 예정 항목
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#latestdata').addClass('active');
+        });
     .main
         include ../compara/navbar
         main.content
             .container-fluid.p-0
                 .row.justify-content-start
-                    .col-xl-4.col-lg-6.col-md-12
+                    .col
                         h1
-                            strong Expenditure List
+                            strong= "Expenditure List "
+                            = yearmonth
                             a.btn.btn-dark.ms-4(href="adddata") Add data
                         h6 지출 내역
-
-                .col-12
-                    .card
-                        .card-body
-                            table.table.table-sm#table1
-                                thead(class="table-dark")
-                                    tr(class="text-center")
-                                        th Title
-                                        th Method
-                                        th Date
-                                        th Subord
-                                        th Cost
-                                tbody(class="text-center")
-                                    for line in result
-                                        tr
-                                            td
-                                                a(href="detail?id="+line.id)= line.detail
-                                            td= line.title
-                                            td= line.date
-                                            td= line.subord
-                                            td(class="text-right")= line.cost.toLocaleString() + '₩'
+                    .col
+                        span.ms-3
+                            a(class="mb-2 mr-2 btn btn-primary" href="latestdatapmonth") Previous month
+                        span.ms-3
+                            a(class="mb-2 mr-2 btn btn-primary" href="latestdata") Today
+                        span.ms-3
+                            a(class="mb-2 mr-2 btn btn-primary" href="latestdatanmonth") Next month
+                .row
+                    .col-lg-8
+                        .card
+                            .card-body
+                                table.table.table-sm#table1
+                                    thead(class="table-dark")
+                                        tr(class="text-center")
+                                            th Title
+                                            th Method
+                                            th Date
+                                            th Cat
+                                            th Subord
+                                            th Cost
+                                    tbody
+                                        for line in result
+                                            tr
+                                                td.text-center
+                                                    a(href="detail?id="+line.id)= line.detail
+                                                td.text-center= line.title
+                                                td= line.date
+                                                td.text-center= line.alligner
+                                                td.text-center= line.subord
+                                                td.text-end= line.cost.toLocaleString() + '₩'
+                    .col-lg-4
+                        .card
+                            .card-header
+                                h4 지출 분석
+                                if(summary.summary)
+                                    h6= "총 지출 " + summary.summary.toLocaleString() + '₩'
+                                else
+                                    h6= "지출 내역 없음"
+                            .card-body
+                                canvas(id="myChart")
+                                hr
+                                canvas(id="myChart2")
+                script(src="https://cdn.jsdelivr.net/npm/chart.js")
+                script(src="/chartjs/latestdata_chart.js")
         include ../compara/footer.pug
     include ../compara/footer_script.pug

@@ -1,5 +1,5 @@
 doctype html
-include compara/head.pug
+include ../compara/head
 .wrapper
     nav#sidebar.sidebar.js-sidebar
         .sidebar-content.js-simplebar
@@ -28,7 +28,7 @@ include compara/head.pug
                         i.align-middle(data-feather='check-square')
                         span.align-middle 지출 예정 항목
     .main
-        include compara/navbar
+        include ../compara/navbar
         main.content
             .container-fluid.p-0
                     div(class="col-lg-12")
@@ -53,5 +53,5 @@ include compara/head.pug
                                                 td= line.detail
                                                 td= line.date
                                 a(class="btn btn-dark" href="index") Go Back
-            include compara/footer.pug
-    include compara/footer_script.pug
+            include ../compara/footer
+    include ../compara/footer_script
