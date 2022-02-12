@@ -10,7 +10,18 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.justify-content-start
-                    H1 UNDER CONSTRUCTION
-                    H3 This page is under construction
-                    H3 Service not available
+                .row
+                    .col.text-center
+                        .card.bg-warning
+                            .card-body
+                                h1.text-light.fw-bold UNDER CONSTRUCTION
+                        H3 This page is under construction
+                        H3 Service not available
+                        H4 페이지 준비중입니다
+                        H5 빠른 시일 내 찾아뵙겠습니다.
+                    .col.text-center
+                        //.card.shadow
+                            .card-body
+                        img(src="images/construction.png")
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug
