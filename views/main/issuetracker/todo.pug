@@ -31,7 +31,11 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                H2(class="m-4 text-dark") Purchase or Save
+                .row.justify-content-start
+                    .col-xl-4.col-lg-6.col-md-12
+                        h1
+                            strong= "To buy list"
+                        h6 구매 예정 목록
                 .row
                     .col-6
                         .card

@@ -2,14 +2,16 @@ head
     include ../compara/head.pug
     script.
         $(document).ready(function () {
-            $('#table1').DataTable();
+            $('#table1').DataTable({
+                "lengthMenu": [[15, 25, 50, -1], [15, 25, 50, "All"]]
+            });
         });
 .wrapper
     nav#sidebar.sidebar.js-sidebar
         .sidebar-content.js-simplebar
             a.sidebar-brand(href='index')
-                span.align-middle E-PRO
-                //img(src="images/logo_white.png" alt="homepage" width="90")
+                //span.align-middle E-PRO
+                img(src="images/logo_white.png" alt="homepage" width="90")
             ul.sidebar-nav
                 li.sidebar-header
                     | Main functions
@@ -35,11 +37,16 @@ head
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                div(class="col-lg-12")
-                    H2(class="m-4 text-dark") Latest List
-                        a.btn.btn-dark.ms-4(href="adddata") Add data
-                    div(class='card shadow')
-                        div(class='card-body')
+                .row.justify-content-start
+                    .col-xl-4.col-lg-6.col-md-12
+                        h1
+                            strong Expenditure List
+                            a.btn.btn-dark.ms-4(href="adddata") Add data
+                        h6 지출 내역
+
+                .col-12
+                    .card
+                        .card-body
                             table.table.table-sm#table1
                                 thead(class="table-dark")
                                     tr(class="text-center")

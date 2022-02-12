@@ -31,73 +31,73 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                    div(id="title" class="m-4")
-                        H2(class="text-dark") Fixed expense
-                        h6() 고정 지출
-                    div(class="col-lg-12 row")
-
-                        div(class="col-md-3 col-xs-6")
-                            div(class="card mb-2 border-left-primary shadow")
-                                div(class="card-body")
-                                    div(class="row no-gutters align-items-center")
-                                        div(class="col mr-2")
-                                            div(class="text-xs font-weight-bold text-primary text-uppercase mb-1") Total Fixed expense
-                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].totalbill.toLocaleString() + " KRW"
-                                        div(class="col-auto")
-                                            i(class="fas fa-money-check-alt fa-2x text-gray-300")
-                        div(class="col-md-3 col-xs-6")
-                            div(class="card mb-2 border-left-info shadow")
-                                div(class="card-body")
-                                    div(class="row no-gutters align-items-center")
-                                        div(class="col mr-2")
-                                            div(class="text-xs font-weight-bold text-info text-uppercase mb-1") Divided as month
-                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].divbill.toLocaleString() + " KRW"
-                                        div(class="col-auto")
-                                            i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
-                        div(class="col-md-3 col-xs-6")
-                            div(class="card mb-2 border-left-success shadow")
-                                div(class="card-body")
-                                    div(class="row no-gutters align-items-center")
-                                        div(class="col mr-2")
-                                            div(class="text-xs font-weight-bold text-success text-uppercase mb-1") Monthly bill
-                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].monthbill.toLocaleString() + " KRW"
-                                        div(class="col-auto")
-                                            i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
-                        div(class="col-md-3 col-xs-6")
-                            div(class="card mb-2 border-left-warning shadow")
-                                div(class="card-body")
-                                    div(class="row no-gutters align-items-center")
-                                        div(class="col mr-2")
-                                            div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") Year bill
-                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].yearbill.toLocaleString() + " KRW"
-                                        div(class="col-auto")
-                                            i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
-                        div(class='col-md-12 card shadow')
-                            div(class='card-body')
-                                table(id="exampletable" class="display table table-bordered table-sm")
-                                    thead(class="table-dark")
-                                        tr(class="text-center")
-                                            th Title
-                                            th Category
-                                            th Comment
-                                            th Paid Cycle
-                                            th price
-                                            th Payday
-                                    tbody(class="text-center")
-                                        for line in result
-                                            tr
-                                                td= line.title
-                                                td= line.category
-                                                td= line.comment
-                                                td
-                                                    if(line.payment_num == 1)
-                                                        span 매년
-                                                    else if (line.payment_num == 12)
-                                                        span 매달
-                                                td= line.price
-                                                td= line.payday
-
-                                div(class="row")
-                                    a(class="btn btn-dark text-light ml-auto mr-4" href="fixedexpenseadd") Add data
+                .row.justify-content-start
+                    .col-xl-4.col-lg-6.col-md-12
+                        h1
+                            strong= "Fixed expense"
+                            h6() 고정 지출
+                .row
+                    div(class="col-md-3 col-xs-6")
+                        div(class="card mb-2 border-left-primary shadow")
+                            div(class="card-body")
+                                div(class="row no-gutters align-items-center")
+                                    div(class="col mr-2")
+                                        div(class="text-xs font-weight-bold text-primary text-uppercase mb-1") Total Fixed expense
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].totalbill.toLocaleString() + " KRW"
+                                    div(class="col-auto")
+                                        i(class="fas fa-money-check-alt fa-2x text-gray-300")
+                    div(class="col-md-3 col-xs-6")
+                        div(class="card mb-2 border-left-info shadow")
+                            div(class="card-body")
+                                div(class="row no-gutters align-items-center")
+                                    div(class="col mr-2")
+                                        div(class="text-xs font-weight-bold text-info text-uppercase mb-1") Divided as month
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].divbill.toLocaleString() + " KRW"
+                                    div(class="col-auto")
+                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                    div(class="col-md-3 col-xs-6")
+                        div(class="card mb-2 border-left-success shadow")
+                            div(class="card-body")
+                                div(class="row no-gutters align-items-center")
+                                    div(class="col mr-2")
+                                        div(class="text-xs font-weight-bold text-success text-uppercase mb-1") Monthly bill
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].monthbill.toLocaleString() + " KRW"
+                                    div(class="col-auto")
+                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                    div(class="col-md-3 col-xs-6")
+                        div(class="card mb-2 border-left-warning shadow")
+                            div(class="card-body")
+                                div(class="row no-gutters align-items-center")
+                                    div(class="col mr-2")
+                                        div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") Year bill
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].yearbill.toLocaleString() + " KRW"
+                                    div(class="col-auto")
+                                        i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
+                    div(class='col-md-12 card shadow')
+                        div(class='card-body')
+                            table(id="exampletable" class="display table table-bordered table-sm")
+                                thead(class="table-dark")
+                                    tr(class="text-center")
+                                        th Title
+                                        th Category
+                                        th Comment
+                                        th Paid Cycle
+                                        th price
+                                        th Payday
+                                tbody(class="text-center")
+                                    for line in result
+                                        tr
+                                            td= line.title
+                                            td= line.category
+                                            td= line.comment
+                                            td
+                                                if(line.payment_num == 1)
+                                                    span 매년
+                                                else if (line.payment_num == 12)
+                                                    span 매달
+                                            td= line.price
+                                            td= line.payday
+                            div(class="row")
+                                a(class="btn btn-dark text-light ml-auto mr-4" href="fixedexpenseadd") Add data
         include ../compara/footer.pug
     include ../compara/footer_script.pug
