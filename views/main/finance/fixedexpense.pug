@@ -1,32 +1,11 @@
 doctype html
 include ../compara/head.pug
 .wrapper
-    nav#sidebar.sidebar.js-sidebar
-        .sidebar-content.js-simplebar
-            a.sidebar-brand(href='index')
-                span.align-middle E-PRO
-                //img(src="images/logo_white.png" alt="homepage" width="90")
-            ul.sidebar-nav
-                li.sidebar-header
-                    | Main functions
-                li.sidebar-item
-                    a.sidebar-link(href='index')
-                        i.align-middle(data-feather='sliders')
-                        span.align-middle Dashboard
-                li.sidebar-header
-                    | Experimental
-                li.sidebar-item
-                    a.sidebar-link(href='latestdata')
-                        i.align-middle(data-feather='bar-chart-2')
-                        span.align-middle 수입 지출 관리
-                li.sidebar-item.active
-                    a.sidebar-link(href='fixedexpense')
-                        i.align-middle(data-feather='grid')
-                        span.align-middle 고정 지출
-                li.sidebar-item
-                    a.sidebar-link(href="tobuylist")
-                        i.align-middle(data-feather='check-square')
-                        span.align-middle 지출 예정 항목
+    include ../compara/sidebar
+        script.
+            $(document).ready(function () {
+                $('#fixedexpense').addClass('active');
+            });
     .main
         include ../compara/navbar
         main.content

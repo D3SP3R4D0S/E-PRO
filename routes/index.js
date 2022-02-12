@@ -214,7 +214,7 @@ router.get('/detail', function(req, res, next) {
 });
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
-    res.render('main/adddata',{name:req.session.user});
+    res.render('main/finance/adddata',{name:req.session.user});
   }else{
     res.redirect('login')
   }
