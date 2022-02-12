@@ -32,7 +32,6 @@ router.get('/index', function(req, res, next) {
   req.session.indexdate = selector
   let controldate = new Date(selector.split('-')[0], parseInt(selector.split('-')[1])-1);
   if(req.session.user){
-    console.log(req.session.user, idnum)
     let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
       where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? group by alligner order by alligner;
       SELECT sum(if(income=1, cost, -cost))+0 as total from finance.account where userid = ?;
@@ -114,16 +113,94 @@ router.get('/indexnmonth', function (req,res){
 
 // From here is latest data
 router.get('/latestdata', function(req, res, next) {
+  let idnum = req.session.idn
+  let selector = req.query.yearmonth // 연-월 (YYYY-MM) 형식
+  if(!selector){
+    let today = new Date()
+    let month = today.getMonth() + 1 // JS 에서는 월이 기본적으로 0부터 시작
+    if(month < 10){ // 10이하일 경우 앞자리수가 0 으로 mysql 과 호환되지않음
+      month ='0' + month
+    }
+    selector = today.getFullYear() + "-" + month
+  }
+  req.session.indexdate = selector
   if(req.session.user){
-    let sql = 'SELECT id, title, cost, alligner, detail, subord, DATE_FORMAT(time, "%y-%m-%d") as date '+
-        'FROM finance.account where userid = ? order by id desc'
-    connection.query(sql, req.session.idn, function (error, results, fields) {
-      res.render('main/finance/latestdata', {result:results, name:req.session.user});
+    let sql = `SELECT id, title, cost, alligner, detail, subord, DATE_FORMAT(time, "%y-%m-%d") as date
+        FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;
+        SELECT sum(cost) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
+    connection.query(sql, [idnum, selector,idnum, selector], function (error, results, fields) {
+      res.render('main/finance/latestdata', {yearmonth:selector, result:results[0], summary:results[1][0], name:req.session.user});
     });
   }else{
     res.redirect('login')
   }
 });
+router.get('/latestdatapmonth', function (req,res){
+  let indexdate = req.session.indexdate.split('-');
+  let newdate = new Date(indexdate[0], parseInt(indexdate[1])-1);
+  newdate.setMonth(newdate.getMonth() - 1);
+  let month = newdate.getMonth() + 1
+  if(month<10){
+    month = '0' + month;
+  }
+  let selector = newdate.getFullYear() + '-' + month
+  if(req.session.user){
+    res.redirect('latestdata?yearmonth=' + selector);
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/latestdatanmonth', function (req,res){
+  let indexdate = req.session.indexdate.split('-');
+  let newdate = new Date(indexdate[0], parseInt(indexdate[1])-1);
+  newdate.setMonth(newdate.getMonth() + 1);
+  let month = newdate.getMonth() + 1
+  if(month<10){
+    month = '0' + month;
+  }
+  let selector = newdate.getFullYear() + '-' + month
+  if(req.session.user){
+    res.redirect('latestdata?yearmonth=' + selector);
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/latestdatachart', function (req, res){
+  let responseData = {};
+  let responseData1 = {};
+  let idn = req.session.idn
+  let indexdate = req.session.indexdate
+  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
+    where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
+    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA 
+    left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
+  connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
+    responseData.title = [];
+    responseData.score = [];
+    responseData1.title = [];
+    responseData1.score = [];
+    if(err) throw err;
+    if(rows[0]){
+      responseData.result = "ok";
+      rows[0].forEach(function(val){
+        responseData.title.push(val.alligner);
+        responseData.score.push(val.total);
+      })
+      rows[1].forEach(function(val){
+        responseData1.title.push(val.paiddate);
+        responseData1.score.push(val.dailyuse);
+      })
+    }
+    else{
+      responseData.result = "none";
+      responseData.score = "";
+      responseData1.result = "none";
+      responseData1.score = "";
+    }
+    res.json([responseData, responseData1]);
+  });
+})
+
 router.get('/detail', function(req, res, next) {
   if(req.session.user){
     let assort = req.query.id;
@@ -273,7 +350,6 @@ router.get('/account', function(req, res, next){
     res.redirect('login')
   }
 });
-
 router.get('/register', function(req, res, next) {
   res.render('main/login/register');
 });
