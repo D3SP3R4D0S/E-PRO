@@ -288,8 +288,21 @@ router.post('/fixedexpenseadd', function(req, res, next) {
 });
 
 router.get('/report', function (req, res,next){
+  let idn = req.session.idn
   if(req.session.user) {
-    res.render('main/finance/report', {name: req.session.user, results})
+    let sql =`SELECT 
+    sum(if(income='1' and date_format(time, '%Y-%m-%d') <= 
+    date_format(DATE_SUB(now(), INTERVAL 1 YEAR),'%Y-%m-%d'), cost, -cost)) as yearbefore, 
+    sum(if(income='1' and date_format(time, '%Y-%m-%d') <= date_format(now(),'%Y-%m-%d'), cost, -cost)) as todaytotal
+    from account where userid = ?;`
+    connection.query(sql, [idn], function(err, result){
+      if(err) {
+        throw err
+      }else {
+        console.log(result)
+        res.render('main/finance/report', {result, name: req.session.user})
+      }
+    })
   }else{
     res.redirect('login')
   }
@@ -297,27 +310,34 @@ router.get('/report', function (req, res,next){
 router.post('/reportchart', function (req, res){
   let responseData = {};
   let idn = req.session.idn
-  let sql = `Select (SELECT sum(if(income='1', cost, -cost)) from account where userid = 8 and time <= date_val) as value, 
-        DATE_FORMAT(date_val, "%Y-%m") as date from date_all
-        where date_val <= date(now()) group by date`
-  connection.query(sql,[idn], function(err,rows){
+  let sql = `Select 
+        (SELECT sum(if(income='1', cost, -cost)) from account where userid = ? and time <= date_val) as value,
+        (SELECT sum(if(income='1', cost, 0)) from account where userid = ? and time <= date_val) as income,
+        (SELECT sum(if(income='0', cost, 0)) from account where userid = ? and time <= date_val) as expense,
+        date_format(date_val, '%Y-%m-%d') as date_val from date_all
+        where date_val <= date(now()) group by date_val`
+  connection.query(sql,[idn,idn,idn] , function(err,result){
     responseData.value = [];
+    responseData.income = [];
+    responseData.expense = [];
     responseData.date = [];
     if(err) throw err;
-    if(rows[0]){
+    if(result){
       responseData.result = "ok";
-      rows[0].forEach(function(val){
-        responseData.title.push(val.alligner);
-        responseData.score.push(val.total);
+      result.forEach(function(val){
+        responseData.value.push(val.value);
+        responseData.income.push(val.income);
+        responseData.expense.push(val.expense);
+        responseData.date.push(val.date_val);
       })
     }
     else{
-      responseData.result = "none";
-      responseData.score = "";
-      responseData1.result = "none";
-      responseData1.score = "";
+      responseData.value = "none";
+      responseData.income = "none";
+      responseData.expense = "none";
+      responseData.date = "";
     }
-    res.json([responseData, responseData1]);
+    res.json([responseData]);
   });
 })
 
