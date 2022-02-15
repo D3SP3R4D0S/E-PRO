@@ -1,0 +1,74 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#projects').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col
+                        h1
+                            strong= project.title
+                        h6= project.description
+                            if project.creator = id
+                                span.ms-3.badge.bg-danger owner
+                .row
+                    .col-lg-8
+                        .card
+                            .card-body
+                                h3 Tasks
+                                hr
+                                if(tasks)
+                                    table.table
+                                        thead
+                                            th Task
+                                            th Descroption
+                                            th Status
+                                            th Creator
+                                        tbody
+                                            for line in tasks
+                                                td= line.tasktitle
+                                                td= line.detail
+                                                if line.status = 0
+                                                    td pending
+                                                else if line.status = 1
+                                                    td on going
+                                                else if line.status = 2
+                                                    td rejected
+                                                else if line.status = 3
+                                                    td completed
+                                                for member in pmember
+                                                    if line.creator = member.idnum
+                                                        td= member.name
+                                else
+                                    h2 No existing tasks
+                        .card
+                            .card-body
+                                h3 Request of fund
+                                hr
+                                table.table
+                                    thead
+                                        th title
+                                        th cost
+                                        th status
+                                        th requester
+                                        th accepter
+                                    tbody
+                    .col-lg-4
+                        .card
+                            .card-body
+                                h3 members
+                                hr
+                                table.table
+                                    tbody
+                                    for member in pmember
+                                        td= member.userid
+                                        td= member.name
+
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug

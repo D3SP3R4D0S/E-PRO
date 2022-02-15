@@ -288,11 +288,37 @@ router.post('/fixedexpenseadd', function(req, res, next) {
 });
 
 router.get('/report', function (req, res,next){
-  if(req.session.user){
-    res.render('main/compara/underconstruction',{name:req.session.user});
+  if(req.session.user) {
+    res.render('main/finance/report', {name: req.session.user, results})
   }else{
     res.redirect('login')
   }
+})
+router.post('/reportchart', function (req, res){
+  let responseData = {};
+  let idn = req.session.idn
+  let sql = `Select (SELECT sum(if(income='1', cost, -cost)) from account where userid = 8 and time <= date_val) as value, 
+        DATE_FORMAT(date_val, "%Y-%m") as date from date_all
+        where date_val <= date(now()) group by date`
+  connection.query(sql,[idn], function(err,rows){
+    responseData.value = [];
+    responseData.date = [];
+    if(err) throw err;
+    if(rows[0]){
+      responseData.result = "ok";
+      rows[0].forEach(function(val){
+        responseData.title.push(val.alligner);
+        responseData.score.push(val.total);
+      })
+    }
+    else{
+      responseData.result = "none";
+      responseData.score = "";
+      responseData1.result = "none";
+      responseData1.score = "";
+    }
+    res.json([responseData, responseData1]);
+  });
 })
 
 // to but list ( wish list )

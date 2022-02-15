@@ -8,4 +8,17 @@ include ../compara/head.pug
         });
     .main
         include ../compara/navbar
-
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col
+                        h1
+                            strong Report
+                            //a.btn.btn-dark.ms-3.disabled(href="projectadd") new project
+                        h6 재정 수지 보고
+                .row
+                    .col-lg-12
+                        .card
+                            .card-body
+        include ../compara/footer
+    include ../compara/footer_script
