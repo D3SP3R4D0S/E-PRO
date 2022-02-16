@@ -4,14 +4,14 @@ head
     include ../compara/sidebar
     script.
         $(document).ready(function () {
-            $('#latestdata').addClass('active');
+            $('#projects').addClass('active');
         });
     .main
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                row(class="row justify-content-center")
-                    H2(class="m-4 text-dark") Add Task
+                .row.justify-content-center
+                    H2.m-4 Add Task
                     .col-12
                         .card
                             .card-body
