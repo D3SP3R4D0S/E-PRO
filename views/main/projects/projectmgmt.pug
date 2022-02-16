@@ -27,7 +27,7 @@ include ../compara/head.pug
                                                 h3
                                                     a(href="projectdetail?pid=" + line.pid)= line.title
                                                 h6= line.description
-                                            if line.creator = id
+                                            if(line.creator == id)
                                                 .col.text-end
                                                     span.ms-auto.ms-3.badge.bg-danger owner
                     .col-lg-6

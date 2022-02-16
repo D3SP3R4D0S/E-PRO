@@ -14,7 +14,7 @@ connection.close
 router.get('/projects', function(req, res, next) {
     let idnum = req.session.idn
     if(req.session.user){
-        let sql = `SELECT project.id as pid, title, description FROM project_member join project on project_member.projectid = project.id
+        let sql = `SELECT project.id as pid, title, description, creator FROM project_member join project on project_member.projectid = project.id
                     WHERE memberid = ?;`
         connection.query(sql, idnum, function (error, results) {
             if(error){
@@ -31,7 +31,8 @@ router.get('/projects', function(req, res, next) {
 
 router.get('/projectdetail', function(req, res, next) {
     let idnum = req.session.idn
-    let pid = req.query.pid
+    req.session.pid = req.query.pid
+    let pid = req.session.pid
     if(req.session.user){
         let sql = `SELECT * FROM finance.project where id = ?;
                 SELECT * FROM finance.project_task where projectid = ?;
@@ -50,6 +51,33 @@ router.get('/projectdetail', function(req, res, next) {
         res.redirect('login')
     }
 });
+
+router.get('/projectaddtask', function(req, res, next) {
+    if(req.session.user){
+        res.render('main/projects/projectaddtask',{name:req.session.user});
+    }else{
+        res.redirect('login')
+    }
+});
+router.post('/projectaddtask', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        let sql = "INSERT INTO finance.project_task(projectid, tasktitle, creator, duedate, detail)VALUES(?,?,?,?,?);"
+        let params = [req.session.pid, rb.tasktitle, req.session.idn, rb.duedate, rb.detail];
+        console.log(params);
+        connection.query(sql,params,function (err, results, fields) {
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect('/projectdetail?pid='+req.session.pid);
+            }
+        });
+    }else{
+        res.redirect('login')
+    }
+});
+
+
 router.get('/projectadd', function (req, res,next){
     if(req.session.user){
         res.render('main/compara/underconstruction',{name:req.session.user});

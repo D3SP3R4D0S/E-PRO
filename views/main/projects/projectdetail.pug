@@ -15,13 +15,17 @@ include ../compara/head.pug
                         h1
                             strong= project.title
                         h6= project.description
-                            if project.creator = id
+                            if(project.creator == id)
                                 span.ms-3.badge.bg-danger owner
                 .row
                     .col-lg-8
                         .card
                             .card-body
-                                h3 Tasks
+                                .row
+                                    .col
+                                        .h3 Tasks
+                                    .col.text-end
+                                        a.btn.btn-dark(href="projectaddtask") Add
                                 hr
                                 if(tasks)
                                     table.table
@@ -32,24 +36,35 @@ include ../compara/head.pug
                                             th Creator
                                         tbody
                                             for line in tasks
-                                                td= line.tasktitle
-                                                td= line.detail
-                                                if line.status = 0
-                                                    td pending
-                                                else if line.status = 1
-                                                    td on going
-                                                else if line.status = 2
-                                                    td rejected
-                                                else if line.status = 3
-                                                    td completed
-                                                for member in pmember
-                                                    if line.creator = member.idnum
-                                                        td= member.name
+                                                tr
+                                                    td
+                                                        a(href="")= line.tasktitle
+                                                    td= line.detail
+                                                    if line.status = 0
+                                                        td
+                                                            .badge.bg-warning PENDING
+                                                    else if line.status = 1
+                                                        td
+                                                            .badge.bg-primary ON GOING
+                                                    else if line.status = 2
+                                                        td
+                                                            .badge.bg-danger REJECTED
+                                                    else if line.status = 3
+                                                        td
+                                                            .badge.bg-success COMPLETE
+                                                    for member in pmember
+                                                        if(line.creator == member.idnum)
+                                                            td= member.name
+
                                 else
                                     h2 No existing tasks
                         .card
                             .card-body
-                                h3 Request of fund
+                                .row
+                                    .col
+                                        .h3 Request of fund
+                                    .col.text-end
+                                        a.btn.btn-dark(href="projectaddfundreq") Add
                                 hr
                                 table.table
                                     thead
@@ -62,13 +77,18 @@ include ../compara/head.pug
                     .col-lg-4
                         .card
                             .card-body
-                                h3 members
+                                .row
+                                    .col
+                                        .h3 members
+                                    .col.text-end
+                                        a.btn.btn-dark(href="projectaddmembers") Add
                                 hr
                                 table.table
                                     tbody
                                     for member in pmember
-                                        td= member.userid
-                                        td= member.name
+                                        tr
+                                            td= member.userid
+                                            td= member.name
 
         include ../compara/footer.pug
     include ../compara/footer_script.pug
