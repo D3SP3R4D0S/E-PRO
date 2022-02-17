@@ -79,4 +79,4 @@ public/vendor
 
 routes/config
 routes/account
-public/images/construction.png
+public/images/construction.*

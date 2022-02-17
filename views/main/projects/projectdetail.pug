@@ -1,0 +1,126 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#projects').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col
+                        h1
+                            strong= project.title
+                        h6= project.description
+                            if project.creator === id
+                                span.ms-3.badge.bg-danger owner
+                .row
+                    .col-lg-8
+                        .card
+                            .card-body
+                                .row
+                                    .col
+                                        .h3 Tasks
+                                    .col.text-end
+                                        a.btn.btn-dark(href="projectaddtask") Add
+                                hr
+                                if(tasks)
+                                    table.table
+                                        thead
+                                            th Task
+                                            th Descroption
+                                            th Status
+                                            th Creator
+                                        tbody
+                                            for line in tasks
+                                                tr
+                                                    td
+                                                        a(href="projecttaskdetail?taskid="+ line.taskid)= line.tasktitle
+                                                    td= line.detail
+                                                    if line.status === 0
+                                                        td
+                                                            .badge.bg-warning PENDING
+                                                    else if line.status === 1
+                                                        td
+                                                            .badge.bg-primary ON GOING
+                                                    else if line.status === 2
+                                                        td
+                                                            .badge.bg-danger REJECTED
+                                                    else if line.status === 3
+                                                        td
+                                                            .badge.bg-success COMPLETE
+                                                    for member in pmember
+                                                        if(line.creator === member.idnum)
+                                                            td= member.name
+
+                                else
+                                    h2 No existing tasks
+                        .card
+                            .card-body
+                                .row
+                                    .col
+                                        .h3 Request of fund
+                                    .col.text-end
+                                        a.btn.btn-dark(href="projectaddfundreq") Add
+                                hr
+                                table.table
+                                    thead
+                                        th Title
+                                        th Cost
+                                        th Status
+                                        th Requester
+                                        th Accepter
+                                        th Status
+                                    tbody
+                                        for line in fundreq
+                                            tr
+                                                td= line.title
+                                                td= line.detail
+                                                td= line.cost.toLocaleString() + "KRW"
+                                                td
+                                                    for member in pmember
+                                                        if line.creator === member.idnum
+                                                            span= member.name
+                                                td
+                                                    for member in pmember
+                                                        if line.accepter === member.idnum
+                                                            span= member.name
+                                                if line.status === 0
+                                                    td
+                                                        .badge.bg-warning REQUESTED
+                                                else if line.status === 1
+                                                    td
+                                                        .badge.bg-secondary PENDING
+                                                else if line.status === 2
+                                                    td
+                                                        .badge.bg-primary ACCEPTED
+                                                else if line.status === 3
+                                                    td
+                                                        .badge.bg-success COMPLETE
+                                                else if line.status === 4
+                                                    td
+                                                        .badge.bg-danger REJECTED
+                    .col-lg-4
+                        .card
+                            .card-body
+                                .row
+                                    .col
+                                        .h3 Members
+                                    .col.text-end
+                                        a.btn.btn-dark(href="projectaddmembers") Add
+                                hr
+                                table.table
+                                    thead
+                                        tr
+                                            th User ID
+                                            th Name
+                                    tbody
+                                    for member in pmember
+                                        tr
+                                            td= member.userid
+                                            td= member.name
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug

@@ -71,16 +71,15 @@ function sendAjax(url) {
     oReq.send();
 
     oReq.addEventListener('load', function() {
-        var result = JSON.parse(oReq.responseText);
-        var comp_data = data1.datasets[0].data;
+        let result = JSON.parse(oReq.responseText);
+        let comp_data = data1.datasets[0].data;
 
         data1.labels = result[0].title
         comp_data = result[0].score;
 
         data1.datasets[0].data = comp_data;
         myBarChart.update();
-        var result = JSON.parse(oReq.responseText);
-        var comp_data2 = data2.datasets[0].data;
+        let comp_data2 = data2.datasets[0].data;
 
         data2.labels = result[1].title
         comp_data2 = result[1].score

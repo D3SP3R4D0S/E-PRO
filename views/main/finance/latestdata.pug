@@ -36,6 +36,43 @@ head
                 }
             });
         });
+    script.
+        $(document).ready(function () {
+            var groupColumn = 2;
+            var table = $('#table2').DataTable({
+                "columnDefs": [
+                    {"visible": false, "targets": groupColumn}
+                ],
+                "order": [[groupColumn, 'desc']],
+                "displayLength": 10,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({page: 'current'}).nodes();
+                    var last = null;
+
+                    api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
+
+            // Order by the grouping
+            $('#example tbody').on('click', 'tr.group', function () {
+                var currentOrder = table.order()[0];
+                if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                    table.order([groupColumn, 'desc']).draw();
+                } else {
+                    table.order([groupColumn, 'asc']).draw();
+                }
+            });
+        });
+
 .wrapper
     include ../compara/sidebar
     script.
@@ -64,6 +101,8 @@ head
                     .col-lg-8
                         .card
                             .card-body
+                                h4 지출내역
+                                hr
                                 table.table.table-sm#table1
                                     thead(class="table-dark")
                                         tr(class="text-center")
@@ -75,14 +114,38 @@ head
                                             th Cost
                                     tbody
                                         for line in result
-                                            tr
-                                                td.text-center
-                                                    a(href="detail?id="+line.id)= line.detail
-                                                td.text-center= line.title
-                                                td= line.date
-                                                td.text-center= line.alligner
-                                                td.text-center= line.subord
-                                                td.text-end= line.cost.toLocaleString() + '₩'
+                                            if line.income === 0
+                                                tr
+                                                    td.text-center
+                                                        a(href="detail?id="+line.id)= line.detail
+                                                    td.text-center= line.title
+                                                    td= line.date
+                                                    td.text-center= line.alligner
+                                                    td.text-center= line.subord
+                                                    td.text-end= line.cost.toLocaleString() + '₩'
+                                hr
+                                h4 수입내역
+                                hr
+                                table.table.table-sm#table2
+                                    thead(class="table-dark")
+                                        tr(class="text-center")
+                                            th Title
+                                            th Method
+                                            th Date
+                                            th Cat
+                                            th Subord
+                                            th Cost
+                                    tbody
+                                        for line in result
+                                            if line.income === 1
+                                                tr
+                                                    td.text-center
+                                                        a(href="detail?id=" + line.id)= line.detail
+                                                    td.text-center= line.title
+                                                    td= line.date
+                                                    td.text-center= line.alligner
+                                                    td.text-center= line.subord
+                                                    td.text-end= line.cost.toLocaleString() + '₩'
                     .col-lg-4
                         .card
                             .card-header

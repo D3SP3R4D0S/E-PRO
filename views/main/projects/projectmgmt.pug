@@ -14,7 +14,7 @@ include ../compara/head.pug
                     .col
                         h1
                             strong Project Management
-                            a.btn.btn-dark.ms-3.disabled(href="projectadd") new project
+                            //a.btn.btn-dark.ms-3.disabled(href="projectadd") new project
                         h6 프로젝트 관리
                 .row
                     if result1
@@ -22,15 +22,22 @@ include ../compara/head.pug
                             .col-lg-6
                                 .card
                                     .card-body
-                                        h3= line.title
-                                        h6= line.description
+                                        .row
+                                            .col
+                                                h3
+                                                    a(href="projectdetail?pid=" + line.pid)= line.title
+                                                h6= line.description
+                                            if(line.creator == id)
+                                                .col.text-end
+                                                    span.ms-auto.ms-3.badge.bg-danger owner
                     .col-lg-6
                         .card
                             .card-body
-                                a.h3 +
+                                h3
+                                    a(href="projectadd") +
                                 h6 Add new project
 
 
 
-        include ../compara/footer.pug
-    include ../compara/footer_script.pug
+        include ../compara/footer
+    include ../compara/footer_script

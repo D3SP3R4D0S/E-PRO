@@ -134,7 +134,7 @@ router.get('/latestdata', function(req, res, next) {
   }
   req.session.indexdate = selector
   if(req.session.user){
-    let sql = `SELECT id, title, cost, alligner, detail, subord, DATE_FORMAT(time, "%y-%m-%d") as date
+    let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT(time, "%y-%m-%d") as date
         FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;
         SELECT sum(cost) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
     connection.query(sql, [idnum, selector,idnum, selector], function (error, results, fields) {
@@ -229,10 +229,14 @@ router.get('/adddata', function(req, res, next) {
   }
 });
 router.post('/adddata', function(req, res, next) {
-  let rb = req.body
+  let rb = req.body;
+  let income = 0;
+  if(rb.income === "1"){
+    income = 1;
+  };
   if(req.session.user){
-    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
-    let params = [rb.title, rb.cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
+    let params = [rb.title, rb.cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
     console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
@@ -288,11 +292,57 @@ router.post('/fixedexpenseadd', function(req, res, next) {
 });
 
 router.get('/report', function (req, res,next){
-  if(req.session.user){
-    res.render('main/compara/underconstruction',{name:req.session.user});
+  let idn = req.session.idn
+  if(req.session.user) {
+    let sql =`SELECT 
+    sum(if(income='1' and date_format(time, '%Y-%m-%d') <= 
+    date_format(DATE_SUB(now(), INTERVAL 1 YEAR),'%Y-%m-%d'), cost, -cost)) as yearbefore, 
+    sum(if(income='1' and date_format(time, '%Y-%m-%d') <= date_format(now(),'%Y-%m-%d'), cost, -cost)) as todaytotal
+    from account where userid = ?;`
+    connection.query(sql, [idn], function(err, result){
+      if(err) {
+        throw err
+      }else {
+        console.log(result)
+        res.render('main/finance/report', {result, name: req.session.user})
+      }
+    })
   }else{
     res.redirect('login')
   }
+})
+router.post('/reportchart', function (req, res){
+  let responseData = {};
+  let idn = req.session.idn
+  let sql = `Select 
+        (SELECT sum(if(income='1', cost, -cost)) from account where userid = ? and time <= date_val) as value,
+        (SELECT sum(if(income='1', cost, 0)) from account where userid = ? and time <= date_val) as income,
+        (SELECT sum(if(income='0', cost, 0)) from account where userid = ? and time <= date_val) as expense,
+        date_format(date_val, '%Y-%m-%d') as date_val from date_all
+        where date_val <= date(now()) group by date_val`
+  connection.query(sql,[idn,idn,idn] , function(err,result){
+    responseData.value = [];
+    responseData.income = [];
+    responseData.expense = [];
+    responseData.date = [];
+    if(err) throw err;
+    if(result){
+      responseData.result = "ok";
+      result.forEach(function(val){
+        responseData.value.push(val.value);
+        responseData.income.push(val.income);
+        responseData.expense.push(val.expense);
+        responseData.date.push(val.date_val);
+      })
+    }
+    else{
+      responseData.value = "none";
+      responseData.income = "none";
+      responseData.expense = "none";
+      responseData.date = "";
+    }
+    res.json([responseData]);
+  });
 })
 
 // to but list ( wish list )

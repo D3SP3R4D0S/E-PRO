@@ -1,0 +1,74 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#projects').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col.mb-3.align-middle
+                        a.btn.btn-dark.mb-2(href="javascript:history.back()") Back
+                        strong.h2.ms-3= task.tasktitle
+                            if task.status === 0
+                                .ms-3.badge.bg-warning PENDING
+                            else if task.status === 1
+                                .ms-3.badge.bg-primary ON GOING
+                            else if task.status === 2
+                                .ms-3.badge.bg-danger REJECTED
+                            else if task.status === 3
+                                .ms-3.badge.bg-success COMPLETE
+                    //    h6= project.description
+                    //        if(project.creator == id)
+                    //            span.ms-3.badge.bg-danger owner
+                .row
+                    .col-lg-8
+                        .card
+                            .card-header
+                                h4 Description
+                                hr
+                                .row
+                                    .col
+                                        .h5= task.detail
+                    .col-lg-4
+                        .card
+                            .card-header
+                                h4 Creator
+                                hr
+                                for member in pmember
+                                    if(task.creator === member.idnum)
+                                        h5= member.name
+                    .col-lg-12
+                        .card
+                            .card-body
+                                h4 Comment
+                                table.table
+                                    thead
+                                        tr
+                                            th User
+                                            th Comment
+                                    tbody
+                                        for line in comments
+                                           tr
+                                               th
+                                                   for member in pmember
+                                                       if(line.userid === member.idnum)
+                                                           span= member.name
+                                                           p.small
+                                                               span= line.created.toLocaleString().split(' ')[0] + ' '
+                                                               span= line.created.toLocaleString().split(' ')[1]
+                                               th= line.comment
+                                        tr
+                                            form(action="taskaddcomment" method="post")
+                                                td.text-center
+                                                    button(class="btn btn-dark text-light" type="submit") Submit
+                                                td
+                                                    input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
+
+
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug
