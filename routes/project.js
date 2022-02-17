@@ -37,14 +37,20 @@ router.get('/projectdetail', function(req, res, next) {
         let sql = `SELECT * FROM finance.project where id = ?;
                 SELECT * FROM finance.project_task where projectid = ?;
                 SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
-                ON project_member.memberid = account.number where projectid = ?;`
-        connection.query(sql, [pid, pid, pid] ,function (error, results) {
+                ON project_member.memberid = account.number where projectid = ?;
+                SELECT * FROM finance.project_fundreq where projectid = ?;`
+        connection.query(sql, [pid, pid, pid, pid] ,function (error, results) {
             if(error){
                 console.log(error)
             }
             else {
                 console.log(results)
-                res.render('main/projects/projectdetail', {project: results[0][0], tasks:results[1], pmember: results[2], name: req.session.user, id: idnum});
+                res.render('main/projects/projectdetail', {
+                    project: results[0][0],
+                    tasks:results[1],
+                    pmember: results[2],
+                    fundreq: results[3],
+                    name: req.session.user, id: idnum});
             }
         });
     }else{
@@ -64,6 +70,30 @@ router.post('/projectaddtask', function(req, res, next) {
     if(req.session.user){
         let sql = "INSERT INTO finance.project_task(projectid, tasktitle, creator, duedate, detail)VALUES(?,?,?,?,?);"
         let params = [req.session.pid, rb.tasktitle, req.session.idn, rb.duedate, rb.detail];
+        console.log(params);
+        connection.query(sql,params,function (err, results, fields) {
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect('/projectdetail?pid='+req.session.pid);
+            }
+        });
+    }else{
+        res.redirect('login')
+    }
+});
+router.get('/projectaddfundreq', function(req, res, next) {
+    if(req.session.user){
+        res.render('main/projects/projectaddfundreq',{name:req.session.user});
+    }else{
+        res.redirect('login')
+    }
+});
+router.post('/projectaddfundreq', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        let sql = "INSERT INTO finance.project_fundreq(projectid, title, detail, cost, creator)VALUES(?,?,?,?,?);"
+        let params = [req.session.pid, rb.title, rb.detail, rb.cost, req.session.idn];
         console.log(params);
         connection.query(sql,params,function (err, results, fields) {
             if(err){

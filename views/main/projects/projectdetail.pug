@@ -40,20 +40,20 @@ include ../compara/head.pug
                                                     td
                                                         a(href="")= line.tasktitle
                                                     td= line.detail
-                                                    if line.status = 0
+                                                    if line.status === 0
                                                         td
                                                             .badge.bg-warning PENDING
-                                                    else if line.status = 1
+                                                    else if line.status === 1
                                                         td
                                                             .badge.bg-primary ON GOING
-                                                    else if line.status = 2
+                                                    else if line.status === 2
                                                         td
                                                             .badge.bg-danger REJECTED
-                                                    else if line.status = 3
+                                                    else if line.status === 3
                                                         td
                                                             .badge.bg-success COMPLETE
                                                     for member in pmember
-                                                        if(line.creator == member.idnum)
+                                                        if(line.creator === member.idnum)
                                                             td= member.name
 
                                 else
@@ -68,12 +68,41 @@ include ../compara/head.pug
                                 hr
                                 table.table
                                     thead
-                                        th title
-                                        th cost
-                                        th status
-                                        th requester
-                                        th accepter
+                                        th Title
+                                        th Cost
+                                        th Status
+                                        th Requester
+                                        th Accepter
+                                        th Status
                                     tbody
+                                        for line in fundreq
+                                            tr
+                                                td= line.title
+                                                td= line.detail
+                                                td= line.cost.toLocaleString() + "KRW"
+                                                td
+                                                    for member in pmember
+                                                        if line.creator === member.idnum
+                                                            span= member.name
+                                                td
+                                                    for member in pmember
+                                                        if line.accepter === member.idnum
+                                                            span= member.name
+                                                if line.status === 0
+                                                    td
+                                                        .badge.bg-warning REQUESTED
+                                                else if line.status === 1
+                                                    td
+                                                        .badge.bg-secondary PENDING
+                                                else if line.status === 2
+                                                    td
+                                                        .badge.bg-primary ACCEPTED
+                                                else if line.status === 3
+                                                    td
+                                                        .badge.bg-success COMPLETE
+                                                else if line.status === 4
+                                                    td
+                                                        .badge.bg-danger REJECTED
                     .col-lg-4
                         .card
                             .card-body
