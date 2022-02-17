@@ -134,7 +134,7 @@ router.get('/latestdata', function(req, res, next) {
   }
   req.session.indexdate = selector
   if(req.session.user){
-    let sql = `SELECT id, title, cost, alligner, detail, subord, DATE_FORMAT(time, "%y-%m-%d") as date
+    let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT(time, "%y-%m-%d") as date
         FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;
         SELECT sum(cost) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
     connection.query(sql, [idnum, selector,idnum, selector], function (error, results, fields) {
@@ -231,8 +231,8 @@ router.get('/adddata', function(req, res, next) {
 router.post('/adddata', function(req, res, next) {
   let rb = req.body;
   let income = 0;
-  if(rb.income === true){
-    let income = 1
+  if(rb.income === "1"){
+    income = 1;
   };
   if(req.session.user){
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
