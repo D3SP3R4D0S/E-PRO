@@ -229,10 +229,14 @@ router.get('/adddata', function(req, res, next) {
   }
 });
 router.post('/adddata', function(req, res, next) {
-  let rb = req.body
+  let rb = req.body;
+  let income = 0;
+  if(rb.income === true){
+    let income = 1
+  };
   if(req.session.user){
-    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
-    let params = [rb.title, rb.cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
+    let params = [rb.title, rb.cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
     console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
