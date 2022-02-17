@@ -15,7 +15,7 @@ include ../compara/head.pug
                         h1
                             strong= project.title
                         h6= project.description
-                            if(project.creator == id)
+                            if project.creator === id
                                 span.ms-3.badge.bg-danger owner
                 .row
                     .col-lg-8
@@ -38,7 +38,7 @@ include ../compara/head.pug
                                             for line in tasks
                                                 tr
                                                     td
-                                                        a(href="")= line.tasktitle
+                                                        a(href="projecttaskdetail?taskid="+ line.taskid)= line.tasktitle
                                                     td= line.detail
                                                     if line.status === 0
                                                         td
@@ -108,16 +108,19 @@ include ../compara/head.pug
                             .card-body
                                 .row
                                     .col
-                                        .h3 members
+                                        .h3 Members
                                     .col.text-end
                                         a.btn.btn-dark(href="projectaddmembers") Add
                                 hr
                                 table.table
+                                    thead
+                                        tr
+                                            th User ID
+                                            th Name
                                     tbody
                                     for member in pmember
                                         tr
                                             td= member.userid
                                             td= member.name
-
         include ../compara/footer.pug
     include ../compara/footer_script.pug
