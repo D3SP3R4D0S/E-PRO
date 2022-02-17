@@ -104,14 +104,22 @@ router.get('/projecttaskdetail', function(req, res,next){
 router.post('/taskaddcomment', function(req, res, next) {
     let rb = req.body
     if(req.session.user){
-        let sql = "INSERT INTO finance.project_task_comment(taskid, userid, comment)VALUES(?,?,?);"
-        let params = [req.session.tid, req.session.idn, rb.comment];
+        if(rb.status!=''){
+            let sql = "UPDATE `finance`.`project_task` SET `status` = ? WHERE (`taskid` = ?);\n;"
+            connection.query(sql,[rb.status,req.session.tid] ,function (err, results, fields) {
+                if(err){
+                console.log(err);
+                }
+            });
+        }
+        let sql = "INSERT INTO finance.project_task_comment(taskid, userid, comment, status)VALUES(?,?,?,?);"
+        let params = [req.session.tid, req.session.idn, rb.comment, rb.status];
         console.log(params);
         connection.query(sql,params,function (err, results, fields) {
             if(err){
                 console.log(err);
             }else{
-                res.redirect('/projectdetail?pid='+req.session.pid);
+                res.redirect('/projecttaskdetail?taskid='+req.session.tid);
             }
         });
     }else{

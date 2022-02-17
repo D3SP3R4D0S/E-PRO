@@ -12,7 +12,7 @@ include ../compara/head.pug
             .container-fluid.p-0
                 .row.justify-content-start
                     .col.mb-3.align-middle
-                        a.btn.btn-dark.mb-2(href="javascript:history.back()") Back
+                        a.btn.btn-dark.mb-2(href="projectdetail?pid="+task.projectid) Back
                         strong.h2.ms-3= task.tasktitle
                             if task.status === 0
                                 .ms-3.badge.bg-warning PENDING
@@ -46,10 +46,11 @@ include ../compara/head.pug
                         .card
                             .card-body
                                 h4 Comment
-                                table.table
+                                table.table.table-sm
                                     thead
                                         tr
                                             th User
+                                            th Status change
                                             th Comment
                                     tbody
                                         for line in comments
@@ -61,11 +62,27 @@ include ../compara/head.pug
                                                            p.small
                                                                span= line.created.toLocaleString().split(' ')[0] + ' '
                                                                span= line.created.toLocaleString().split(' ')[1]
-                                               th= line.comment
+                                               td
+                                                    if line.status === 0
+                                                        .ms-3.badge.bg-warning PENDING
+                                                    else if line.status === 1
+                                                        .ms-3.badge.bg-primary ON GOING
+                                                    else if line.status === 2
+                                                        .ms-3.badge.bg-danger REJECTED
+                                                    else if line.status === 3
+                                                        .ms-3.badge.bg-success COMPLETE
+                                               td= line.comment
                                         tr
                                             form(action="taskaddcomment" method="post")
-                                                td.text-center
-                                                    button(class="btn btn-dark text-light" type="submit") Submit
+                                                td(colspan="2")
+                                                    .input-group
+                                                        button(class="form-control btn btn-dark text-light " type="submit") Submit
+                                                        select(class="form-control" name="status" placeholder="status" required)
+                                                            option(value="" selected) No change
+                                                            option(value="0") PENDING
+                                                            option(value="1") ON GOING
+                                                            option(value="2") REJECTED
+                                                            option(value="3") COMPLETE
                                                 td
                                                     input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
 
