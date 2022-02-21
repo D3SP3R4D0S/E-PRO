@@ -221,6 +221,17 @@ router.get('/detail', function(req, res, next) {
     res.redirect('login')
   }
 });
+router.get('/removedata', function(req, res, next){
+  if(req.session.user){
+    let sql = 'DELETE FROM `finance`.`account` WHERE `id` = ?;'
+    connection.query(sql, req.query.id , function (error, results, fields) {
+      res.redirect('latestdata');
+    });
+  }else{
+    res.redirect('login')
+  }
+});
+
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
     res.render('main/finance/adddata',{name:req.session.user});

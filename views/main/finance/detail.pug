@@ -53,7 +53,7 @@ include ../compara/head
                                                 td= line.detail
                                                 td= line.date
                                 div.text-end
-                                    a.btn.btn-danger.ms-auto.disabled(href="index") Remove Data
+                                    a.btn.btn-danger.ms-auto(href="removedata?id=" + result[0].id) Remove Data
                                     a.btn.btn-dark.ms-2(href="index") Go Back
             include ../compara/footer
     include ../compara/footer_script
