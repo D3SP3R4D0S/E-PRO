@@ -77,7 +77,8 @@ include ../compara/head.pug
                                     tbody
                                         for line in fundreq
                                             tr
-                                                td= line.title
+                                                td
+                                                    a(href="projectfunddetail?fundid=" + line.id)= line.title
                                                 td= line.detail
                                                 td= line.cost.toLocaleString() + "KRW"
                                                 td
@@ -93,16 +94,13 @@ include ../compara/head.pug
                                                         .badge.bg-warning REQUESTED
                                                 else if line.status === 1
                                                     td
-                                                        .badge.bg-secondary PENDING
+                                                        .badge.bg-primary ACCEPTED
                                                 else if line.status === 2
                                                     td
-                                                        .badge.bg-primary ACCEPTED
+                                                        .badge.bg-danger REJECTED
                                                 else if line.status === 3
                                                     td
                                                         .badge.bg-success COMPLETE
-                                                else if line.status === 4
-                                                    td
-                                                        .badge.bg-danger REJECTED
                     .col-lg-4
                         .card
                             .card-body

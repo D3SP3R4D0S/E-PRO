@@ -36,7 +36,8 @@ router.get('/projectdetail', function(req, res, next) {
     if(req.session.user){
         let sql = `SELECT * FROM finance.project where id = ?;
                 SELECT * FROM finance.project_task where projectid = ?;
-                SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
+                SELECT project_member.memberid as idnum, account.id as userid, account.name as name 
+                FROM finance.project_member JOIN nodedb.account 
                 ON project_member.memberid = account.number where projectid = ?;
                 SELECT * FROM finance.project_fundreq where projectid = ?;`
         connection.query(sql, [pid, pid, pid, pid] ,function (error, results) {
@@ -162,6 +163,52 @@ router.post('/projectaddfundreq', function(req, res, next) {
                 console.log(err);
             }else{
                 res.redirect('/projectdetail?pid='+req.session.pid);
+            }
+        });
+    }else{
+        res.redirect('login')
+    }
+});
+
+//request fund here
+router.get('/projectfunddetail', function(req, res, next){
+    let fundid = req.query.fundid
+    req.session.fid = fundid
+    let pid = req.session.pid
+    if(req.session.user){
+        let sql = `SELECT * FROM finance.project_fundreq where id = ?;
+                   SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
+                ON project_member.memberid = account.number where projectid = ?;
+                SELECT * FROM project_fund_comment WHERE fundid = ?`
+        connection.query(sql, [fundid, pid, fundid], function (err,results, fields){
+            res.render('main/projects/projectfunddetail',{
+                fund: results[0][0], pmember: results[1],
+                comments:results[2], name:req.session.user
+            });
+        })
+    }else{
+        res.redirect('login')
+    }
+});
+router.post('/fundaddcomment', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        if(rb.status!=''){
+            let sql = "UPDATE `finance`.`project_fundreq` SET `status` = ?, `accepter` = ? WHERE (`id` = ?);\n;"
+            connection.query(sql,[rb.status, req.session.idn, req.session.fid] ,function (err, results, fields) {
+                if(err){
+                    console.log(err);
+                }
+            });
+        }
+        let sql = "INSERT INTO finance.project_fund_comment(fundid, userid, comment, status)VALUES(?,?,?,?);"
+        let params = [req.session.fid, req.session.idn, rb.comment, rb.status];
+        console.log(params);
+        connection.query(sql,params,function (err, results, fields) {
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect('/projectfunddetail?fundid='+req.session.fid);
             }
         });
     }else{
