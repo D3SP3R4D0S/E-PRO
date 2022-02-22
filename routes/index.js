@@ -136,7 +136,7 @@ router.get('/latestdata', function(req, res, next) {
   if(req.session.user){
     let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT(time, "%y-%m-%d") as date
         FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;
-        SELECT sum(cost) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
+        SELECT sum(if(income='0', cost, '0')) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
     connection.query(sql, [idnum, selector,idnum, selector], function (error, results, fields) {
       res.render('main/finance/latestdata', {yearmonth:selector, result:results[0], summary:results[1][0], name:req.session.user});
     });
