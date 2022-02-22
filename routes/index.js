@@ -458,9 +458,22 @@ router.post('/register', function(req, res, next){
   });
 });
 
+router.get('/settings', function(req, res, next){
+  if(req.session.user){
+    let sql = "SELECT settings FROM nodedb.account where number = ?"
+    connection.query(sql, [req.session.idn], function (error, results, fields) {
+      let result = JSON.parse(results[0].settings)
+      res.render('main/login/setting', {result, name:req.session.user });
+    });
+  }else{
+    res.redirect('login')
+  }
+});
+
 // Others
 router.get('/sitemap', function(req, res, next) {
   if(req.session.user){
+
     res.render('main/sitemap', {name:req.session.user });
   }else{
     res.redirect('login')

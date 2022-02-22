@@ -1,0 +1,22 @@
+doctype html
+include ../compara/head
+.wrapper
+    include ../compara/sidebar
+        script.
+            $(document).ready(function () {
+                $('#latestdata').addClass('active');
+            });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .col-lg-12
+                    div(class='card shadow')
+                        .card-header
+                            H2 Personal Setting
+                        .card-body
+                            for line in result
+                                p= line
+
+        include ../compara/footer
+    include ../compara/footer_script
