@@ -463,6 +463,7 @@ router.get('/settings', function(req, res, next){
     let sql = "SELECT settings FROM nodedb.account where number = ?"
     connection.query(sql, [req.session.idn], function (error, results, fields) {
       let result = JSON.parse(results[0].settings)
+      req.session.setting = result
       res.render('main/login/setting', {result, name:req.session.user });
     });
   }else{

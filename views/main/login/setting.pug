@@ -15,8 +15,16 @@ include ../compara/head
                         .card-header
                             H2 Personal Setting
                         .card-body
-                            for line in result
+                            p method
+                            for line in result.method
                                 p= line
+                            p paid for
+                            for line in result.paidfor
+                                p= line
+                            p alligner
+                            for line in result.alligner
+                                p= line
+
 
         include ../compara/footer
     include ../compara/footer_script
