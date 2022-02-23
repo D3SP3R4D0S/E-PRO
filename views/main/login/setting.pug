@@ -1,0 +1,74 @@
+doctype html
+include ../compara/head
+.wrapper
+    include ../compara/sidebar
+        script.
+            $(document).ready(function () {
+                $('#latestdata').addClass('active');
+            });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .col-lg-12
+                    div(class='card shadow')
+                        .card-header
+                            H2 Personal Setting
+                        .card-body
+                            .container.text-center.row.justify-content-center
+                                .col-lg-6
+                                    table.table.table-sm
+                                        form(action="removesetting" method="post")
+                                            thead
+                                                th
+                                                    button.btn.btn-danger.btn-sm(type="submit") Remove
+                                                th(colspan='2') 결재방법
+
+                                            tbody
+                                                input(type="hidden" name="option" value='method')
+                                                for line in result.method
+                                                    tr
+                                                        td
+                                                            input(type="radio" name="value" value=line)
+                                                        td= line
+                                    form(action="addsettingmethod" method="post")
+                                        .input-group.mb-2
+                                            input.form-control(type="text" name="value" placeholder="value" required)
+                                            button.btn.btn-primary.text-light(type="submit") Add
+                                    table.table.table-sm
+                                        form(action="removesetting" method="post")
+                                            thead
+                                                th
+                                                    button.btn.btn-danger.btn-sm(type="submit") Remove
+                                                th(colspan='2') 대분류
+                                            tbody
+                                                input(type="hidden" name="option" value='paidfor')
+                                                for line in result.paidfor
+                                                    tr
+                                                        td
+                                                            input(type="radio" name="value" value=line)
+                                                        td= line
+                                    form(action="addsettingpaidfor" method="post")
+                                        .input-group.mb-2
+                                            input.form-control(type="text" name="value" placeholder="value" required)
+                                            button.btn.btn-primary.text-light(type="submit") Add
+                                    table.table.table-sm
+                                        form(action="removesetting" method="post")
+                                            thead
+                                                th
+                                                    button.btn.btn-danger.btn-sm(type="submit") Remove
+                                                th(colspan='2') 소분류
+                                            tbody
+                                                input(type="hidden" name="option" value='alligner')
+                                                for line in result.alligner
+                                                    tr
+                                                        td
+                                                            input(type="radio" name="value" value=line)
+                                                        td= line
+                                    form(action="addsettingalligner" method="post")
+                                        .input-group.mb-2
+                                            input.form-control(type="text" name="value" placeholder="value" required)
+                                            button.btn.btn-primary.text-light(type="submit") Add
+
+        include ../compara/footer
+    include ../compara/footer_script
