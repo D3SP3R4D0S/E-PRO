@@ -30,18 +30,14 @@ head
                                                 th method
                                                 td
                                                     select(class="form-control" name="title" placeholder="title" class="col-12" required)
-                                                        option(value="naverpay") 네이버페이
-                                                        option(value="cash") 현금
-                                                        option(value="card-samsung") 삼성카드
-                                                        option(value="card-kb") 국민카드
-                                                        option(value="card-hyundai") 현대카드
+                                                        for line in setting.method
+                                                            option(value=line)= line
                                             tr
                                                 th Paid for
                                                 td
                                                     select(class="form-control" name="subord" placeholder="title" class="col-12" required)
-                                                        option(value="server") 서버실
-                                                        option(value="family") 가족
-                                                        option(value="personal") 개인
+                                                        for line in setting.paidfor
+                                                            option(value=line)= line
                                             tr
                                                 th date
                                                 td
@@ -51,17 +47,8 @@ head
                                                 th alligner
                                                 td
                                                     select(class="form-control" name="alligner" placeholder="alligner" class="col-12" required)
-                                                        option(value="통신비") 통신비
-                                                        option(value="교통비") 교통비
-                                                        option(value="교통비-택시") 교통비-택시
-                                                        option(value="취미") 취미
-                                                        option(value="식비") 식비
-                                                        option(value="의료비") 의료비
-                                                        option(value="의류비") 의류비
-                                                        option(value="교육비") 교육비
-                                                        option(value="생활비") 생활비
-                                                        option(value="server") server
-                                                        option(value="급여") 급여
+                                                        for line in setting.alligner
+                                                            option(value=line)= line
                                             tr
                                                 th Income
                                                 td

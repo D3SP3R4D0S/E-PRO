@@ -234,7 +234,7 @@ router.get('/removedata', function(req, res, next){
 
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
-    res.render('main/finance/adddata',{name:req.session.user});
+    res.render('main/finance/adddata',{setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -400,6 +400,7 @@ router.post('/login', function(req, res, next) {
           req.session.idn = results[0].number;
           req.session.user = results[0].name;
           req.session.permission = results[0].permission;
+          req.session.setting = JSON.parse(results[0].settings);
           req.session.save();
           res.redirect('/index');
         }
@@ -470,7 +471,92 @@ router.get('/settings', function(req, res, next){
     res.redirect('login')
   }
 });
-
+router.post('/addsettingmethod', function(req, res, next){
+  if(req.session.user){
+    let settings = req.session.setting
+    let value = req.body.value
+    settings.method.push(value)
+    let sql = `UPDATE nodedb.account SET settings = ? WHERE (number = ?);`
+    connection.query(sql, [JSON.stringify(settings), req.session.idn], function (error, results, fields) {
+      if(error){
+        console.log(error)
+      }
+    });
+    res.redirect('/settings');
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/addsettingpaidfor', function(req, res, next){
+  if(req.session.user){
+    let settings = req.session.setting
+    let value = req.body.value
+    settings.paidfor.push(value)
+    let sql = `UPDATE nodedb.account SET settings = ? WHERE (number = ?);`
+    connection.query(sql, [JSON.stringify(settings), req.session.idn], function (error, results, fields) {
+      if(error){
+        console.log(error)
+      }
+    });
+    res.redirect('/settings');
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/addsettingalligner', function(req, res, next){
+  if(req.session.user){
+    let settings = req.session.setting
+    let value = req.body.value
+    settings.alligner.push(value)
+    let sql = `UPDATE nodedb.account SET settings = ? WHERE (number = ?);`
+    connection.query(sql, [JSON.stringify(settings), req.session.idn], function (error, results, fields) {
+      if(error){
+        console.log(error)
+      }
+    });
+    res.redirect('/settings');
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/removesetting', function(req, res, next){
+  if(req.session.user){
+    let settings = req.session.setting
+    let value = req.body.value
+    let option = req.body.option
+    if(option === "method") {
+      for(let i = 0; i < settings.method.length; i++) {
+        if(settings.method[i] === value){
+          settings.method.splice(i, 1);
+          i--;
+        }
+      }
+    } else if(option === "paidfor") {
+      for(let i = 0; i < settings.paidfor.length; i++) {
+        if (settings.paidfor[i] === value) {
+          settings.paidfor.splice(i, 1);
+          i--;
+        }
+      }
+    } else if(option === "alligner") {
+        for(let i = 0; i < settings.alligner.length; i++) {
+          if (settings.alligner[i] === value) {
+            settings.alligner.splice(i, 1);
+            i--;
+          }
+        }
+    }
+    let sql = `UPDATE nodedb.account SET settings = ? WHERE (number = ?);`
+    connection.query(sql, [JSON.stringify(settings), req.session.idn], function (error, results, fields) {
+      if(error){
+        console.log(error)
+      }
+    });
+    res.redirect('settings');
+  }else{
+    res.redirect('login')
+  }
+});
 // Others
 router.get('/sitemap', function(req, res, next) {
   if(req.session.user){
