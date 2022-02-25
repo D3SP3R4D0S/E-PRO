@@ -120,5 +120,24 @@ include ../compara/head.pug
                                         tr
                                             td= member.userid
                                             td= member.name
+                        .card
+                            .card-body
+                                .row
+                                    .col
+                                        .h3 Fund total
+                                table.table
+                                    thead
+                                        tr
+                                            th Object
+                                            th Cost
+                                    tbody
+                                        tr
+                                            th Requested
+                                            td
+                                                span#requested
+
+                                        tr
+                                            th Completed
+                                            td
         include ../compara/footer.pug
     include ../compara/footer_script.pug
