@@ -52,8 +52,11 @@ router.post('/alpha', function(req, res, next){
   let indexdate = req.session.indexdate
   let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
     where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
-    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA 
-    left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
+    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate,
+     sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse
+      from finance.date_all 
+      DA left join finance.account AC on (AC.time = DA.date_val) group by paiddate) as a
+    where DATE_FORMAT(paiddate, "%Y-%m") = ?;`
   connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
     responseData.title = [];
     responseData.score = [];
