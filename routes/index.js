@@ -33,10 +33,10 @@ router.get('/index', function(req, res, next) {
   let controldate = new Date(selector.split('-')[0], parseInt(selector.split('-')[1])-1);
   if(req.session.user){
     let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
-      where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? group by alligner order by alligner;
+      where userid = ? and DATE_FORMAT('time', "%Y-%m") = ? group by alligner order by alligner;
       SELECT sum(if(income=1, cost, -cost))+0 as total from finance.account where userid = ?;
       SELECT sum(if(income=1, cost, -cost))+0 as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome
-      from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ?;`
+      from finance.account where userid = ? and DATE_FORMAT('time', "%Y-%m") = ?;`
     connection.query(sql, [idnum,selector,idnum,idnum, selector], function (error, results, fields) {
       console.log(results)
       res.render('main/index', {controldate, yearmonth:selector, result1:results[0], result2:results[1], result3:results[2], name:req.session.user});
@@ -134,9 +134,9 @@ router.get('/latestdata', function(req, res, next) {
   }
   req.session.indexdate = selector
   if(req.session.user){
-    let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT(time, "%y-%m-%d") as date
-        FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;
-        SELECT sum(if(income='0', cost, '0')) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
+    let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT('time', "%y-%m-%d") as date
+        FROM finance.account where userid = ? and DATE_FORMAT('time', "%Y-%m") = ? order by 'time' desc;
+        SELECT sum(if(income='0', cost, '0')) as summary FROM finance.account where userid = ? and DATE_FORMAT('time', "%Y-%m") = ? order by 'time' desc;`
     connection.query(sql, [idnum, selector,idnum, selector], function (error, results, fields) {
       res.render('main/finance/latestdata', {yearmonth:selector, result:results[0], summary:results[1][0], name:req.session.user});
     });
@@ -179,10 +179,10 @@ router.post('/latestdatachart', function (req, res){
   let responseData1 = {};
   let idn = req.session.idn
   let indexdate = req.session.indexdate
-  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
-    where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
+  let sql = `SELECT DATE_FORMAT('time', "%M") as month, alligner,sum(cost) as total FROM finance.account 
+    where userid = ? and DATE_FORMAT('time', "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
     select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA 
-    left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
+    left join finance.account AC on (AC.'time' = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
   connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
     responseData.title = [];
     responseData.score = [];
