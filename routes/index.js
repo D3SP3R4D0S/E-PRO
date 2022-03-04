@@ -380,11 +380,25 @@ router.get('/wishlist', function(req, res, next) {
 });
 router.get('/addwish', function (req, res,next){
   if(req.session.user){
-    res.render('main/compara/underconstruction',{name:req.session.user});
+    res.render('main/wishlist/addwish',{name:req.session.user});
   }else{
     res.redirect('login')
   }
 })
+router.post('/addwish', function (req, res){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost.replace(',', '')
+    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priorty, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);\n;"
+    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.idn];
+    connection.query(sql,params,function (err) {
+      if(err) console.log(err);
+    });
+    res.redirect('wishlist');
+  }else{
+    res.redirect('login')
+  }
+});
 
 //expendables
 router.get('/expendables', function (req, res, next){
