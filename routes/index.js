@@ -183,7 +183,7 @@ router.post('/latestdatachart', function (req, res){
   let responseData1 = {};
   let idn = req.session.idn
   let indexdate = req.session.indexdate
-  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
+  let sql = `SELECT ANY_VALUE(DATE_FORMAT(time, "%M")) as month, alligner,sum(cost) as total FROM finance.account 
     where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
     select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate,
      sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse
