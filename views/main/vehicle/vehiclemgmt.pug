@@ -1,0 +1,23 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#vehiclemanage').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col
+                        h1
+                            strong My Personal Vehicle
+                .row
+                    .col-lg-8
+                        .card
+                            .card-body
+                                H1 Currently Under Construction
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug

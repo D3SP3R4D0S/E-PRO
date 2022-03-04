@@ -362,15 +362,18 @@ router.post('/reportchart', function (req, res){
 })
 
 // to but list ( wish list )
-router.get('/tobuylist', function(req, res, next) {
+router.get('/wishlist', function(req, res, next) {
   if(req.session.user){
-    let sql = 'SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate FROM finance.crave where userid = ? order by id;'+
-        'SELECT sum(if(stat = "requested", cost, 0)) as req_total, sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total FROM finance.crave where userid = ? order by id;'
+    let sql = `SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate 
+         FROM wishlist where userid = ? order by id;
+         SELECT sum(if(stat = "requested", cost, 0)) as req_total,
+         sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total 
+         FROM wishlist where userid = ? order by id;`
     let val = [req.session.idn, req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
       else{
-        res.render('main/issuetracker/todo', {result:results[0], summary:results[1][0], name:req.session.user});
+        res.render('main/wishlist/wishlist', {result:results[0], summary:results[1][0], name:req.session.user});
       }
     });
   }else{
@@ -474,11 +477,11 @@ router.post('/expendableadd', function(req, res, next) {
 //
 router.get('/vehiclemanage', function(req, res, next){
   if(req.session.user){
-    res.render('main/compara/underconstruction',{name:req.session.user});
+    res.render('main/vehicle/vehiclemgmt',{name:req.session.user});
   }else{
     res.redirect('login')
   }
-})
+});
 
 // Login
 router.get('/login', function(req, res, next) {
