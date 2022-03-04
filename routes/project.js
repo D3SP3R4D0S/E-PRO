@@ -14,7 +14,7 @@ connection.close
 router.get('/projects', function(req, res, next) {
     let idnum = req.session.idn
     if(req.session.user){
-        let sql = `SELECT project.id as pid, title, description, creator FROM project_member join project on project_member.projectid = project.id
+        let sql = `SELECT project.id as pid, title, description, created, creator FROM project_member join project on project_member.projectid = project.id
                     WHERE memberid = ?;`
         connection.query(sql, idnum, function (error, results) {
             if(error){
@@ -22,6 +22,44 @@ router.get('/projects', function(req, res, next) {
             }
             else {
                 res.render('main/projects/projectmgmt', {result1: results, name: req.session.user, id:idnum});
+            }
+        });
+    }else{
+        res.redirect('login')
+    }
+});
+router.get('/projectadd', function(req, res, next) {
+    if(req.session.user){
+        res.render('main/projects/projectadd',{name:req.session.user});
+    }else{
+        res.redirect('login')
+    }
+});
+//@todo please add pool or other option to cope multiple connection
+router.post('/projectadd', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        let sql = "INSERT INTO finance.project(title, description, creator)VALUES(?,?,?);"
+        let params = [rb.title, rb.description, req.session.idn];
+        connection.query(sql,params,function (err, results, fields) {
+            if(err){
+                console.log(err);
+            }else{
+                connection.query("SELECT LAST_INSERT_ID() as id;", function (err, results, fields){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        let pid = results[0].id
+                        let sql = "INSERT INTO finance.project_member (projectid, memberid) VALUES (?,?);"
+                        connection.query(sql,[pid,req.session.idn], function (err, results, fields) {
+                            if(err){
+                                console.log(err);
+                            }else{
+                                res.redirect('/projects');
+                            }
+                        });
+                    }
+                })
             }
         });
     }else{
@@ -52,6 +90,33 @@ router.get('/projectdetail', function(req, res, next) {
                     pmember: results[2],
                     fundreq: results[3],
                     name: req.session.user, id: idnum});
+            }
+        });
+    }else{
+        res.redirect('login')
+    }
+});
+
+//@todo add member search function for protect personal information
+//currently disabled need to fix all
+router.get('/projectaddmember', function(req, res, next) {
+    if(req.session.user){
+        res.render('main/projects/projectaddtask',{name:req.session.user});
+    }else{
+        res.redirect('login')
+    }
+});
+router.post('/projectaddmember', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        let sql = "INSERT INTO finance.project_member(projectid, tasktitle, creator, duedate, detail)VALUES(?,?,?,?,?);"
+        let params = [req.session.pid, rb.tasktitle, req.session.idn, rb.duedate, rb.detail];
+        console.log(params);
+        connection.query(sql,params,function (err, results, fields) {
+            if(err){
+                console.log(err);
+            }else{
+                res.redirect('/projectdetail?pid='+req.session.pid);
             }
         });
     }else{

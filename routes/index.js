@@ -117,14 +117,14 @@ router.get('/indexnmonth', function (req,res){
 // From here is latest data
 router.get('/latestdata', function(req, res, next) {
   let idnum = req.session.idn
-  let selector
-  if(req.session.yearmonth) {
-    selector = req.session.yearmonth
+  let selector = ''
+  if(req.query.yearmonth) {
+    selector = req.query.yearmonth
   }
   else {
-    if (!selector) {
-      if (req.query.yearmonth) {
-        selector = req.query.yearmonth
+    if (selector === '') {
+      if (req.session.yearmonth) {
+        selector = req.session.yearmonth
       } else {
         let today = new Date()
         let month = today.getMonth() + 1 // JS 에서는 월이 기본적으로 0부터 시작
@@ -135,6 +135,7 @@ router.get('/latestdata', function(req, res, next) {
       }
     }
   }
+  req.session.yearmonth = selector
   req.session.indexdate = selector
   if(req.session.user){
     let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT(time, "%y-%m-%d") as date
