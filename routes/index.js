@@ -420,7 +420,7 @@ router.post('/expendablepurchaseadd', function (req, res, next){
     sql = "UPDATE expendables SET `cost` = ?, `lastbought` = ? WHERE (`id` = ?);"
     params = [cost, datetime, req.session.expendableitemid];
     connection.query(sql,params,function (err) { if(err) console.log(err);});
-    res.redirect('/expendables');
+    res.redirect('/latestdata');
   }else{
     res.redirect('login')
   }
