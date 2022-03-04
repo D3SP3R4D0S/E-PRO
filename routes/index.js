@@ -50,13 +50,13 @@ router.post('/alpha', function(req, res, next){
   let responseData1 = {};
   let idn = req.session.idn
   let indexdate = req.session.indexdate
-  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
-    where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
-    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate,
-     sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse
-      from finance.date_all 
-      DA left join finance.account AC on (AC.time = DA.date_val) group by paiddate) as a
-    where DATE_FORMAT(paiddate, "%Y-%m") = ?;`
+  let sql = `SELECT ANY_VALUE(DATE_FORMAT(time, "%M")) as month, alligner, sum(cost) as total FROM finance.account 
+    WHERE userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 
+    group by alligner order by alligner; 
+    SELECT * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate,
+    SUM(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse 
+    FROM finance.date_all DA LEFT JOIN finance.account AC ON (AC.time = DA.date_val) GROUP BY paiddate) as a
+    WHERE DATE_FORMAT(paiddate, "%Y-%m") = ?;`
   connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
     responseData.title = [];
     responseData.score = [];
@@ -379,7 +379,6 @@ router.get('/tobuylist', function(req, res, next) {
     res.redirect('login')
   }
 });
-
 router.get('/addwish', function (req, res,next){
   if(req.session.user){
     res.render('main/compara/underconstruction',{name:req.session.user});
@@ -387,6 +386,24 @@ router.get('/addwish', function (req, res,next){
     res.redirect('login')
   }
 })
+
+//expendables
+router.get('/expendables', function (req, res, nect){
+  if(req.session.user){
+    let sql = 'SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate FROM finance.crave where userid = ? order by id;'+
+        'SELECT sum(if(stat = "requested", cost, 0)) as req_total, sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total FROM finance.crave where userid = ? order by id;'
+    let val = [req.session.idn, req.session.idn]
+    connection.query(sql, val, function (err, results, fields) {
+      if(err) throw err;
+      else{
+        res.render('main/issuetracker/todo', {result:results[0], summary:results[1][0], name:req.session.user});
+      }
+    });
+  }else{
+    res.redirect('login')
+  }
+});
+
 
 // Login
 router.get('/login', function(req, res, next) {
