@@ -425,7 +425,31 @@ router.post('/expendablepurchaseadd', function (req, res, next){
     res.redirect('login')
   }
 })
-
+router.post('/expendableedit', function (req, res){
+  if(req.session.user){
+    req.session.expendableitemid = req.body.id
+    let title = req.body.title
+    let description = req.body.description
+    let link = req.body.link
+    res.render('main/finance/expendableedit', {title, description, link, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+router.post('/expendableeditapply', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let title = rb.title
+    let description = rb.description
+    let link = rb.link
+    sql = "UPDATE expendables SET `title` = ?, `description` = ?, `link` = ? WHERE (`id` = ?);"
+    params = [title, description, link, req.session.expendableitemid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/expendables');
+  }else{
+    res.redirect('login')
+  }
+})
 
 // Login
 router.get('/login', function(req, res, next) {

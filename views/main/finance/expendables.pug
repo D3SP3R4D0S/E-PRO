@@ -23,7 +23,7 @@ include ../compara/head.pug
                                     tr(class="text-center")
                                         th Title
                                         th Cost
-                                        th Priorty
+                                        th Description
                                         th Link
                                         th Last Purchased
                                         th Apply
@@ -47,7 +47,12 @@ include ../compara/head.pug
                                                     input(type="hidden" name="cost" value=line.cost)
                                                     input.btn.btn-sm.btn-primary(type="submit" value="Add purchase")
                                             td
-                                                a.btn.btn-sm.btn-info(href="expendabledit?id") Edit
+                                                form(name="apply" action="expendableedit" method="POST")
+                                                    input(type="hidden" name="id" value=line.id)
+                                                    input(type="hidden" name="title" value=line.title)
+                                                    input(type="hidden" name="description" value=line.description)
+                                                    input(type="hidden" name="link" value=line.link)
+                                                    input.btn.btn-sm.btn-info(type="submit" value="Edit")
 
                             .col.align-self-end
                                 a.btn.btn-dark.text-light(href="addwish") Add data
