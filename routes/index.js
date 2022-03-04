@@ -276,7 +276,6 @@ router.get('/fixedexpense', function(req, res, next) {
         sum(if(payment_num=12, price, 0)) as monthbill, sum(if(payment_num=1, price, 0)) as yearbill
         FROM finance.fixedexpense where userid = ?;`
     connection.query(sql, [req.session.idn, req.session.idn] , function (error, results, fields) {
-      console.log(results);
       res.render('main/finance/fixedexpense', {result:results[0], sum:results[1], name:req.session.user});
     });
   }else{
@@ -295,7 +294,6 @@ router.post('/fixedexpenseadd', function(req, res, next) {
   if(req.session.user){
     let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, price, userid)VALUES(?,?,?,?,?,?);"
     let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, req.session.idn];
-    console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
         console.log(err);
@@ -321,7 +319,6 @@ router.get('/report', function (req, res,next){
       if(err) {
         throw err
       }else {
-        console.log(result)
         res.render('main/finance/report', {result, name: req.session.user})
       }
     })
