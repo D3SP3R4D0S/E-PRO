@@ -385,21 +385,46 @@ router.get('/addwish', function (req, res,next){
 })
 
 //expendables
-router.get('/expendables', function (req, res, nect){
+router.get('/expendables', function (req, res, next){
   if(req.session.user){
-    let sql = 'SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate FROM finance.crave where userid = ? order by id;'+
-        'SELECT sum(if(stat = "requested", cost, 0)) as req_total, sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total FROM finance.crave where userid = ? order by id;'
-    let val = [req.session.idn, req.session.idn]
+    let sql = 'SELECT * FROM expendables WHERE userid = ?;'
+    let val = [req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
       else{
-        res.render('main/issuetracker/todo', {result:results[0], summary:results[1][0], name:req.session.user});
+        res.render('main/finance/expendables', {result:results, name:req.session.user});
       }
     });
   }else{
     res.redirect('login')
   }
 });
+router.post('/expendablepurchase', function (req, res, next){
+  if(req.session.user){
+    req.session.expendableitemid = req.body.id
+    let title = req.body.title
+    let cost = req.body.cost
+    res.render('main/finance/expendablepurchase', {title, cost,setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/expendablepurchaseadd', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost
+    let datetime = rb.date
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    sql = "UPDATE expendables SET `cost` = ?, `lastbought` = ? WHERE (`id` = ?);"
+    params = [cost, datetime, req.session.expendableitemid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/expendables');
+  }else{
+    res.redirect('login')
+  }
+})
 
 
 // Login
