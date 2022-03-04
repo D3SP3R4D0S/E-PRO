@@ -50,10 +50,13 @@ router.post('/alpha', function(req, res, next){
   let responseData1 = {};
   let idn = req.session.idn
   let indexdate = req.session.indexdate
-  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
-    where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
-    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA 
-    left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
+  let sql = `SELECT ANY_VALUE(DATE_FORMAT(time, "%M")) as month, alligner, sum(cost) as total FROM finance.account 
+    WHERE userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 
+    group by alligner order by alligner; 
+    SELECT * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate,
+    SUM(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse 
+    FROM finance.date_all DA LEFT JOIN finance.account AC ON (AC.time = DA.date_val) GROUP BY paiddate) as a
+    WHERE DATE_FORMAT(paiddate, "%Y-%m") = ?;`
   connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
     responseData.title = [];
     responseData.score = [];
@@ -114,14 +117,14 @@ router.get('/indexnmonth', function (req,res){
 // From here is latest data
 router.get('/latestdata', function(req, res, next) {
   let idnum = req.session.idn
-  let selector
-  if(req.session.yearmonth) {
-    selector = req.session.yearmonth
+  let selector = ''
+  if(req.query.yearmonth) {
+    selector = req.query.yearmonth
   }
   else {
-    if (!selector) {
-      if (req.query.yearmonth) {
-        selector = req.query.yearmonth
+    if (selector === '') {
+      if (req.session.yearmonth) {
+        selector = req.session.yearmonth
       } else {
         let today = new Date()
         let month = today.getMonth() + 1 // JS 에서는 월이 기본적으로 0부터 시작
@@ -132,6 +135,7 @@ router.get('/latestdata', function(req, res, next) {
       }
     }
   }
+  req.session.yearmonth = selector
   req.session.indexdate = selector
   if(req.session.user){
     let sql = `SELECT id, title, cost, alligner, detail, subord, income, DATE_FORMAT(time, "%y-%m-%d") as date
@@ -179,10 +183,13 @@ router.post('/latestdatachart', function (req, res){
   let responseData1 = {};
   let idn = req.session.idn
   let indexdate = req.session.indexdate
-  let sql = `SELECT DATE_FORMAT(time, "%M") as month, alligner,sum(cost) as total FROM finance.account 
+  let sql = `SELECT ANY_VALUE(DATE_FORMAT(time, "%M")) as month, alligner,sum(cost) as total FROM finance.account 
     where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? and income = 0 group by alligner order by alligner; 
-    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate, sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse from finance.date_all DA 
-    left join finance.account AC on (AC.time = DA.date_val) group by paiddate) a where paiddate like concat ("%" , ?, "%") ;`
+    select * from (select date_format(DA.date_val, "%Y-%m-%d") paiddate,
+     sum(if(AC.userid = ? and AC.income = 0 and AC.cost, AC.cost, 0)) as dailyuse
+      from finance.date_all 
+      DA left join finance.account AC on (AC.time = DA.date_val) group by paiddate) as a
+    where DATE_FORMAT(paiddate, "%Y-%m") = ?;`
   connection.query(sql,[idn, indexdate, idn, indexdate], function(err,rows){
     responseData.title = [];
     responseData.score = [];
@@ -241,13 +248,14 @@ router.get('/adddata', function(req, res, next) {
 });
 router.post('/adddata', function(req, res, next) {
   let rb = req.body;
+  let cost = rb.cost.replace(',', '')
   let income = 0;
   if(rb.income === "1"){
     income = 1;
   };
   if(req.session.user){
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
-    let params = [rb.title, rb.cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
+    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
     console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
@@ -269,7 +277,6 @@ router.get('/fixedexpense', function(req, res, next) {
         sum(if(payment_num=12, price, 0)) as monthbill, sum(if(payment_num=1, price, 0)) as yearbill
         FROM finance.fixedexpense where userid = ?;`
     connection.query(sql, [req.session.idn, req.session.idn] , function (error, results, fields) {
-      console.log(results);
       res.render('main/finance/fixedexpense', {result:results[0], sum:results[1], name:req.session.user});
     });
   }else{
@@ -288,7 +295,6 @@ router.post('/fixedexpenseadd', function(req, res, next) {
   if(req.session.user){
     let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, price, userid)VALUES(?,?,?,?,?,?);"
     let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, req.session.idn];
-    console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
         console.log(err);
@@ -314,7 +320,6 @@ router.get('/report', function (req, res,next){
       if(err) {
         throw err
       }else {
-        console.log(result)
         res.render('main/finance/report', {result, name: req.session.user})
       }
     })
@@ -372,8 +377,102 @@ router.get('/tobuylist', function(req, res, next) {
     res.redirect('login')
   }
 });
-
 router.get('/addwish', function (req, res,next){
+  if(req.session.user){
+    res.render('main/compara/underconstruction',{name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+
+//expendables
+router.get('/expendables', function (req, res, next){
+  if(req.session.user){
+    let sql = 'SELECT * FROM expendables WHERE userid = ?;'
+    let val = [req.session.idn]
+    connection.query(sql, val, function (err, results, fields) {
+      if(err) throw err;
+      else{
+        res.render('main/finance/expendables', {result:results, name:req.session.user});
+      }
+    });
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/expendablepurchase', function (req, res, next){
+  if(req.session.user){
+    req.session.expendableitemid = req.body.id
+    let title = req.body.title
+    let cost = req.body.cost
+    res.render('main/finance/expendablepurchase', {title, cost,setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/expendablepurchaseadd', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost
+    let datetime = rb.date
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    sql = "UPDATE expendables SET `cost` = ?, `lastbought` = ? WHERE (`id` = ?);"
+    params = [cost, datetime, req.session.expendableitemid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/latestdata');
+  }else{
+    res.redirect('login')
+  }
+})
+router.post('/expendableedit', function (req, res){
+  if(req.session.user){
+    req.session.expendableitemid = req.body.id
+    let title = req.body.title
+    let description = req.body.description
+    let link = req.body.link
+    res.render('main/finance/expendableedit', {title, description, link, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+router.post('/expendableeditapply', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let title = rb.title
+    let description = rb.description
+    let link = rb.link
+    sql = "UPDATE expendables SET `title` = ?, `description` = ?, `link` = ? WHERE (`id` = ?);"
+    params = [title, description, link, req.session.expendableitemid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/expendables');
+  }else{
+    res.redirect('login')
+  }
+})
+router.get('/expendableadd', function(req, res, next) {
+  if(req.session.user){
+    res.render('main/finance/expendableadd',{setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/expendableadd', function(req, res, next) {
+  let rb = req.body;
+  let cost = rb.cost.replace(',', '')
+  if(req.session.user){
+    let sql = "INSERT INTO expendables (userid, title, cost, link, description) VALUES (?, ?, ?, ?, ?);"
+    let params = [req.session.idn, rb.title, cost, rb.link, rb.description];
+    connection.query(sql,params,function (err, results, fields) {if(err){console.log(err);}});
+    res.redirect('/expendables');
+  }else{
+    res.redirect('login')
+  }
+});
+
+//
+router.get('/vehiclemanage', function(req, res, next){
   if(req.session.user){
     res.render('main/compara/underconstruction',{name:req.session.user});
   }else{

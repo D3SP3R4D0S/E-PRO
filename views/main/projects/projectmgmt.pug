@@ -27,9 +27,11 @@ include ../compara/head.pug
                                                 h3
                                                     a(href="projectdetail?pid=" + line.pid)= line.title
                                                 h6= line.description
-                                            if(line.creator == id)
-                                                .col.text-end
+                                                h6= "Created : " + line.created.toLocaleString('en-US')
+                                            .col.text-end
+                                                if(line.creator == id)
                                                     span.ms-auto.ms-3.badge.bg-danger owner
+
                     .col-lg-6
                         .card
                             .card-body

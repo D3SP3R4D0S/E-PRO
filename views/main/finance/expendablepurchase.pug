@@ -1,43 +1,31 @@
 head
     include ../compara/head.pug
-    script.
-        function numberWithCommas(num) {
-            var parts = num.toString().split(".");
-            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
-        }
-        function chkNumber(obj) {
-            var tmpValue = $(obj).val().replace(/[^0-9,]/g, '');
-            tmpValue = tmpValue.replace(/[,]/g, '');
-            obj.value = numberWithCommas(tmpValue);
-        }
 .wrapper
     include ../compara/sidebar
     script.
         $(document).ready(function () {
-            $('#latestdata').addClass('active');
+            $('#expendables').addClass('active');
         });
     .main
         include ../compara/navbar
         main.content
             .container-fluid.p-0
                 row(class="row justify-content-center")
-                    H2(class="m-4 text-dark") Add data
+                    H2(class="m-4 text-dark") Add Expendable purchase
                     div(class="col-12")
                         div(class='card border-0 shadow-lg')
                             div(class='card-body')
                                 div(class="container col-lg-8")
-                                    form(action="adddata" method="post")
+                                    form(action="expendablepurchaseadd" method="post")
                                         table(class="table table-hover table-borderless text-center")
                                             tr
                                                 th cost
                                                 td
-                                                    .input-group.mb-3
-                                                        input(class="form-control" type="text" onkeyup="chkNumber(this)" name="Cost" placeholder="cost" class="col-12" required)
-                                                        span(class="input-group-text" id="basic-addon2") KRW
+                                                    input(class="form-control" type="number" name="cost" value=cost placeholder="cost" class="col-12" required)
                                             tr
                                                 th(class="col-6") detail
                                                 td
-                                                    input(class="form-control" type="text" name="details" placeholder="details" class="col-12" required)
+                                                    input(class="form-control" type="text" name="details" value=title placeholder="details" class="col-12" readonly)
                                             tr
                                                 th method
                                                 td
@@ -53,19 +41,16 @@ head
                                             tr
                                                 th date
                                                 td
-                                                    input(class="form-control" type="date" name="date" placeholder="date" class="col-12" required)
-
+                                                    input#dateinput(class="form-control" type="date" name="date" placeholder="date" class="col-12" required)
+                                                    script.
+                                                        document.getElementById('dateinput').value= new Date().toISOString().slice(0, 7);
+                                                        document.getElementById('dateinput').value = new Date().toISOString().substring(0, 10);;
                                             tr
                                                 th alligner
                                                 td
                                                     select(class="form-control" name="alligner" placeholder="alligner" class="col-12" required)
                                                         for line in setting.alligner
                                                             option(value=line)= line
-                                            tr
-                                                th Income
-                                                td
-                                                    input(type="checkbox" value="1" name="income")
-                                                    span.ms-3 수입
                                         div(class="row")
                                             a(class="btn btn-dark text-light col-lg-3 col-sm-5 ml-auto m-2" href="javascript:history.back()") go back
                                             button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
