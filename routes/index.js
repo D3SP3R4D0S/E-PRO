@@ -364,10 +364,8 @@ router.post('/reportchart', function (req, res){
 // to but list ( wish list )
 router.get('/wishlist', function(req, res, next) {
   if(req.session.user){
-    let sql = `SELECT id, title, cost, priorty, stat, detail, DATE_FORMAT(duedate, "%y-%m-%d") as duedate 
-         FROM wishlist where userid = ? order by id;
-         SELECT sum(if(stat = "requested", cost, 0)) as req_total,
-         sum(if(stat = "requested" and Priorty>2, cost, 0)) as high_total 
+    let sql = `SELECT * FROM wishlist where userid = ? order by stat asc;
+         SELECT sum(if(stat = 1, cost, 0)) as req_total, sum(if(stat = 1 and Priorty>2, cost, 0)) as high_total 
          FROM wishlist where userid = ? order by id;`
     let val = [req.session.idn, req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
