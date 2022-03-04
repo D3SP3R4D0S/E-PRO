@@ -248,13 +248,14 @@ router.get('/adddata', function(req, res, next) {
 });
 router.post('/adddata', function(req, res, next) {
   let rb = req.body;
+  let cost = rb.cost.replace(',', '')
   let income = 0;
   if(rb.income === "1"){
     income = 1;
   };
   if(req.session.user){
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
-    let params = [rb.title, rb.cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
+    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
     console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
@@ -450,6 +451,25 @@ router.post('/expendableeditapply', function (req, res, next){
     res.redirect('login')
   }
 })
+router.get('/expendableadd', function(req, res, next) {
+  if(req.session.user){
+    res.render('main/finance/expendableadd',{setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/expendableadd', function(req, res, next) {
+  let rb = req.body;
+  let cost = rb.cost.replace(',', '')
+  if(req.session.user){
+    let sql = "INSERT INTO expendables (userid, title, cost, link, description) VALUES (?, ?, ?, ?, ?);"
+    let params = [req.session.idn, rb.title, cost, rb.link, rb.description];
+    connection.query(sql,params,function (err, results, fields) {if(err){console.log(err);}});
+    res.redirect('/expendables');
+  }else{
+    res.redirect('login')
+  }
+});
 
 // Login
 router.get('/login', function(req, res, next) {

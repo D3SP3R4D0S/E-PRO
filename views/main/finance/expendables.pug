@@ -32,14 +32,14 @@ include ../compara/head.pug
                                     for line in result
                                         tr
                                             td= line.title
-                                            td= line.cost
+                                            td= line.cost.toLocaleString() + " KRW"
                                             td= line.description
                                             td
                                                 a.btn.btn-sm.btn-success(href=line.link target="_blank") Link
                                             if(line.lastbought)
                                                 td= line.lastbought.toISOString().split('T')[0]
                                             else
-                                                td Not purchased yet
+                                                td No record
                                             td
                                                 form(name="apply" action="expendablepurchase" method="POST")
                                                     input(type="hidden" name="id" value=line.id)
@@ -55,6 +55,6 @@ include ../compara/head.pug
                                                     input.btn.btn-sm.btn-info(type="submit" value="Edit")
 
                             .col.align-self-end
-                                a.btn.btn-dark.text-light(href="addwish") Add data
+                                a.btn.btn-dark.text-light(href="expendableadd") Add data
         include ../compara/footer.pug
     include ../compara/footer_script.pug
