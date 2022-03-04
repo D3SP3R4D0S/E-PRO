@@ -471,6 +471,15 @@ router.post('/expendableadd', function(req, res, next) {
   }
 });
 
+//
+router.get('/vehiclemanage', function(req, res, next){
+  if(req.session.user){
+    res.render('main/compara/underconstruction',{name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+
 // Login
 router.get('/login', function(req, res, next) {
   res.render('main/login/login');
