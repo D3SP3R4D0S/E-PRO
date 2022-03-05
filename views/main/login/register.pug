@@ -1,5 +1,6 @@
 head
     include ../compara/head.pug
+
 .wrapper
     .main
         main.content
@@ -18,8 +19,10 @@ head
                                             form(class="user")
                                                 div(class="form-group").mb-2
                                                     input(class="form-control form-control-user" type="text" name="id" placeholder = "id" required)
-                                                div(class="form-group").mb-2
-                                                    input(class="form-control form-control-user" type="password" name="pw" placeholder="password" required)
+                                                div(class="input-group").mb-2
+                                                    input#pwd(class="form-control form-control-user" type="password" name="pw" placeholder="password" required)
+                                                    button.btn.btn-primary(type="button" id="eye") Check
+
                                                 div(class="form-group").mb-2
                                                     input(class="form-control form-control-user" type="text" name="name" placeholder="name" required)
                                                 button.btn.btn-primary.mb-2.form-control(type="submit" formmethod="post") Register
@@ -28,3 +31,9 @@ head
                                                 a(class="small" href="login") Back to login
         include ../compara/footer.pug
 include ../compara/footer_script.pug
+script.
+    $('#eye').on("mousedown", function () {
+        $('#pwd').attr('type', "text");
+    }).on('mouseup mouseleave', function () {
+        $('#pwd').attr('type', "password");
+    });
