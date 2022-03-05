@@ -365,7 +365,7 @@ router.post('/reportchart', function (req, res){
 router.get('/wishlist', function(req, res, next) {
   if(req.session.user){
     let sql = `SELECT * FROM wishlist where userid = ? order by stat asc;
-         SELECT sum(if(stat = 1, cost, 0)) as req_total, sum(if(stat = 1 and Priorty>2, cost, 0)) as high_total 
+         SELECT sum(if(stat = 1, cost, 0)) as req_total, sum(if(stat = 1 and Priority>2, cost, 0)) as high_total 
          FROM wishlist where userid = ? order by id;`
     let val = [req.session.idn, req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
@@ -399,6 +399,34 @@ router.post('/addwish', function (req, res){
     res.redirect('login')
   }
 });
+router.post('/wishitemedit', function (req, res,next){
+  if(req.session.user){
+    let title = req.body.title
+    let cost = req.body.cost
+    let link = req.body.link
+    let duedate = req.body.duedate
+    let detail = req.body.detail
+    let priority = req.body.priority
+    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate,detail, priority, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+router.post('/wishitemeditapply', function (req, res){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost.replace(',', '')
+    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priorty, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);\n;"
+    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.idn];
+    connection.query(sql,params,function (err) {
+      if(err) console.log(err);
+    });
+    res.redirect('wishlist');
+  }else{
+    res.redirect('login')
+  }
+});
+
 
 //expendables
 router.get('/expendables', function (req, res, next){

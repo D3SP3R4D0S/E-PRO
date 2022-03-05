@@ -123,13 +123,13 @@ include ../compara/head
                                                 td= line.title
                                                 td= line.cost.toLocaleString() + " KRW"
                                                 td(class="text-light text-center")
-                                                    if line.priorty === 1
+                                                    if line.priority === 1
                                                         span(class="badge bg-danger") EXTREME
-                                                    else if line.priorty === 2
+                                                    else if line.priority === 2
                                                         span(class="badge bg-warning") HIGH
-                                                    else if line.priorty === 3
+                                                    else if line.priority === 3
                                                         span(class="badge bg-success") MEDIUM
-                                                    else if line.priorty === 4
+                                                    else if line.priority === 4
                                                         span(class="badge bg-info") LOW
                                                 td(class="text-light text-center")
                                                     if line.stat === 1
