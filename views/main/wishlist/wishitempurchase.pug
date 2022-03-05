@@ -23,13 +23,13 @@ head
                 .row.justify-content-start
                     .col-xl-4.col-lg-6.col-md-12
                         h1
-                            strong= "Add wish item"
-                        h6 구매 예정 항목 추가
+                            strong= "Wish item purchase"
+                        h6 구매 항목 입력
                     .row
                         .card
                             .card-body
                                 .container.col-xl-8.col-lg-12
-                                    form(action="expendablepurchaseadd" method="post")
+                                    form(action="wishitempurchaseapply" method="post")
                                         table(class="table table-hover table-borderless text-center")
                                             tr
                                                 th cost
@@ -65,7 +65,7 @@ head
                                                         for line in setting.alligner
                                                             option(value=line)= line
                                         div(class="row")
-                                            a(class="btn btn-dark text-light col-lg-3 col-sm-5 ml-auto m-2" href="javascript:history.back()") go back
+                                            a(class="btn btn-dark text-light col-lg-3 col-sm-5 ms-auto m-2" href="javascript:history.back()") go back
                                             button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
 
     include ../compara/footer_script.pug

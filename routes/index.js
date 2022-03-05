@@ -429,22 +429,25 @@ router.post('/wishitemeditapply', function (req, res){
 });
 router.post('/wishitempurchase', function (req, res,next){
   if(req.session.user){
+    req.session.wishid = req.body.id
     let title = req.body.title
     let cost = req.body.cost
-    res.render('main/wishlist/wishitempurchase',{title, cost, name:req.session.user});
+    res.render('main/wishlist/wishitempurchase',{title, cost, setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
 })
-router.post('/wishitemeditapply', function (req, res){
+router.post('/wishitempurchaseapply', function (req, res){
   if(req.session.user){
     let rb = req.body
     let cost = rb.cost.replace(',', '')
-    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priorty, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);\n;"
-    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.idn];
-    connection.query(sql,params,function (err) {
-      if(err) console.log(err);
-    });
+    let datetime = rb.date
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, cost, rb.details, datetime, rb.alligner, rb.subord, req.session.idn];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    sql = "UPDATE wishlist SET cost = ?, stat = '3', completed = ? WHERE (id = ?);"
+    params = [cost, datetime, req.session.wishid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
     res.redirect('wishlist');
   }else{
     res.redirect('login')
@@ -480,7 +483,7 @@ router.post('/expendablepurchase', function (req, res, next){
 router.post('/expendablepurchaseadd', function (req, res, next){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost
+    let cost = rb.cost.replace(',', '')
     let datetime = rb.date
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
