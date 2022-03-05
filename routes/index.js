@@ -389,7 +389,7 @@ router.post('/addwish', function (req, res){
   if(req.session.user){
     let rb = req.body
     let cost = rb.cost.replace(',', '')
-    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priority, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);\n;"
+    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priority, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);"
     let params = [rb.title, cost, rb.link, rb.duedate, rb.priority, rb.detail, req.session.idn];
     connection.query(sql,params,function (err) {
       if(err) console.log(err);
