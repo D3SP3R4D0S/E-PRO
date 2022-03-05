@@ -248,7 +248,7 @@ router.get('/adddata', function(req, res, next) {
 });
 router.post('/adddata', function(req, res, next) {
   let rb = req.body;
-  let cost = rb.cost.replace(',', '');
+  let cost = rb.cost.replace(/,/g, '');
   let income = 0;
   if(rb.income === "1"){
     income = 1;
@@ -388,7 +388,7 @@ router.get('/addwish', function (req, res,next){
 router.post('/addwish', function (req, res){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost.replace(',', '')
+    let cost = rb.cost.replace(/,/g, '')
     let sql = "INSERT INTO wishlist (title, cost, link, duedate, priority, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);"
     let params = [rb.title, cost, rb.link, rb.duedate, rb.priority, rb.detail, req.session.idn];
     connection.query(sql,params,function (err) {
@@ -403,7 +403,7 @@ router.post('/wishitemedit', function (req, res,next){
   if(req.session.user){
     req.session.wishid = req.body.id
     let title = req.body.title
-    let cost = req.body.cost
+    let cost = req.body.cost.replace(/,/g, '')
     let link = req.body.link
     let duedate = req.body.duedate
     let detail = req.body.detail
@@ -431,7 +431,7 @@ router.post('/wishitempurchase', function (req, res,next){
   if(req.session.user){
     req.session.wishid = req.body.id
     let title = req.body.title
-    let cost = req.body.cost
+    let cost = req.body.cost.replace(/,/g, '')
     res.render('main/wishlist/wishitempurchase',{title, cost, setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
@@ -440,7 +440,7 @@ router.post('/wishitempurchase', function (req, res,next){
 router.post('/wishitempurchaseapply', function (req, res){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost.replace(',', '')
+    let cost = rb.cost.replace(/,/g, '')
     let datetime = rb.date
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, datetime, rb.alligner, rb.subord, req.session.idn];
@@ -483,7 +483,7 @@ router.post('/expendablepurchase', function (req, res, next){
 router.post('/expendablepurchaseadd', function (req, res, next){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost.replace(',', '')
+    let cost = rb.cost.replace(/,/g, '')
     let datetime = rb.date
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
