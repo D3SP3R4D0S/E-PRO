@@ -401,6 +401,7 @@ router.post('/addwish', function (req, res){
 });
 router.post('/wishitemedit', function (req, res,next){
   if(req.session.user){
+    req.session.wishid = req.body.id
     let title = req.body.title
     let cost = req.body.cost
     let link = req.body.link
@@ -408,6 +409,29 @@ router.post('/wishitemedit', function (req, res,next){
     let detail = req.body.detail
     let priority = req.body.priority
     res.render('main/wishlist/wishitemedit',{title, cost, link, duedate,detail, priority, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+router.post('/wishitemeditapply', function (req, res){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost.replace(',', '')
+    let sql = "UPDATE wishlist SET title = ?, cost = ?, link = ?, duedate = ?, priority = ?, detail = ? WHERE (id = ?);"
+    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.wishid];
+    connection.query(sql,params,function (err) {
+      if(err) console.log(err);
+    });
+    res.redirect('wishlist');
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/wishitempurchase', function (req, res,next){
+  if(req.session.user){
+    let title = req.body.title
+    let cost = req.body.cost
+    res.render('main/wishlist/wishitempurchase',{title, cost, name:req.session.user});
   }else{
     res.redirect('login')
   }

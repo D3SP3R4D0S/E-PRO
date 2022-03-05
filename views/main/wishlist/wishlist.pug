@@ -63,13 +63,13 @@ include ../compara/head
                                                 td= line.cost.toLocaleString() + " KRW"
 
                                                 td(class="text-light text-center")
-                                                    if line.priorty === 1
+                                                    if line.priority === 1
                                                         span(class="badge bg-danger") EXTREME
-                                                    else if line.priorty === 2
+                                                    else if line.priority === 2
                                                         span(class="badge bg-warning") HIGH
-                                                    else if line.priorty === 3
+                                                    else if line.priority === 3
                                                         span(class="badge bg-success") MEDIUM
-                                                    else if line.priorty === 4
+                                                    else if line.priority === 4
                                                         span(class="badge bg-info") LOW
                                                 td(class="text-light text-center")
                                                     if line.stat === 1
@@ -93,16 +93,20 @@ include ../compara/head
                                                     form(name="apply" action="wishitempurchase" method="POST")
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
-                                                        input(type="hidden" name="description" value=line.cost)
+                                                        input(type="hidden" name="cost" value=line.cost)
+                                                        input(type="hidden" name="duedate" value=line.duedate.toISOString().split('T')[0])
                                                         input(type="hidden" name="link" value=line.link)
+                                                        input(type="hidden" name="detail" value=line.detail)
                                                         input(type="hidden" name="stat" value=line.stat)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Buy")
                                                 td
                                                     form(name="apply" action="wishitemedit" method="POST")
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
-                                                        input(type="hidden" name="description" value=line.cost)
+                                                        input(type="hidden" name="cost" value=line.cost)
+                                                        input(type="hidden" name="duedate" value=line.duedate.toISOString().split('T')[0])
                                                         input(type="hidden" name="link" value=line.link)
+                                                        input(type="hidden" name="detail" value=line.detail)
                                                         input(type="hidden" name="stat" value=line.stat)
                                                         input.btn.btn-sm.btn-info(type="submit" value="Edit")
                             H3 Completed items

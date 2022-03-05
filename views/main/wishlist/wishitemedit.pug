@@ -34,12 +34,12 @@ head
                                             input.mb-3(class="form-control" type="text" name="title" placeholder="Title" value=title class="col-12" required)
                                             h4 Cost
                                                 .input-group.mb-3
-                                                    input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" value=cost placeholder="Cost" class="col-12" required)
+                                                    input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" value=cost.toLocaleString() placeholder="Cost" class="col-12" required)
                                                     span(class="input-group-text" id="basic-addon2") KRW
                                             h4 Link
-                                            input.mb-3(class="form-control" type="text" name="link" placeholder="Link" value=link class="col-12" required)
+                                            input.mb-3(class="form-control" type="text" name="link" placeholder="Link" value=link class="col-12")
                                             h4 Due date
-                                            input.mb-3(class="form-control" type="date" name="duedate" placeholder="duedate" value=duedate class="col-12" required)
+                                            input#dateinput.mb-3(class="form-control" type="date" name="duedate" placeholder="duedate" value=duedate class="col-12" required)
                                             h4 Detail
                                             textarea.mb-3(class="form-control" type="textarea" name="detail" placeholder="detail" class="col-12" required)= detail
                                             h4 Priorty
