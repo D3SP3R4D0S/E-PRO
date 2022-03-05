@@ -614,8 +614,9 @@ router.post('/register', function(req, res, next){
   let inpw = rb.pw
   crypto.randomBytes(32, function(err, buf) {
     crypto.pbkdf2(inpw, buf.toString('base64'), 100000, 64, 'sha512', (err, key) => {
-      const sql = 'INSERT into nodedb.account(id, password, name, salt)VALUES(?, ?, ?, ?)'
-      const params = [rb.id, key.toString('base64'), rb.name, buf.toString('base64')];
+      let setting = `{\"method\": [], \"paidfor\": [], \"alligner\": []}`
+      const sql = 'INSERT into nodedb.account(id, password, name, salt, settings)VALUES(?, ?, ?, ?, ?)'
+      const params = [rb.id, key.toString('base64'), rb.name, buf.toString('base64'), setting];
       connection.query(sql, params, function(err, result, next){
         if(err){
           console.log(err);
