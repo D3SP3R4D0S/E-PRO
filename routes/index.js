@@ -248,7 +248,7 @@ router.get('/adddata', function(req, res, next) {
 });
 router.post('/adddata', function(req, res, next) {
   let rb = req.body;
-  let cost = rb.cost.replace(',', '')
+  let cost = rb.cost.replace(',', '');
   let income = 0;
   if(rb.income === "1"){
     income = 1;
