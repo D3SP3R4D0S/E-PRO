@@ -4,6 +4,7 @@ head
         $(document).ready(function () {
             var groupColumn = 2;
             var table = $('#table1').DataTable({
+                autoWidth: true,
                 "columnDefs": [
                     {"visible": false, "targets": groupColumn}
                 ],
@@ -104,13 +105,12 @@ head
                                 h4 지출내역
                                 hr
                                 table.table.table-sm#table1
-                                    thead(class="table-dark")
+                                    thead
                                         tr(class="text-center")
                                             th Title
                                             th Method
                                             th Date
-                                            th Cat
-                                            th Subord
+                                            th Aligner
                                             th Cost
                                     tbody
                                         for line in result
@@ -120,14 +120,13 @@ head
                                                         a(href="detail?id="+line.id)= line.detail
                                                     td.text-center= line.title
                                                     td= line.date
-                                                    td.text-center= line.alligner
-                                                    td.text-center= line.subord
+                                                    td.text-center= line.subord + '-' + line.alligner
                                                     td.text-end= line.cost.toLocaleString() + '₩'
                                 hr
                                 h4 수입내역
                                 hr
                                 table.table.table-sm#table2
-                                    thead(class="table-dark")
+                                    thead
                                         tr(class="text-center")
                                             th Title
                                             th Method
@@ -143,7 +142,7 @@ head
                                                         a(href="detail?id=" + line.id)= line.detail
                                                     td.text-center= line.title
                                                     td= line.date
-                                                    td.text-center= line.alligner
+                                                    td.text-center= line.subord + '-' + line.alligner
                                                     td.text-center= line.subord
                                                     td.text-end= line.cost.toLocaleString() + '₩'
                     .col-lg-4
