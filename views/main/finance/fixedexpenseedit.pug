@@ -11,8 +11,8 @@ include ../compara/head.pug
         main.content
             .container-fluid.p-0
                 div(class="m-4")
-                    H2(class="text-dark") Add fixed expense
-                    h6() 고정 지출 항목 추가
+                    H2.strong(class="text-dark") Edit fixed expense
+                    h6 고정 지출 항목 수정
                 row(class="row justify-content-center")
                     div(class="col-12")
                         div(class='card shadow-lg')
@@ -20,25 +20,43 @@ include ../compara/head.pug
                                 div(class="container col-lg-8")
                                     form(action="fixedexpenseeditapply" method="post")
                                         h4 Title
-                                        input.mb-2(class="form-control" type="text" name="title" value=title placeholder="Title" class="col-12" required)
+                                        input.mb-2(class="form-control" type="text" name="title" value=rb.title placeholder="Title" class="col-12" required)
                                         h4 Category
                                         select.mb-2(class="form-control" name="category" placeholder="Category" class="col-12" required)
                                             option(value="" selected disabled hidden) Category
                                             for line in ['통신비', '교통비', '생활비', '구독', '보험', '세금']
-                                                option(value=line)= line
+                                                if rb.category === line
+                                                    option(value=line selected)= line
+                                                else
+                                                    option(value=line)= line
                                         h4 Comment
-                                        input.mb-2(class="form-control" type="text" name="comment" placeholder="Comment" class="col-12" required)
+                                        input.mb-2(class="form-control" type="text" name="comment" value=rb.comment placeholder="Comment" class="col-12" required)
                                         h4 Link
-                                        input.mb-2(class="form-control" type="text" name="link" placeholder="Link" class="col-12" required)
+                                        input.mb-2(class="form-control" type="text" name="link" value=rb.link placeholder="Link" class="col-12")
                                         h4 Cycle
                                         select.mb-2(class="form-control" name="payment_num" placeholder="payment_num" class="col-12" required)
                                             option(value="" selected disabled hidden) Payment Cycle
                                             for line in [['12', '매달'],['1', '매년'], ['2', '반기'], ['4', '분기']]
-                                                option(value=line[0])= line[1]
+                                                if rb.payment_num === line[0]
+                                                    option(value=line[0] selected)= line[1]
+                                                else
+                                                    option(value=line[0])= line[1]
                                         h4 Cost
-                                        input.mb-2(class="form-control" type="number" name="price" placeholder="price" class="col-12" required)
-                                        .row
-                                            a(class="btn btn-dark text-light col-lg-3 col-sm-5 ms-auto m-2" href="javascript:history.back()") go back
-                                            button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
+                                        input.mb-4(class="form-control" type="number" name="cost" value=rb.cost placeholder="cost" class="col-12" required)
+                                        .text-end
+                                            button.btn.btn-danger(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
+                                            .modal.text-start#removeModal
+                                                .modal-dialog
+                                                    .modal-content
+                                                        .modal-header
+                                                            .modal-title Warning
+                                                        .modal-body
+                                                            p Remove action is not recoverable
+                                                            p will you continue?
+                                                            .text-end
+                                                                a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                                a.btn.btn-danger.ms-2(href="fixedexpenseremove") Remove
+                                            a.btn.btn-dark.text-light.ms-2(href="javascript:history.back()") go back
+                                            button.btn.btn-dark.text-light.ms-2(type="submit") Submit
         include ../compara/footer
     include ../compara/footer_script

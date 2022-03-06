@@ -339,25 +339,30 @@ router.post('/fixedexpensepurchaseadd', function (req, res, next){
     res.redirect('login')
   }
 });
-router.get('/fixedexpenseedit', function(req, res, next) {
+router.post('/fixedexpenseedit', function(req, res, next) {
   if(req.session.user){
-    res.render('main/finance/fixedexpenseadd', {name:req.session.user});
+    req.session.fixedexpenseid = req.body.id
+    res.render('main/finance/fixedexpenseedit', {rb:req.body, name:req.session.user});
   }else{
     res.redirect('login')
   }
 });
 router.post('/fixedexpenseeditapply', function(req, res, next) {
-  let rb = req.body
   if(req.session.user){
-    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, cost, link, userid)VALUES(?,?,?,?,?,?,?);"
-    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, rb.link, req.session.idn];
-    connection.query(sql,params,function (err, results, fields) {
-      if(err){
-        console.log(err);
-      }else{
-        console.log(results.insertId);
-      }
-    });
+    let rb = req.body
+    let sql = "UPDATE fixedexpense SET title = ?, category = ?, comment = ?, payment_num = ?, cost = ?, link = ? WHERE (id = ?);"
+    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.cost, rb.link, req.session.fixedexpenseid];
+    connection.query(sql,params,function (err) {if(err){console.log(err);}});
+    res.redirect('/fixedexpense');
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/fixedexpenseremove', function(req, res, next) {
+  if(req.session.user){
+    let sql = "DELETE FROM fixedexpense WHERE (`id` = ?);"
+    let params = req.session.fixedexpenseid;
+    connection.query(sql,params,function (err) {if(err) console.log(err);});
     res.redirect('/fixedexpense');
   }else{
     res.redirect('login')

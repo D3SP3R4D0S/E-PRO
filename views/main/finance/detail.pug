@@ -32,7 +32,18 @@ include ../compara/head
                                                 td= line.detail
                                                 td= line.date
                                 div.text-end
-                                    a.btn.btn-danger.ms-auto(href="removedata?id=" + result[0].id) Remove Data
+                                    button.btn.btn-danger(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
+                                        .modal.text-start#removeModal
+                                            .modal-dialog
+                                                .modal-content.text-dark
+                                                    .modal-header
+                                                        .modal-title Warning
+                                                    .modal-body
+                                                        p Remove action is not recoverable
+                                                        p will you continue?
+                                                        .text-end
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            a.btn.btn-danger.ms-2(href="removedata?id=" + result[0].id) Remove Data
                                     a.btn.btn-dark.ms-2(href="index") Go Back
-            include ../compara/footer
-    include ../compara/footer_script
+        include ../compara/footer
+include ../compara/footer_script
