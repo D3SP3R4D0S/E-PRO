@@ -16,67 +16,117 @@ include ../compara/head.pug
                             strong= "Fixed expense"
                             h6() 고정 지출
                 .row
-                    div(class="col-md-3 col-xs-6")
+                    div(class="col-xl-3 col-md-6 col-xs-122")
                         div(class="card mb-2 border-left-primary shadow")
                             div(class="card-body")
                                 div(class="row no-gutters align-items-center")
                                     div(class="col mr-2")
                                         div(class="text-xs font-weight-bold text-primary text-uppercase mb-1") Total Fixed expense
-                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].totalbill.toLocaleString() + " KRW"
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")
+                                            if(sum[0].totalbill)
+                                                span= sum[0].totalbill.toLocaleString() + " KRW"
+                                            else
+                                                span not data
                                     div(class="col-auto")
                                         i(class="fas fa-money-check-alt fa-2x text-gray-300")
-                    div(class="col-md-3 col-xs-6")
+                    div(class="col-xl-3 col-md-6 col-xs-12")
                         div(class="card mb-2 border-left-info shadow")
                             div(class="card-body")
                                 div(class="row no-gutters align-items-center")
                                     div(class="col mr-2")
                                         div(class="text-xs font-weight-bold text-info text-uppercase mb-1") Divided as month
-                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].divbill.toLocaleString() + " KRW"
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")
+                                            if sum[0].divbill
+                                                span= sum[0].divbill.toLocaleString() + " KRW"
+                                            else
+                                                span not data
                                     div(class="col-auto")
                                         i(class="fas fa-file-invoice-dollar fa-2x text-gray-300")
-                    div(class="col-md-3 col-xs-6")
+                    div(class="col-xl-3 col-md-6 col-xs-12")
                         div(class="card mb-2 border-left-success shadow")
                             div(class="card-body")
                                 div(class="row no-gutters align-items-center")
                                     div(class="col mr-2")
                                         div(class="text-xs font-weight-bold text-success text-uppercase mb-1") Monthly bill
-                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].monthbill.toLocaleString() + " KRW"
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")
+                                            if sum[0].monthbill
+                                                span= sum[0].monthbill.toLocaleString() + " KRW"
+                                            else
+                                                span no data
                                     div(class="col-auto")
                                         .fa-solid.fa-calendar-days.fa-2x
-                    div(class="col-md-3 col-xs-6")
+                    div(class="col-xl-3 col-md-6 col-xs-12")
                         div(class="card mb-2 border-left-warning shadow")
                             div(class="card-body")
                                 div(class="row no-gutters align-items-center")
                                     div(class="col mr-2")
                                         div(class="text-xs font-weight-bold text-warning text-uppercase mb-1") Year bill
-                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= sum[0].yearbill.toLocaleString() + " KRW"
+                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")
+                                            if sum[0].yearbill
+                                                span= sum[0].yearbill.toLocaleString() + " KRW"
+                                            else
+                                                span not data
                                     div(class="col-auto")
                                         .fa-solid.fa-earth-americas.fa-2x
                     div(class='col-md-12 card shadow')
                         div(class='card-body')
-                            table(id="exampletable" class="display table table-bordered table-sm")
-                                thead(class="table-dark")
+                            table.table.table-sm
+                                thead
                                     tr(class="text-center")
                                         th Title
-                                        th Category
                                         th Comment
-                                        th Paid Cycle
-                                        th price
-                                        th Payday
+                                        th Recently used payment
+                                        th Price
+                                        th Cycle
+                                        th Control
                                 tbody(class="text-center")
                                     for line in result
                                         tr
-                                            td= line.title
-                                            td= line.category
+                                            td.text-sm.text-start
+                                                Strong= line.category
+                                                br
+                                                span= line.title
                                             td= line.comment
-                                            td
+                                            td= line.paymethod
+                                            if line.cost
+                                                td.text-end= line.cost.toLocaleString() + " KRW"
+                                            else
+                                                td.text-end N/A
+                                            td.text-sm
                                                 if(line.payment_num == 1)
                                                     span 매년
                                                 else if (line.payment_num == 12)
                                                     span 매달
-                                            td= line.price
-                                            td= line.payday
-                            div(class="row")
-                                a(class="btn btn-dark text-light ml-auto mr-4" href="fixedexpenseadd") Add data
+                                                if line.payday
+                                                    span= ' ' + line.payday
+                                                if(line.lastpaid)
+                                                    br
+                                                    span= "Paid" + line.lastpaid.toISOString().split('T')[0]
+                                                else
+                                                    br
+                                                    span No paid data
+                                            td
+                                                .input-group.align-content-center.text-center
+                                                    if line.link
+                                                        a.btn.btn-success.btn-sm.ms-auto(href=line.link) Link
+                                                    else
+                                                        a.btn.btn-dark.disabled.btn-sm.ms-auto Link
+                                                    form(action="fixedexpensepurchase" method="POST")
+                                                        input(type="hidden" name="id" value=line.id)
+                                                        input(type="hidden" name="title" value=line.title)
+                                                        input(type="hidden" name="cost" value=line.cost)
+                                                        input(type="hidden" name="method" value=line.paymethod)
+                                                        input.btn.btn-sm.btn-primary(type="submit" value="Add Paid")
+                                                    form(action="fixedexpenseedit" method="POST")
+                                                        input(type="hidden" name="id" value=line.id)
+                                                        input(type="hidden" name="title" value=line.title)
+                                                        input(type="hidden" name="category" value=line.category)
+                                                        input(type="hidden" name="comment" value=line.comment)
+                                                        input(type="hidden" name="cost" value=line.cost)
+                                                        input(type="hidden" name="payment_num" value=line.payment_num)
+                                                        input(type="hidden" name="link" value=line.link)
+                                                        input.btn.btn-info.btn-sm.me-auto(type="submit" value="Edit")
+                            .text-end
+                                a.btn.btn-dark( href="fixedexpenseadd") Add data
         include ../compara/footer.pug
     include ../compara/footer_script.pug

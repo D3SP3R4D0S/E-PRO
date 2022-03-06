@@ -248,7 +248,7 @@ router.get('/adddata', function(req, res, next) {
 });
 router.post('/adddata', function(req, res, next) {
   let rb = req.body;
-  let cost = rb.cost.replace(',', '')
+  let cost = rb.cost.replace(/,/g, '');
   let income = 0;
   if(rb.income === "1"){
     income = 1;
@@ -273,10 +273,10 @@ router.post('/adddata', function(req, res, next) {
 router.get('/fixedexpense', function(req, res, next) {
   if(req.session.user){
     let sql = `SELECT * FROM finance.fixedexpense where userid = ?; 
-        SELECT sum(payment_num * price) as totalbill, sum(payment_num * price/12) as divbill,
-        sum(if(payment_num=12, price, 0)) as monthbill, sum(if(payment_num=1, price, 0)) as yearbill
+        SELECT sum(payment_num * cost) as totalbill, sum(payment_num * cost/12) as divbill,
+        sum(if(payment_num=12, cost, 0)) as monthbill, sum(if(payment_num=1, cost, 0)) as yearbill
         FROM finance.fixedexpense where userid = ?;`
-    connection.query(sql, [req.session.idn, req.session.idn] , function (error, results, fields) {
+    connection.query(sql, [req.session.idn, req.session.idn] , function (error, results) {
       res.render('main/finance/fixedexpense', {result:results[0], sum:results[1], name:req.session.user});
     });
   }else{
@@ -293,8 +293,8 @@ router.get('/fixedexpenseadd', function(req, res, next) {
 router.post('/fixedexpenseadd', function(req, res, next) {
   let rb = req.body
   if(req.session.user){
-    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, price, userid)VALUES(?,?,?,?,?,?);"
-    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, req.session.idn];
+    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, cost, link, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, rb.link, req.session.idn];
     connection.query(sql,params,function (err, results, fields) {
       if(err){
         console.log(err);
@@ -302,6 +302,67 @@ router.post('/fixedexpenseadd', function(req, res, next) {
         console.log(results.insertId);
       }
     });
+    res.redirect('/fixedexpense');
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpensepurchase', function (req, res, next){
+  if(req.session.user){
+    req.session.fixedexpenseid = req.body.id
+    let title = req.body.title
+    let cost = req.body.cost
+    let method = req.body.method
+    res.render('main/finance/fixedexpensepurchase', {title, cost, method, setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpensepurchaseadd', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost.replace(/,/g, '')
+    let datetime = rb.date
+    let paymethod = rb.title +','+ rb.subord +','+ rb.alligner
+    // add on account
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    // update paid date and
+    sql = "UPDATE fixedexpense SET cost = ?, lastpaid = ?, paymethod = ? WHERE (id = ?);"
+
+    params = [cost, datetime, paymethod, req.session.fixedexpenseid];
+    console.log(params)
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/fixedexpense');
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpenseedit', function(req, res, next) {
+  if(req.session.user){
+    req.session.fixedexpenseid = req.body.id
+    res.render('main/finance/fixedexpenseedit', {rb:req.body, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpenseeditapply', function(req, res, next) {
+  if(req.session.user){
+    let rb = req.body
+    let sql = "UPDATE fixedexpense SET title = ?, category = ?, comment = ?, payment_num = ?, cost = ?, link = ? WHERE (id = ?);"
+    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.cost, rb.link, req.session.fixedexpenseid];
+    connection.query(sql,params,function (err) {if(err){console.log(err);}});
+    res.redirect('/fixedexpense');
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/fixedexpenseremove', function(req, res, next) {
+  if(req.session.user){
+    let sql = "DELETE FROM fixedexpense WHERE (`id` = ?);"
+    let params = req.session.fixedexpenseid;
+    connection.query(sql,params,function (err) {if(err) console.log(err);});
     res.redirect('/fixedexpense');
   }else{
     res.redirect('login')
@@ -388,9 +449,9 @@ router.get('/addwish', function (req, res,next){
 router.post('/addwish', function (req, res){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost.replace(',', '')
-    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priorty, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);\n;"
-    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.idn];
+    let cost = rb.cost.replace(/,/g, '')
+    let sql = "INSERT INTO wishlist (title, cost, link, duedate, priority, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);"
+    let params = [rb.title, cost, rb.link, rb.duedate, rb.priority, rb.detail, req.session.idn];
     connection.query(sql,params,function (err) {
       if(err) console.log(err);
     });
@@ -403,7 +464,7 @@ router.post('/wishitemedit', function (req, res,next){
   if(req.session.user){
     req.session.wishid = req.body.id
     let title = req.body.title
-    let cost = req.body.cost
+    let cost = req.body.cost.replace(/,/g, '')
     let link = req.body.link
     let duedate = req.body.duedate
     let detail = req.body.detail
@@ -431,7 +492,7 @@ router.post('/wishitempurchase', function (req, res,next){
   if(req.session.user){
     req.session.wishid = req.body.id
     let title = req.body.title
-    let cost = req.body.cost
+    let cost = req.body.cost.replace(/,/g, '')
     res.render('main/wishlist/wishitempurchase',{title, cost, setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
@@ -440,7 +501,7 @@ router.post('/wishitempurchase', function (req, res,next){
 router.post('/wishitempurchaseapply', function (req, res){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost.replace(',', '')
+    let cost = rb.cost.replace(/,/g, '')
     let datetime = rb.date
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, datetime, rb.alligner, rb.subord, req.session.idn];
@@ -483,7 +544,7 @@ router.post('/expendablepurchase', function (req, res, next){
 router.post('/expendablepurchaseadd', function (req, res, next){
   if(req.session.user){
     let rb = req.body
-    let cost = rb.cost.replace(',', '')
+    let cost = rb.cost.replace(/,/g, '')
     let datetime = rb.date
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
@@ -614,8 +675,9 @@ router.post('/register', function(req, res, next){
   let inpw = rb.pw
   crypto.randomBytes(32, function(err, buf) {
     crypto.pbkdf2(inpw, buf.toString('base64'), 100000, 64, 'sha512', (err, key) => {
-      const sql = 'INSERT into nodedb.account(id, password, name, salt)VALUES(?, ?, ?, ?)'
-      const params = [rb.id, key.toString('base64'), rb.name, buf.toString('base64')];
+      let setting = `{\"method\": [], \"paidfor\": [], \"alligner\": []}`
+      const sql = 'INSERT into nodedb.account(id, password, name, salt, settings)VALUES(?, ?, ?, ?, ?)'
+      const params = [rb.id, key.toString('base64'), rb.name, buf.toString('base64'), setting];
       connection.query(sql, params, function(err, result, next){
         if(err){
           console.log(err);
