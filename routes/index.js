@@ -273,10 +273,10 @@ router.post('/adddata', function(req, res, next) {
 router.get('/fixedexpense', function(req, res, next) {
   if(req.session.user){
     let sql = `SELECT * FROM finance.fixedexpense where userid = ?; 
-        SELECT sum(payment_num * price) as totalbill, sum(payment_num * price/12) as divbill,
-        sum(if(payment_num=12, price, 0)) as monthbill, sum(if(payment_num=1, price, 0)) as yearbill
+        SELECT sum(payment_num * cost) as totalbill, sum(payment_num * cost/12) as divbill,
+        sum(if(payment_num=12, cost, 0)) as monthbill, sum(if(payment_num=1, cost, 0)) as yearbill
         FROM finance.fixedexpense where userid = ?;`
-    connection.query(sql, [req.session.idn, req.session.idn] , function (error, results, fields) {
+    connection.query(sql, [req.session.idn, req.session.idn] , function (error, results) {
       res.render('main/finance/fixedexpense', {result:results[0], sum:results[1], name:req.session.user});
     });
   }else{
@@ -293,8 +293,8 @@ router.get('/fixedexpenseadd', function(req, res, next) {
 router.post('/fixedexpenseadd', function(req, res, next) {
   let rb = req.body
   if(req.session.user){
-    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, price, userid)VALUES(?,?,?,?,?,?);"
-    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, req.session.idn];
+    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, cost, link, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, rb.link, req.session.idn];
     connection.query(sql,params,function (err, results, fields) {
       if(err){
         console.log(err);
@@ -307,6 +307,32 @@ router.post('/fixedexpenseadd', function(req, res, next) {
     res.redirect('login')
   }
 });
+router.post('/fixedexpensepurchase', function (req, res, next){
+  if(req.session.user){
+    req.session.fixedexpenseid = req.body.id
+    let title = req.body.title
+    let cost = req.body.cost
+    res.render('main/finance/expendablepurchase', {title, cost,setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpensepurchaseadd', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost.replace(/,/g, '')
+    let datetime = rb.date
+    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    sql = "UPDATE fixedexpense SET `cost` = ?, `lastpaid` = ? WHERE (`id` = ?);"
+    params = [cost, datetime, req.session.fixedexpenseid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/latestdata');
+  }else{
+    res.redirect('login')
+  }
+})
 
 router.get('/report', function (req, res,next){
   let idn = req.session.idn
