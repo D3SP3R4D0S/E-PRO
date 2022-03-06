@@ -115,8 +115,9 @@ include ../compara/head.pug
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="cost" value=line.cost)
+                                                        input(type="hidden" name="method" value=line.paymethod)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Add Paid")
-                                                    a.btn.btn-info.btn-sm.me-auto Edit
+                                                    a.btn.btn-info.btn-sm.me-auto.disabled Edit
                             .text-end
                                 a.btn.btn-dark( href="fixedexpenseadd") Add data
         include ../compara/footer.pug

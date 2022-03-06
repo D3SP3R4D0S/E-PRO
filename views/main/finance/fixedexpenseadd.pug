@@ -24,12 +24,8 @@ include ../compara/head.pug
                                             h4 Category
                                             select.mb-2(class="form-control" name="category" placeholder="Category" class="col-12" required)
                                                 option(value="" selected disabled hidden) Category
-                                                option(value="통신비") 통신비
-                                                option(value="교통비") 교통비
-                                                option(value="생활비") 생활비
-                                                option(value="구독") 구독
-                                                option(value="보험") 보험
-                                                option(value="세금") 세금
+                                                for line in ['통신비', '교통비', '생활비', '구독', '보험', '세금']
+                                                    option(value=line)= line
                                             h4 Comment
                                             input.mb-2(class="form-control" type="text" name="comment" placeholder="Comment" class="col-12" required)
                                             h4 Link
@@ -37,10 +33,8 @@ include ../compara/head.pug
                                             h4 Cycle
                                             select.mb-2(class="form-control" name="payment_num" placeholder="payment_num" class="col-12" required)
                                                 option(value="" selected disabled hidden) Payment Cycle
-                                                option(value="12") 매달
-                                                option(value="1") 매년
-                                                option(value="2") 반기(6개월)
-                                                option(value="4") 분기(3개월)
+                                                for line in [['12', '매달'],['1', '매년'], ['2', '반기'], ['4', '분기']]
+                                                    option(value=line[0])= line[1]
                                             h4 Cost
                                             input.mb-2(class="form-control" type="number" name="price" placeholder="price" class="col-12" required)
                                             .row

@@ -312,7 +312,8 @@ router.post('/fixedexpensepurchase', function (req, res, next){
     req.session.fixedexpenseid = req.body.id
     let title = req.body.title
     let cost = req.body.cost
-    res.render('main/finance/expendablepurchase', {title, cost,setting:req.session.setting, name:req.session.user});
+    let method = req.body.method
+    res.render('main/finance/fixedexpensepurchase', {title, cost, method, setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -322,17 +323,46 @@ router.post('/fixedexpensepurchaseadd', function (req, res, next){
     let rb = req.body
     let cost = rb.cost.replace(/,/g, '')
     let datetime = rb.date
+    let paymethod = rb.title +','+ rb.subord +','+ rb.alligner
+    // add on account
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid)VALUES(?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn];
     connection.query(sql,params,function (err) { if(err) console.log(err);});
-    sql = "UPDATE fixedexpense SET `cost` = ?, `lastpaid` = ? WHERE (`id` = ?);"
-    params = [cost, datetime, req.session.fixedexpenseid];
+    // update paid date and
+    sql = "UPDATE fixedexpense SET cost = ?, lastpaid = ?, paymethod = ? WHERE (id = ?);"
+
+    params = [cost, datetime, paymethod, req.session.fixedexpenseid];
+    console.log(params)
     connection.query(sql,params,function (err) { if(err) console.log(err);});
-    res.redirect('/latestdata');
+    res.redirect('/fixedexpense');
   }else{
     res.redirect('login')
   }
-})
+});
+router.get('/fixedexpenseedit', function(req, res, next) {
+  if(req.session.user){
+    res.render('main/finance/fixedexpenseadd', {name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/fixedexpenseeditapply', function(req, res, next) {
+  let rb = req.body
+  if(req.session.user){
+    let sql = "INSERT INTO finance.fixedexpense(title, category, comment, payment_num, cost, link, userid)VALUES(?,?,?,?,?,?,?);"
+    let params = [rb.title, rb.category, rb.comment, rb.payment_num, rb.price, rb.link, req.session.idn];
+    connection.query(sql,params,function (err, results, fields) {
+      if(err){
+        console.log(err);
+      }else{
+        console.log(results.insertId);
+      }
+    });
+    res.redirect('/fixedexpense');
+  }else{
+    res.redirect('login')
+  }
+});
 
 router.get('/report', function (req, res,next){
   let idn = req.session.idn
