@@ -23,7 +23,10 @@ include ../compara/head
                                     div(class="col mr-2")
                                         div(class="text-xs font-weight-bold text-warning text-uppercase mb-1")
                                             strong Requested
-                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= "KRW " + summary.req_total.toLocaleString()
+                                        if summary.req_total
+                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= "KRW " + summary.req_total.toLocaleString()
+                                        else
+                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800") No data
                                     div(class="col-auto")
                                         i(class="fas fa-money-check-alt fa-2x text-gray-300")
                     .col-6
@@ -33,7 +36,10 @@ include ../compara/head
                                     div(class="col mr-2")
                                         div(class="text-xs font-weight-bold text-danger text-uppercase mb-1")
                                             strong High priorty
-                                        div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= "KRW " + summary.high_total.toLocaleString()
+                                        if summary.high_total
+                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800")= "KRW " + summary.high_total.toLocaleString()
+                                        else
+                                            div(class="h5 text-end mb-0 font-weight-bold text-gray-800") No data
                                     div(class="col-auto")
                                         i(class="fas fa-receipt fa-2x text-gray-300")
                 .card.col-12
