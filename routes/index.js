@@ -425,9 +425,9 @@ router.post('/reportchart', function (req, res){
 // to but list ( wish list )
 router.get('/wishlist', function(req, res, next) {
   if(req.session.user){
-    let sql = `SELECT * FROM wishlist where userid = ? order by stat asc;
+    let sql = `SELECT * FROM wishlist where userid = ? order by priority asc;
          SELECT sum(if(stat = 1, cost, 0)) as req_total, sum(if(stat = 1 and Priority>2, cost, 0)) as high_total 
-         FROM wishlist where userid = ? order by id;`
+         FROM wishlist where userid = ?;`
     let val = [req.session.idn, req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
@@ -469,7 +469,8 @@ router.post('/wishitemedit', function (req, res,next){
     let duedate = req.body.duedate
     let detail = req.body.detail
     let priority = req.body.priority
-    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate,detail, priority, name:req.session.user});
+    let stat = req.body.stat
+    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate, detail, priority, stat, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -478,8 +479,8 @@ router.post('/wishitemeditapply', function (req, res){
   if(req.session.user){
     let rb = req.body
     let cost = rb.cost.replace(',', '')
-    let sql = "UPDATE wishlist SET title = ?, cost = ?, link = ?, duedate = ?, priority = ?, detail = ? WHERE (id = ?);"
-    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.wishid];
+    let sql = "UPDATE wishlist SET title = ?, cost = ?, link = ?, duedate = ?, priority = ?, detail = ?, stat = ? WHERE (id = ?);"
+    let params = [rb.title, cost, rb.link, rb.duedate, rb.priority, rb.detail, rb.stat, req.session.wishid];
     connection.query(sql,params,function (err) {
       if(err) console.log(err);
     });
@@ -514,7 +515,6 @@ router.post('/wishitempurchaseapply', function (req, res){
     res.redirect('login')
   }
 });
-
 
 //expendables
 router.get('/expendables', function (req, res, next){
@@ -659,7 +659,6 @@ router.get('/logout', function(req, res, next){
     res.redirect('/Login');
   }
 })
-
 router.get('/account', function(req, res, next){
   if(req.session.user){
     res.render('main/login/account', {name:req.session.user, id:req.session.idname, permission:req.session.permission});

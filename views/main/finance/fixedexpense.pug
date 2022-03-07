@@ -2,10 +2,10 @@ doctype html
 include ../compara/head.pug
 .wrapper
     include ../compara/sidebar
-        script.
-            $(document).ready(function () {
-                $('#fixedexpense').addClass('active');
-            });
+    script.
+        $(document).ready(function () {
+            $('#fixedexpense').addClass('active');
+        });
     .main
         include ../compara/navbar
         main.content
@@ -117,7 +117,7 @@ include ../compara/head.pug
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input(type="hidden" name="method" value=line.paymethod)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Add Paid")
-                                                    form(action="fixedexpenseedit" method="POST")
+                                                    form.me-auto(action="fixedexpenseedit" method="POST")
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="category" value=line.category)
@@ -125,7 +125,7 @@ include ../compara/head.pug
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input(type="hidden" name="payment_num" value=line.payment_num)
                                                         input(type="hidden" name="link" value=line.link)
-                                                        input.btn.btn-info.btn-sm.me-auto(type="submit" value="Edit")
+                                                        input.btn.btn-info.btn-sm(type="submit" value="Edit")
                             .text-end
                                 a.btn.btn-dark( href="fixedexpenseadd") Add data
         include ../compara/footer.pug
