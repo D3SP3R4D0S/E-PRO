@@ -489,6 +489,16 @@ router.post('/wishitemeditapply', function (req, res){
     res.redirect('login')
   }
 });
+router.get('/removewish', function(req, res, next){
+  if(req.session.user){
+    let sql = 'DELETE FROM `wishlist` WHERE `id` = ?;'
+    connection.query(sql, req.session.wishid , function (error, results, fields) {
+      res.redirect('wishlist');
+    });
+  }else{
+    res.redirect('login')
+  }
+});
 router.post('/wishitempurchase', function (req, res,next){
   if(req.session.user){
     req.session.wishid = req.body.id
