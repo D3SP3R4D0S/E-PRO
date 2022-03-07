@@ -620,6 +620,13 @@ router.get('/vehiclemanage', function(req, res, next){
     res.redirect('login')
   }
 });
+router.get('/financialobligation', function(req, res, next){
+  if(req.session.user){
+    res.render('main/finance/financialobligation',{name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
 
 // Login
 router.get('/login', function(req, res, next) {

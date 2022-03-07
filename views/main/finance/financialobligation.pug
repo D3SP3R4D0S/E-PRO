@@ -1,0 +1,24 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#financialobligation').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col-md-12.mb-2
+                        h1
+                            strong= "Financial obligation"
+                        h6 채무관계
+                .row
+                    .col-lg-12
+                        .card
+                            .card-body
+
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug
