@@ -35,10 +35,10 @@ include ../compara/head
                                         th Edit
                                     tbody
                                         for line in result
-                                            if(!line.completed)
+                                            if(!line.complete)
                                                 tr
                                                     td= line.title
-                                                    td= line.cost
+                                                    td.text-end= line.cost.toLocaleString() + " KRW"
                                                     td= line.loaner
                                                     td= line.created.toISOString().split('T')[0]
                                                     td
@@ -69,16 +69,12 @@ include ../compara/head
                                         th duedate
                                     tbody
                                         for line in result
-                                            if(line.completed)
+                                            if(line.complete)
                                                 tr
                                                     td= line.title
                                                     td= line.cost
                                                     td= line.loaner
                                                     td= line.created.toISOString().split('T')[0]
-                                                    td
-                                                        if line.duedate
-                                                            span= line.duedate
-                                                        else
-                                                            span No data
+                                                    td= line.complete.toISOString().split('T')[0]
         include ../compara/footer
     include ../compara/footer_script

@@ -42,9 +42,12 @@ head
                                                 input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" value=rb.cost placeholder="Cost" class="col-12" required)
                                                 span(class="input-group-text" id="basic-addon2") KRW
                                         h4 Due date
-                                        .text-sm 채무만료일
+                                        .text-sm 채무 만료일
                                         input.mb-3(class="form-control" type="date" name="duedate" placeholder="duedate" value=duedate class="col-12")
-                                        .row.text-end
+                                        h4 Completed
+                                        .text-sm 채무 이행일
+                                        input.mb-3(class="form-control" type="date" name="complete" placeholder="complete" class="col-12")
+                                        .text-end
                                             button.btn.btn-danger.ms-2(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
                                             .modal.text-start#removeModal
                                                 .modal-dialog
@@ -57,7 +60,7 @@ head
                                                             .text-end
                                                                 a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
                                                                 a.btn.btn-danger.ms-2(href="financialobligationremove") Remove
-                                            a(class="btn btn-dark text-light m-2" href="javascript:history.back()") go back
-                                            button(class="btn btn-dark text-light m-2" type="submit") Submit
+                                            a.ms-2(class="btn btn-dark text-light" href="javascript:history.back()") go back
+                                            button.ms-2(class="btn btn-dark text-light" type="submit") Submit
 
     include ../compara/footer_script.pug

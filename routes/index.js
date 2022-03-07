@@ -651,14 +651,17 @@ router.post('/financialobligationapply', function (req, res, next){
     let rb = req.body
     let cost = rb.cost.replace(/,/g, '')
     let duedate = rb.duedate
+    let complete = null
+    if(rb.complete!=='')
+      complete = rb.complete
     let sql
     let params
     if(duedate) {
       sql = "UPDATE financial_obligation SET `title` = ?, `cost` = ?, `loaner` = ?, `duedate` = ?, `complete`= ?  WHERE (`id` = ?);"
-      params = [rb.title, cost, rb.loaner, duedate, rb.complete, req.session.financialobligationid];
+      params = [rb.title, cost, rb.loaner, duedate, complete, req.session.financialobligationid];
     }else{
       sql = "UPDATE financial_obligation SET `title` = ?, `cost` = ?, `loaner` = ?, `complete`= ?  WHERE (`id` = ?);"
-      params = [rb.title, cost, rb.loaner, rb.complete, req.session.financialobligationid];
+      params = [rb.title, cost, rb.loaner, complete, req.session.financialobligationid];
     }
     connection.query(sql,params,function (err) { if(err) console.log(err);});
     res.redirect('/financialobligation');
