@@ -1,0 +1,80 @@
+doctype html
+include ../compara/head
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#financialobligation').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col-md-12.mb-2
+                        h1
+                            strong= "Financial obligation"
+                        h6 채무관계
+                .row
+                    .col-lg-12
+                        .card
+                            .card-body
+                                .row
+                                    .col
+                                        h3 Incompleted lend
+                                        h6 완료되지 않은 채무
+                                    .col.text-end
+                                        a.btn.btn-dark(href="financialobligationadd") Add data
+                                table.table
+                                    thead
+                                        th Title
+                                        th Cost
+                                        th Loaner
+                                        th Created
+                                        th Duedate
+                                        th Edit
+                                    tbody
+                                        for line in result
+                                            if(!line.complete)
+                                                tr
+                                                    td= line.title
+                                                    td.text-end= line.cost.toLocaleString() + " KRW"
+                                                    td= line.loaner
+                                                    td= line.created.toISOString().split('T')[0]
+                                                    td
+                                                        if line.duedate
+                                                            span= line.duedate.toISOString().split('T')[0]
+                                                        else
+                                                            span No data
+                                                    td
+                                                        form.me-auto(action="financialobligationedit" method="POST")
+                                                            input(type="hidden" name="id" value=line.id)
+                                                            input(type="hidden" name="title" value=line.title)
+                                                            input(type="hidden" name="cost" value=line.cost)
+                                                            input(type="hidden" name="loaner" value=line.loaner)
+                                                            if line.duedate
+                                                                input(type="hidden" name="duedate" value=line.duedate.toISOString().split('T')[0])
+                                                            input(type="hidden" name="complete" value=line.complete)
+                                                            input.btn.btn-info.btn-sm(type="submit" value="Edit")
+                        .card
+                            .card-body
+                                h3 Completed lend
+                                h6 완료된 채무
+                                table.table
+                                    thead
+                                        th title
+                                        th cost
+                                        th loaner
+                                        th created
+                                        th duedate
+                                    tbody
+                                        for line in result
+                                            if(line.complete)
+                                                tr
+                                                    td= line.title
+                                                    td= line.cost
+                                                    td= line.loaner
+                                                    td= line.created.toISOString().split('T')[0]
+                                                    td= line.complete.toISOString().split('T')[0]
+        include ../compara/footer
+    include ../compara/footer_script

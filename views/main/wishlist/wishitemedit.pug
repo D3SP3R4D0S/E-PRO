@@ -31,41 +31,45 @@ head
                                 .container.col-xl-8.col-lg-12
                                     form(action="wishitemeditapply" method="post")
                                         h4 Title
-                                            input.mb-3(class="form-control" type="text" name="title" placeholder="Title" value=title class="col-12" required)
-                                            h4 Cost
-                                                .input-group.mb-3
-                                                    input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" value=cost.toLocaleString() placeholder="Cost" class="col-12" required)
-                                                    span(class="input-group-text" id="basic-addon2") KRW
-                                            h4 Link
-                                            input.mb-3(class="form-control" type="text" name="link" placeholder="Link" value=link class="col-12")
-                                            h4 Due date
-                                            input#dateinput.mb-3(class="form-control" type="date" name="duedate" placeholder="duedate" value=duedate class="col-12" required)
-                                            h4 Detail
-                                            textarea.mb-3(class="form-control" type="textarea" name="detail" placeholder="detail" class="col-12" required)= detail
-                                            h4 Priorty
-                                            select.mb-3(class="form-control" name="priorty" placeholder="priorty" class="col-12" required)
-                                                if(priority === '3')
-                                                    option(value='4') Low
-                                                    option.selected(value='3') Medium
-                                                    option(value='2') High
-                                                    option(value='1') Extreme
-                                                else if(priority === '2')
-                                                    option(value='4') Low
-                                                    option(value='3') Medium
-                                                    option.selected(value='2') High
-                                                    option(value='1') Extreme
-                                                else if(priority === '1')
-                                                    option(value='4') Low
-                                                    option(value='3') Medium
-                                                    option(value='2') High
-                                                    option.selected(value='1') Extreme
+                                        input.mb-3(class="form-control" type="text" name="title" placeholder="Title" value=title class="col-12" required)
+                                        h4 Cost
+                                            .input-group.mb-3
+                                                input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" value=cost.toLocaleString() placeholder="Cost" class="col-12" required)
+                                                span(class="input-group-text" id="basic-addon2") KRW
+                                        h4 Link
+                                        input.mb-3(class="form-control" type="text" name="link" placeholder="Link" value=link class="col-12")
+                                        h4 Due date
+                                        input#dateinput.mb-3(class="form-control" type="date" name="duedate" placeholder="duedate" value=duedate class="col-12" required)
+                                        h4 Detail
+                                        textarea.mb-3(class="form-control" type="textarea" name="detail" placeholder="detail" class="col-12" required)= detail
+                                        h4 Priority
+                                        select.mb-3(class="form-control" name="priority" placeholder="priority" class="col-12" required)
+                                            for line in [['4', 'Low'],['3', 'Medium'],['2', 'High'],['1', 'Extreme']]
+                                                if priority===line[0]
+                                                    option(value=line[0] selected)= line[1]
                                                 else
-                                                    option.selected(value='4') Low
-                                                    option(value='3') Medium
-                                                    option(value='2') High
-                                                    option(value='1') Extreme
-                                            .row.text-end
-                                                a(class="btn btn-dark text-light col-lg-3 col-sm-5 ms-auto m-2" href="javascript:history.back()") go back
-                                                button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
+                                                    option(value=line[0])= line[1]
+                                        h4 Status
+                                        select.mb-3(class="form-control" name="stat" placeholder="Stat" class="col-12" required)
+                                            for line in [['1', 'Requested'],['2', 'Pending'],['3', 'Purchased'],['4', 'Rejected']]
+                                                if line[0] === stat
+                                                    option(selected value=line[0])= line[1]
+                                                else
+                                                    option(value=line[0])= line[1]
+                                        .text-end
+                                            button.btn.btn-danger.ms-2(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
+                                            .modal.text-start#removeModal
+                                                .modal-dialog
+                                                    .modal-content
+                                                        .modal-header
+                                                            .modal-title Warning
+                                                        .modal-body
+                                                            p Remove action is not recoverable
+                                                            p will you continue?
+                                                            .text-end
+                                                                a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                                a.btn.btn-danger.ms-2(href="removewish") Remove
+                                            a.ms-2(class="btn btn-dark text-light" href="javascript:history.back()") go back
+                                            button.ms-2(class="btn btn-dark text-light" type="submit") Submit
 
     include ../compara/footer_script.pug

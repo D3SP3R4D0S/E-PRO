@@ -425,9 +425,9 @@ router.post('/reportchart', function (req, res){
 // to but list ( wish list )
 router.get('/wishlist', function(req, res, next) {
   if(req.session.user){
-    let sql = `SELECT * FROM wishlist where userid = ? order by stat asc;
+    let sql = `SELECT * FROM wishlist where userid = ? order by priority asc;
          SELECT sum(if(stat = 1, cost, 0)) as req_total, sum(if(stat = 1 and Priority>2, cost, 0)) as high_total 
-         FROM wishlist where userid = ? order by id;`
+         FROM wishlist where userid = ?;`
     let val = [req.session.idn, req.session.idn]
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
@@ -469,7 +469,8 @@ router.post('/wishitemedit', function (req, res,next){
     let duedate = req.body.duedate
     let detail = req.body.detail
     let priority = req.body.priority
-    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate,detail, priority, name:req.session.user});
+    let stat = req.body.stat
+    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate, detail, priority, stat, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -478,12 +479,22 @@ router.post('/wishitemeditapply', function (req, res){
   if(req.session.user){
     let rb = req.body
     let cost = rb.cost.replace(',', '')
-    let sql = "UPDATE wishlist SET title = ?, cost = ?, link = ?, duedate = ?, priority = ?, detail = ? WHERE (id = ?);"
-    let params = [rb.title, cost, rb.link, rb.duedate, rb.priorty, rb.detail, req.session.wishid];
+    let sql = "UPDATE wishlist SET title = ?, cost = ?, link = ?, duedate = ?, priority = ?, detail = ?, stat = ? WHERE (id = ?);"
+    let params = [rb.title, cost, rb.link, rb.duedate, rb.priority, rb.detail, rb.stat, req.session.wishid];
     connection.query(sql,params,function (err) {
       if(err) console.log(err);
     });
     res.redirect('wishlist');
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/removewish', function(req, res, next){
+  if(req.session.user){
+    let sql = 'DELETE FROM `wishlist` WHERE `id` = ?;'
+    connection.query(sql, req.session.wishid , function (error, results, fields) {
+      res.redirect('wishlist');
+    });
   }else{
     res.redirect('login')
   }
@@ -514,7 +525,6 @@ router.post('/wishitempurchaseapply', function (req, res){
     res.redirect('login')
   }
 });
-
 
 //expendables
 router.get('/expendables', function (req, res, next){
@@ -611,6 +621,92 @@ router.get('/vehiclemanage', function(req, res, next){
   }
 });
 
+//Finencial obligation
+router.get('/financialobligation', function(req, res, next){
+  if(req.session.user){
+    let sql = 'SELECT * FROM financial_obligation WHERE userid = ?;'
+    let val = [req.session.idn]
+    connection.query(sql, val, function (err, results) {
+      if(err) throw err;
+      else{
+        res.render('main/obligation/financialobligation',{result:results, name:req.session.user});
+      }
+    });
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/financialobligationedit', function (req, res){
+  if(req.session.user){
+    req.session.financialobligationid = req.body.id
+    let rb = req.body
+    let duedate = rb.duedate
+    res.render('main/obligation/financialobligationedit', {rb, duedate, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/financialobligationapply', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let cost = rb.cost.replace(/,/g, '')
+    let duedate = rb.duedate
+    let complete = null
+    if(rb.complete!=='')
+      complete = rb.complete
+    let sql
+    let params
+    if(duedate) {
+      sql = "UPDATE financial_obligation SET `title` = ?, `cost` = ?, `loaner` = ?, `duedate` = ?, `complete`= ?  WHERE (`id` = ?);"
+      params = [rb.title, cost, rb.loaner, duedate, complete, req.session.financialobligationid];
+    }else{
+      sql = "UPDATE financial_obligation SET `title` = ?, `cost` = ?, `loaner` = ?, `complete`= ?  WHERE (`id` = ?);"
+      params = [rb.title, cost, rb.loaner, complete, req.session.financialobligationid];
+    }
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/financialobligation');
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/financialobligationadd', function(req, res, next) {
+  if(req.session.user){
+    res.render('main/obligation/financialobligationadd',{setting:req.session.setting, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/financialobligationadd', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let title = rb.title
+    let cost = rb.cost.replace(/,/g, '')
+    let loaner = rb.loaner
+    let duedate = rb.duedate
+    let sql
+    let params
+    if(duedate !== '') {
+      sql = "INSERT INTO financial_obligation(title, cost, loaner, duedate, userid)VALUES(?,?,?,?,?);"
+      params = [title, cost, loaner, duedate, req.session.idn];
+    }else{
+      sql = "INSERT INTO financial_obligation(title, cost, loaner, userid)VALUES(?,?,?,?);"
+      params = [title, cost, loaner, req.session.idn];
+    }
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/financialobligation');
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/financialobligationremove', function(req, res, next){
+  if(req.session.user){
+    let sql = 'DELETE FROM financial_obligation WHERE `id` = ?;'
+    connection.query(sql, req.session.financialobligationid , function (err) {if(err)throw err;});
+    res.redirect('financialobligation');
+  }else{
+    res.redirect('login')
+  }
+});
 // Login
 router.get('/login', function(req, res, next) {
   res.render('main/login/login');
@@ -659,7 +755,6 @@ router.get('/logout', function(req, res, next){
     res.redirect('/Login');
   }
 })
-
 router.get('/account', function(req, res, next){
   if(req.session.user){
     res.render('main/login/account', {name:req.session.user, id:req.session.idname, permission:req.session.permission});

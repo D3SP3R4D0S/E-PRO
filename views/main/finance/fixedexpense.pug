@@ -2,10 +2,10 @@ doctype html
 include ../compara/head.pug
 .wrapper
     include ../compara/sidebar
-        script.
-            $(document).ready(function () {
-                $('#fixedexpense').addClass('active');
-            });
+    script.
+        $(document).ready(function () {
+            $('#fixedexpense').addClass('active');
+        });
     .main
         include ../compara/navbar
         main.content
@@ -14,7 +14,7 @@ include ../compara/head.pug
                     .col-xl-4.col-lg-6.col-md-12
                         h1
                             strong= "Fixed expense"
-                            h6() 고정 지출
+                            h6 고정 지출
                 .row
                     div(class="col-xl-3 col-md-6 col-xs-122")
                         div(class="card mb-2 border-left-primary shadow")
@@ -117,7 +117,7 @@ include ../compara/head.pug
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input(type="hidden" name="method" value=line.paymethod)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Add Paid")
-                                                    form(action="fixedexpenseedit" method="POST")
+                                                    form.me-auto(action="fixedexpenseedit" method="POST")
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="category" value=line.category)
@@ -125,7 +125,7 @@ include ../compara/head.pug
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input(type="hidden" name="payment_num" value=line.payment_num)
                                                         input(type="hidden" name="link" value=line.link)
-                                                        input.btn.btn-info.btn-sm.me-auto(type="submit" value="Edit")
+                                                        input.btn.btn-info.btn-sm(type="submit" value="Edit")
                             .text-end
                                 a.btn.btn-dark( href="fixedexpenseadd") Add data
         include ../compara/footer.pug
