@@ -273,11 +273,11 @@ router.post('/projectaddmember', function(req, res, next) {
     if(req.session.user){
         let rb = req.body
         let sql = "SELECT * FROM project_member WHERE projectid = ? AND memberid = ?"
-        let params = [req.secure.pid, rb.id]
+        let params = [req.session.pid, rb.id]
         connection.query(sql,params,function (err, results, fields) {
             if(err) {
                 throw err;
-            }else if(results.length > 0){
+            }else if(results.length === 0){
                 console.log(results.length)
                 sql = "INSERT INTO project_member(projectid, memberid)VALUES(?,?);"
                 params = [req.session.pid, rb.id];
