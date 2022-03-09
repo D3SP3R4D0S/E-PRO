@@ -53,11 +53,8 @@ include ../compara/head
                         table.table.table-sm.text-center
                             thead
                                 tr
-                                    th Title
-                                    th Cost
                                     th Detail
                                     th Priorty
-                                    th Status
                                     th
                                         span.text-sm Created / Due date
                                     th Control
@@ -65,9 +62,11 @@ include ../compara/head
                                 for line in result
                                     if (line.stat < 3)
                                         tr
-                                            td= line.title
-                                            td= line.cost.toLocaleString() + " KRW"
-                                            td= line.detail
+                                            td
+                                                span.fw-bold= line.title
+                                                span.fw-bold.ms-4= line.cost.toLocaleString() + " KRW"
+                                                br
+                                                span= line.detail
                                             td(class="text-light text-center")
                                                 if line.priority === 1
                                                     span(class="badge bg-danger") EXTREME
@@ -77,32 +76,23 @@ include ../compara/head
                                                     span(class="badge bg-success") MEDIUM
                                                 else if line.priority === 4
                                                     span(class="badge bg-info") LOW
-                                            td(class="text-light text-center")
-                                                if line.stat === 1
-                                                    span(class="badge bg-warning") REQUESTED
-                                                else if line.stat === 2
-                                                    span(class="badge bg-info") PENDING
-                                                else if line.stat === 3
-                                                    span(class="badge bg-success") PURCHASED
-                                                else if line.stat === 4
-                                                    span(class="badge bg-secondary") REJECTED
                                             td
-                                                strong.text-sm= line.created.toISOString().split('T')[0]
+                                                span.fw-bold.text-sm= line.created.toISOString().split('T')[0]
                                                 br
-                                                strong.text-sm= line.duedate.toISOString().split('T')[0]
-                                            td
+                                                span.fw-bold.text-sm= line.duedate.toISOString().split('T')[0]
+                                            td(style="min-width: 150px;")
                                                 .input-group
                                                     .ms-auto
                                                         if(line.link)
-                                                            a.btn.btn-primary.btn-sm(href=line.link) Link
+                                                            a.btn.btn-primary.btn-sm(href=line.link type="button") Link
                                                         else
-                                                            a.btn.btn-sm.btn-dark.disabled Link
-                                                    form(name="apply" action="wishitempurchase" method="POST")
+                                                            a.btn.btn-sm.btn-dark.disabled(type="button") Link
+                                                    form(name="apply" action="wishitempurchase" method="POST" type="button")
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Buy")
-                                                    form.me-auto(name="apply" action="wishitemedit" method="POST")
+                                                    form.me-auto(name="apply" action="wishitemedit" method="POST" type="button")
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="cost" value=line.cost)
