@@ -11,29 +11,53 @@ head
         main.content
             .container-fluid.p-0
                 .row.justify-content-center
-                    H2.m-4 Add Task
+                    h2.fw-bold Add project member
+                    h6 프로젝트 맴버 추가
                     .col-12
                         .card
                             .card-body
                                 .container.col-lg-8
-                                    form(action="projectaddmember" method="post")
-                                        //[rb.tasktitle, req.session.idn, rb.worker, rb.detail, rb.status];
-                                        table.disabled(class="table table-hover table-borderless text-center")
+                                    form(action="projectaddmember" method="GET")
+                                        .input-group
+                                            input.form-control(type="text" name="memberid" value=id placeholder="Member ID" required)
+                                            button.btn.btn-dark.text-light(type="submit") Submit
+                                    table.table.text-center
+                                        thead
                                             tr
-                                                th(class="col-6") Title
-                                                td
-                                                    input(class="form-control" type="text" name="tasktitle" placeholder="title" class="col-12" required)
-                                            tr
-                                                th(class="col-6") Detail
+                                                th ID
+                                                th User name
+                                                th Select
+                                        tbody
+                                            if result
+                                                if result.length >= 1
+                                                    for line in result
+                                                        tr
+                                                            td= line.id
+                                                            td= line.name
+                                                            td.m-0.p-0
+                                                                form(name="apply" action="projectaddmember" method="POST")
+                                                                    input(type="hidden" name="id" value=line.number)
+                                                                    button.btn.btn-primary.mt-3(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Add member
+                                                                    .modal.text-start#removeModal
+                                                                        .modal-dialog
+                                                                            .modal-content
+                                                                                .modal-header
+                                                                                    .modal-title= "Add new member : " + line.name
+                                                                                .modal-body
+                                                                                    p will you continue?
+                                                                                    .text-end
+                                                                                        a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                                                        button.btn.btn-primary.ms-2(type="submit") Submit
+                                                else
+                                                    tr
+                                                        td
+                                                        td No Data
+                                                        td
+                                            else
+                                                tr
                                                     td
-                                                        input(class="form-control" type="textarea" name="detail" placeholder="detail" class="col-12" required)
-                                            tr
-                                                th(class="col-6") Due date
+                                                    td No Data
                                                     td
-                                                        input(class="form-control" type="date" name="duedate" placeholder="duedate" class="col-12" required)
 
-                                        div(class="row")
-                                            a(class="btn btn-dark text-light col-lg-3 col-sm-5 ml-auto m-2" href="javascript:history.back()") go back
-                                            button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
 
     include ../compara/footer_script.pug
