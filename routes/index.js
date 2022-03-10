@@ -645,6 +645,22 @@ router.get('/addvehicle', function(req, res){
     res.redirect('login')
   }
 });
+router.post('/addvehicle', function(req, res){
+  if(req.session.user){
+    let rb = req.body
+    let sql = "INSERT INTO vehicle (userid, nickname, number, mileage, detail, produced) VALUES (?, ?, ?, ?, ?, ?);"
+    let params = [req.session.idn, rb.nickname, rb.number, rb.mileage, rb.detail, rb.produced];
+    connection.query(sql, params, function (err, results) {
+      if(err) throw err;
+      else{
+        res.redirect('vehiclemanage');
+      }
+    })
+  }else{
+    res.redirect('login')
+  }
+});
+
 
 //Finencial obligation
 router.get('/financialobligation', function(req, res, next){
