@@ -612,10 +612,35 @@ router.post('/expendableadd', function(req, res, next) {
   }
 });
 
-//
+//Vehicle management
 router.get('/vehiclemanage', function(req, res, next){
   if(req.session.user){
-    res.render('main/vehicle/vehiclemgmt',{name:req.session.user});
+    let sql = 'SELECT * FROM vehicle WHERE userid = ?;'
+    let val = [req.session.idn]
+    connection.query(sql, val, function (err, results) {
+      if(err) throw err;
+      else if(results.length > 0) {
+        res.render('main/vehicle/vehiclemgmt', {name: req.session.user});
+      }else{
+        res.redirect('addvehicle')
+      }
+    })
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/addvehicle', function(req, res){
+  if(req.session.user){
+    let sql = 'SELECT * FROM vehicle WHERE userid = ?;'
+    let val = [req.session.idn]
+    connection.query(sql, val, function (err, results) {
+      if(err) throw err;
+      else if(results.length === 0) {
+        res.render('main/vehicle/addvehicle', {name: req.session.user});
+      }else{
+        res.redirect('vehiclemanage')
+      }
+    })
   }else{
     res.redirect('login')
   }
