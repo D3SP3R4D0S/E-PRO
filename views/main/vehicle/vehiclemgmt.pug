@@ -15,15 +15,21 @@ include ../compara/head.pug
                         h1
                             strong Vehicle management
                         h6 차량관리
+                    .col
+                        h2= result.title
+                //추가해야하는항목 - 차량별칭, 현제km - mileage, 차량번호(number)- 필요시, detail, 출고일
                 .row
                     .col-lg-8
                         .card
                             .card-body
                                 h3 Prefer Parts according to miles
-
+                                h4= "Current mile " + result.mileage
+                                h4= "Date after buy " + result.produved.toISOString().split('T')[0]
+                                span= result.detail
                     .col-lg-4
                         .card
                             .card-body
+
 
         include ../compara/footer.pug
     include ../compara/footer_script.pug
