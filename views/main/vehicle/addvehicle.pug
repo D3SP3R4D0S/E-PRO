@@ -31,12 +31,14 @@ head
                             .card-body
                                 //추가해야하는항목 - 차량별칭, 현제km - mileage, 차량번호(number)- 필요시, detail, 출고일
                                 .container.col-xl-8.col-lg-12
-                                    form(action="addwish" method="post")
+                                    form(action="addvehicle" method="post")
                                         h4 Vehicle name
                                         input.mb-3.form-control( type="text" name="title" placeholder="Title" class="col-12" required)
+                                        h4 Number
+                                            input.mb-3.form-control( type="text" name="number" placeholder="number" class="col-12" required)
                                         h4 Mileage (Km)
                                             .input-group.mb-3
-                                                input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" placeholder="Cost" class="col-12" required)
+                                                input(class="form-control" type="text" onkeyup="chkNumber(this)" name="mileage" placeholder="mileage" class="col-12" required)
                                                 span(class="input-group-text" id="basic-addon2") KM
                                         h4 Produced date
                                         input.mb-3(class="form-control" type="date" name="produced" placeholder="produced" class="col-12" required)

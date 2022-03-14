@@ -620,7 +620,7 @@ router.get('/vehiclemanage', function(req, res, next){
     connection.query(sql, val, function (err, results) {
       if(err) throw err;
       else if(results.length > 0) {
-        res.render('main/vehicle/vehiclemgmt', {name: req.session.user});
+        res.render('main/vehicle/vehiclemgmt', {result:results[0], name: req.session.user});
       }else{
         res.redirect('addvehicle')
       }
@@ -648,8 +648,8 @@ router.get('/addvehicle', function(req, res){
 router.post('/addvehicle', function(req, res){
   if(req.session.user){
     let rb = req.body
-    let sql = "INSERT INTO vehicle (userid, nickname, number, mileage, detail, produced) VALUES (?, ?, ?, ?, ?, ?);"
-    let params = [req.session.idn, rb.nickname, rb.number, rb.mileage, rb.detail, rb.produced];
+    let sql = "INSERT INTO vehicle (userid, title, number, mileage, detail, produced) VALUES (?, ?, ?, ?, ?, ?);"
+    let params = [req.session.idn, rb.title, rb.number, rb.mileage, rb.detail, rb.produced];
     connection.query(sql, params, function (err, results) {
       if(err) throw err;
       else{
