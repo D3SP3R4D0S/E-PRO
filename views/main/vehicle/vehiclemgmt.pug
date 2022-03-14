@@ -10,22 +10,38 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.justify-content-start
+                .row.row-cols-auto
                     .col
                         h1
                             strong Vehicle management
                         h6 차량관리
                     .col
-                        h2= result.title
+                        h2.fw-bold= result.title
                 //추가해야하는항목 - 차량별칭, 현제km - mileage, 차량번호(number)- 필요시, detail, 출고일
                 .row
                     .col-lg-8
                         .card
+                            .card-body.fw-bold
+                                .row
+                                    .col
+                                        h4 Current range
+                                        p.fw-bold.text-end= result.mileage.toLocaleString() + " KM"
+                                    .col
+                                        h4= "Date produced"
+                                        p.fw-bold.text-end= result.produced.toISOString().split('T')[0]
+                                //span= result.detail
+                        .card
                             .card-body
-                                h3 Prefer Parts according to miles
-                                h4= "Current mile " + result.mileage
-                                h4= "Date after buy " + result.produved.toISOString().split('T')[0]
-                                span= result.detail
+                                h3 Vehicle Expendables
+                                table.table
+                                    thead
+                                        tr
+                                            th Type
+                                            th 교환주기
+                                            th 마지막 교환 시점
+                                            th 비용
+                                            th control
+                                    tbody
                     .col-lg-4
                         .card
                             .card-header
