@@ -4,6 +4,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
+const request = require('request')
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
 connection.connect(function(err){
@@ -607,6 +608,26 @@ router.post('/expendableadd', function(req, res, next) {
     let params = [req.session.idn, rb.title, cost, rb.link, rb.description];
     connection.query(sql,params,function (err, results, fields) {if(err){console.log(err);}});
     res.redirect('/expendables');
+  }else{
+    res.redirect('login')
+  }
+});
+
+//investment
+router.get('/investment', function(req, res, next){
+  if(req.session.user){
+    let sql = 'SELECT * FROM investment WHERE userid = ?;'
+    let val = [req.session.idn]
+    connection.query(sql, val, function (err, results) {
+      if(err){
+        console.log(err);
+      } else{
+        let url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'
+        request({url: url,method: "GET"}, function(err,response, body){
+          res.render('main/investment/investmgmt', {currency:JSON.parse(body)[0], result:results, name: req.session.user});
+        })
+      }
+    })
   }else{
     res.redirect('login')
   }

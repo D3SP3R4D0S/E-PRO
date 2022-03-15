@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
+const request = require('request')
 
 connection.connect(function(err){
     if(err) {                                     // or restarting (takes a while sometimes).
