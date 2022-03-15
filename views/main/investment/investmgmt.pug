@@ -19,7 +19,16 @@ include ../compara/head.pug
                     .col
                         .card
                             .card-body
-                                h2= "today's dollor : " + currency
+                                h3.fw-bold= "Today's dollor"
+                                .row
+                                    .col
+                                        span= currency.name
+                                    .col
+                                        span= "Current : " + currency.basePrice
+                                    .col
+                                        span= " Ref date : " + currency.date
+                                    .col
+                                        span= " Provider : " + currency.provider
                 .row
                     .col
                         .card

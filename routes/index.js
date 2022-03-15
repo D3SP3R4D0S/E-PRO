@@ -623,10 +623,8 @@ router.get('/investment', function(req, res, next){
         console.log(err);
       } else{
         let url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'
-        let currency
-        request({url: url,method: "GET"}, function(err,result, body){
-          currency = JSON.parse(body)[0].basePrice
-          res.render('main/investment/investmgmt', {currency, result:results, name: req.session.user});
+        request({url: url,method: "GET"}, function(err,response, body){
+          res.render('main/investment/investmgmt', {currency:JSON.parse(body)[0], result:results, name: req.session.user});
         })
       }
     })
