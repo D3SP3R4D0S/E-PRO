@@ -4,6 +4,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
+const request = require('request')
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
 connection.connect(function(err){
@@ -615,6 +616,12 @@ router.post('/expendableadd', function(req, res, next) {
 //investment
 router.get('/investment', function(req, res, next){
   if(req.session.user){
+    let url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'
+    let currency
+    request({url: url,method: "GET"}, function(err, result, body){
+      currency = body[0].basePrice
+    })
+    console.log(currency)
     let sql = 'SELECT * FROM investment WHERE userid = ?;'
     let val = [req.session.idn]
     connection.query(sql, val, function (err, results) {
