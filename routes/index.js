@@ -612,6 +612,23 @@ router.post('/expendableadd', function(req, res, next) {
   }
 });
 
+//investment
+router.get('/investment', function(req, res, next){
+  if(req.session.user){
+    let sql = 'SELECT * FROM investment WHERE userid = ?;'
+    let val = [req.session.idn]
+    connection.query(sql, val, function (err, results) {
+      if(err){
+        console.log(err);
+      } else{
+        res.render('main/investment/investmgmt', {result:results, name: req.session.user});
+      }
+    })
+  }else{
+    res.redirect('login')
+  }
+});
+
 //Vehicle management
 router.get('/vehiclemanage', function(req, res, next){
   if(req.session.user){
