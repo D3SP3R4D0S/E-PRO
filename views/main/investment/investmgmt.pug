@@ -1,0 +1,60 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#vehiclemanage').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.row-cols-auto
+                    .col
+                        h1
+                            strong Invest management
+                        h6 투자 내역 관리
+                .row
+                    .col
+                        .card
+                            .card-body
+                                table.table
+                                    thead
+                                        tr
+                                            th Item
+                                            th Cost
+                                            th Quantity
+                                            th Current price
+                                            th Devidend
+                                            th Gain
+                                            th bougnt
+                                            th datemodified
+                                            th Control
+                                    tbody
+                                        for line in result
+                                            tr
+                                                td= line.item
+                                                td= line.buying
+                                                td= line.count
+                                                if line.current
+                                                    td= line.current
+                                                else
+                                                    td No data
+                                                td
+                                                    span= line.dividendo + '  '
+                                                    span= line.dividend
+                                                td
+                                                    span Need 
+                                                if(line.boughtdate)
+                                                    td= line.boughtdate.toISOString().split('T')[0]
+                                                else
+                                                    td No data
+                                                if(line.modified)
+                                                    td= line.modified.toISOString().split('T')[0]
+                                                else
+                                                    td No data
+                                                td
+                                                    a.btn.btn-dark.disabled edit
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug
