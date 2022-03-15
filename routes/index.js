@@ -616,19 +616,18 @@ router.post('/expendableadd', function(req, res, next) {
 //investment
 router.get('/investment', function(req, res, next){
   if(req.session.user){
-    let url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'
-    let currency
-    request({url: url,method: "GET"}, function(err, result, body){
-      currency = body[0].basePrice
-    })
-    console.log(currency)
     let sql = 'SELECT * FROM investment WHERE userid = ?;'
     let val = [req.session.idn]
     connection.query(sql, val, function (err, results) {
       if(err){
         console.log(err);
       } else{
-        res.render('main/investment/investmgmt', {result:results, name: req.session.user});
+        let url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'
+        let currency
+        request({url: url,method: "GET"}, function(err,result, body){
+          currency = JSON.parse(body)[0].basePrice
+          res.render('main/investment/investmgmt', {currency, result:results, name: req.session.user});
+        })
       }
     })
   }else{
