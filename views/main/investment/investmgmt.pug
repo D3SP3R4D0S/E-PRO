@@ -10,11 +10,13 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.row-cols-auto
-                    .col
+                .row.row-cols-auto.mb-2
+                    .col.ms-3
                         h1
                             strong Invest management
                         h6 투자 내역 관리
+                    .col.text-end.align-self-center.ms-3
+                        a.btn.btn-dark.btn-sm(href="investmentadd") Add item
                 .row
                     .col
                         .card
