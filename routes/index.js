@@ -632,6 +632,31 @@ router.get('/investment', function(req, res, next){
     res.redirect('login')
   }
 });
+router.get('/investmentadd', function(req, res){
+  if(req.session.user){
+    res.render('main/investment/investmentadd', {name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+})
+router.post('/investmentadd', function(req, res){
+  if(req.session.user){
+    let rb = req.body
+    let dividendo = rb.dividendo
+    let dividend = rb.dividend
+    let sql = "INSERT INTO investment (`userid`, `item`, `buying`, `currency`, `count`, `dividendo`, `dividend`, `boughtdate`) VALUES (?,?,?,?,?,?,?,?);"
+    let params = [req.session.idn, rb.item, rb.buying, rb.currency, rb.count, dividendo, dividend, rb.boughtdate];
+    connection.query(sql, params, function (err, results) {
+      if(err) throw err;
+      else{
+        res.redirect('investment');
+      }
+    })
+  }else{
+    res.redirect('login')
+  }
+});
+
 
 //Vehicle management
 router.get('/vehiclemanage', function(req, res, next){
