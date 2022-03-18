@@ -656,6 +656,26 @@ router.post('/investmentadd', function(req, res){
     res.redirect('login')
   }
 });
+router.post('/investmentedit', function (req, res){
+  if(req.session.user){
+    req.session.investid = req.body.id
+    let rb = req.body
+    res.render('main/investment/investmentedit', {rb, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/investmentapply', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let sql = "UPDATE investment SET  `item` = ?, `buying` = ?, `currency` = ?, `count` = ?, `dividendo` = ?, `dividend` = ?, `boughtdate` = ?  WHERE (`id` = ?);"
+    let params = [rb.item, rb.buying, rb.currency, rb.count, rb.dividendo, rb.dividend, rb.boughtdate, req.session.investid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/investment');
+  }else{
+    res.redirect('login')
+  }
+});
 
 
 //Vehicle management
