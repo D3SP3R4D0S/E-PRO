@@ -1,0 +1,43 @@
+doctype html
+include ../compara/head.pug
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#investment').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.row-cols-auto.mb-2
+                    .col.ms-3
+                        h1
+                            strong Invest item edit
+                        h6 투자 항목 수정
+                .row
+                    .col
+                        .card
+                            .card-body
+                                form(action="investmentapply" method="post")
+                                    .row.justify-content-center
+                                        .col-lg-4
+                                            h5.fw-bold 종목
+                                            input.mb-3.form-control(type='text' name="item" required)
+                                            h5.fw-bold 단가
+                                            input.mb-3.form-control(type='number' name="buying" required)
+                                            h5.fw-bold 환율 (원화일경우 1 입력)
+                                            input.mb-3.form-control(type='number' name="currency" required)
+                                            h5.fw-bold 수량
+                                            input.mb-3.form-control(type='number' name="count" required)
+                                            h5.fw-bold 구매일
+                                            input.mb-3.form-control(type='date' name="boughtdate" required)
+                                            h5.fw-bold 배당여부 (연간 배당 개월수) 없을시 입력안함
+                                            input.mb-3.form-control(type='number' name="dividendo" min="0" required)
+                                            h5.fw-bold 배당액
+                                            input.mb-3.form-control(type='number' name="dividend" min="0" required)
+                                            .row.text-end
+                                                a(class="btn btn-dark text-light col-lg-3 col-sm-5 ms-auto m-2" href="javascript:history.back()") Go back
+                                                button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug
