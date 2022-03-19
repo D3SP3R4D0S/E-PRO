@@ -239,7 +239,6 @@ router.get('/removedata', function(req, res, next){
     res.redirect('login')
   }
 });
-
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
     res.render('main/finance/adddata',{setting:req.session.setting, name:req.session.user});
@@ -677,7 +676,6 @@ router.post('/investmentapply', function (req, res, next){
   }
 });
 
-
 //Vehicle management
 router.get('/vehiclemanage', function(req, res, next){
   if(req.session.user){
@@ -726,7 +724,6 @@ router.post('/addvehicle', function(req, res){
     res.redirect('login')
   }
 });
-
 
 //Finencial obligation
 router.get('/financialobligation', function(req, res, next){
