@@ -239,7 +239,6 @@ router.get('/removedata', function(req, res, next){
     res.redirect('login')
   }
 });
-
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
     res.render('main/finance/adddata',{setting:req.session.setting, name:req.session.user});
@@ -656,7 +655,26 @@ router.post('/investmentadd', function(req, res){
     res.redirect('login')
   }
 });
-
+router.post('/investmentedit', function (req, res){
+  if(req.session.user){
+    req.session.investid = req.body.id
+    let rb = req.body
+    res.render('main/investment/investmentedit', {rb, name:req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/investmentapply', function (req, res, next){
+  if(req.session.user){
+    let rb = req.body
+    let sql = "UPDATE investment SET  `item` = ?, `buying` = ?, `currency` = ?, `count` = ?, `dividendo` = ?, `dividend` = ?, `boughtdate` = ?  WHERE (`id` = ?);"
+    let params = [rb.item, rb.buying, rb.currency, rb.count, rb.dividendo, rb.dividend, rb.boughtdate, req.session.investid];
+    connection.query(sql,params,function (err) { if(err) console.log(err);});
+    res.redirect('/investment');
+  }else{
+    res.redirect('login')
+  }
+});
 
 //Vehicle management
 router.get('/vehiclemanage', function(req, res, next){
@@ -706,7 +724,6 @@ router.post('/addvehicle', function(req, res){
     res.redirect('login')
   }
 });
-
 
 //Finencial obligation
 router.get('/financialobligation', function(req, res, next){

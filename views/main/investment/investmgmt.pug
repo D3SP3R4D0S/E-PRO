@@ -72,6 +72,15 @@ include ../compara/head.pug
                                                 else
                                                     td No data
                                                 td
-                                                    a.btn.btn-dark.disabled edit
+                                                    form.me-auto(action="investmentedit" method="POST")
+                                                        input(type="hidden" name="item" value=line.item)
+                                                        input(type="hidden" name="buying" value=line.buying)
+                                                        input(type="hidden" name="currency" value=line.currency)
+                                                        input(type="hidden" name="count" value=line.count)
+                                                        if(line.boughtdate)
+                                                          input(type="hidden" name="boughtdate" value=line.boughtdate.toISOString().split('T')[0])
+                                                        input(type="hidden" name="dividendo" value=line.dividendo)
+                                                        input(type="hidden" name="dividend" value=line.dividend)
+                                                        input.btn.btn-info.btn-sm(type="submit" value="Edit")
         include ../compara/footer.pug
     include ../compara/footer_script.pug
