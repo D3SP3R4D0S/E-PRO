@@ -39,48 +39,107 @@ include ../compara/head.pug
                                     thead
                                         tr
                                             th Item
-                                            th Cost
-                                            th Quantity
-                                            th Current price
+                                            th Bought
                                             th Devidend
-                                            th Gain
-                                            th bougnt
-                                            th datemodified
-                                            th Control
+                                            th Current
                                     tbody
                                         for line in result
                                             tr
-                                                td= line.item
-                                                td= line.buying
-                                                td= line.count
-                                                if line.current
-                                                    td= line.current
-                                                else
-                                                    td No data
+                                                //item
+
+                                                // Cost
                                                 td
-                                                    span= line.dividendo + '  '
-                                                    span= line.dividend
+                                                    .row.fw-bold
+                                                        .col
+                                                            span= line.item
+                                                        .col.text-end.text-sm
+                                                            form.me-auto(action="investmentedit" method="POST")
+                                                                input(type="hidden" name="id" value=line.id)
+                                                                input(type="hidden" name="item" value=line.item)
+                                                                input(type="hidden" name="buying" value=line.buying)
+                                                                input(type="hidden" name="currency" value=line.currency)
+                                                                input(type="hidden" name="count" value=line.count)
+                                                                if(line.boughtdate)
+                                                                    input(type="hidden" name="boughtdate" value=line.boughtdate.toISOString().split('T')[0])
+                                                                input(type="hidden" name="dividendo" value=line.dividendo)
+                                                                input(type="hidden" name="dividend" value=line.dividend)
+                                                                input.btn.btn-info.btn-xs(type="submit" value="Edit")
+                                                    .row
+                                                        .col
+                                                            span.text-sm Price
+                                                        .col.text-end
+                                                            span.text-sm= line.buying
+                                                    .row
+                                                        .col
+                                                            span.text-sm Quantity
+                                                        .col.text-end
+                                                            span.text-sm= line.count
+                                                //Price bought
+                                                td.text-sm
+                                                    .row
+                                                        .col
+                                                            if(line.boughtdate)
+                                                                span.fw-bold Date
+                                                        .col.text-end
+                                                            if(line.boughtdate)
+                                                                span= line.boughtdate.toISOString().split('T')[0]
+                                                    .row
+                                                        .col
+                                                            span.fw-bold Total
+                                                        .col.text-end
+                                                            span= Math.round(line.count * line.buying * line.currency).toLocaleString()
+                                                    .row
+                                                        .col
+                                                            span.fw-bold Currency
+                                                        .col.text-end
+                                                            if line.currency === '1'
+                                                                span= "KRW"
+                                                            else
+                                                                span= line.currency
+
+
+                                                //dividend
+                                                td.text-sm
+                                                    .row
+                                                        .col
+                                                            span.fw-bold Term
+                                                        .col.text-end
+                                                            span.fw-bold
+                                                                if line.dividendo === 12
+                                                                    span Monthly
+                                                                else if line.dividendo === 1
+                                                                    span Yearly
+                                                                else if line.dividendo === 4
+                                                                    span Quarter
+                                                                else if line.dividendo === 2
+                                                                    span Half
+                                                                else
+                                                                    span= line.dividendo
+                                                    .row
+                                                        .col
+                                                            span.fw-bold Currency
+                                                        .col.text-end
+                                                            span= Math.round(line.dividend * currency.basePrice) + "KRW"
+
+                                                //Current price
+                                                td.text-sm
+                                                    .row
+                                                        .col
+                                                            span.fw-bold Current
+                                                        .col.text-end
+                                                            if line.current
+                                                                span= line.current
+                                                            else
+                                                                span No data
+                                                    .row
+                                                        .col
+                                                            span.fw-bold Gain
+                                                        .col.text-end
+                                                            if line.current
+                                                                span= line.current - (line.count * line.buying)
+                                                            else
+                                                                span No data
                                                 td
-                                                    //@todo need to add current calculation
-                                                    span Need to add
-                                                if(line.boughtdate)
-                                                    td= line.boughtdate.toISOString().split('T')[0]
-                                                else
-                                                    td No data
-                                                if(line.modified)
-                                                    td= line.modified.toISOString().split('T')[0]
-                                                else
-                                                    td No data
-                                                td
-                                                    form.me-auto(action="investmentedit" method="POST")
-                                                        input(type="hidden" name="item" value=line.item)
-                                                        input(type="hidden" name="buying" value=line.buying)
-                                                        input(type="hidden" name="currency" value=line.currency)
-                                                        input(type="hidden" name="count" value=line.count)
-                                                        if(line.boughtdate)
-                                                          input(type="hidden" name="boughtdate" value=line.boughtdate.toISOString().split('T')[0])
-                                                        input(type="hidden" name="dividendo" value=line.dividendo)
-                                                        input(type="hidden" name="dividend" value=line.dividend)
-                                                        input.btn.btn-info.btn-sm(type="submit" value="Edit")
+
         include ../compara/footer.pug
     include ../compara/footer_script.pug
