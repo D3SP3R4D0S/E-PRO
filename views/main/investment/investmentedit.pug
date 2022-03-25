@@ -25,7 +25,7 @@ include ../compara/head.pug
                                             h5.fw-bold 종목
                                             input.mb-3.form-control(type='text' name="item" value=rb.item required)
                                             h5.fw-bold 단가
-                                            input.mb-3.form-control(type='number' name="buying" value=rb.buying required)
+                                            input.mb-3.form-control(type='number' name="buying" step="0.01" value=rb.buying required)
                                             h5.fw-bold 환율 (원화일경우 1 입력)
                                             input.mb-3.form-control(type='number' name="currency" value=rb.currency required)
                                             h5.fw-bold 수량
@@ -33,9 +33,9 @@ include ../compara/head.pug
                                             h5.fw-bold 구매일
                                             input.mb-3.form-control(type='date' name="boughtdate" value=rb.boughtdate required)
                                             h5.fw-bold 배당여부 (연간 배당 개월수) 없을시 입력안함
-                                            input.mb-3.form-control(type='number' name="dividendo" min="0" value=rb.dividendo required)
+                                            input.mb-3.form-control(type='number' name="dividendo" min="0" step="0.01" value=rb.dividendo required)
                                             h5.fw-bold 배당액
-                                            input.mb-3.form-control(type='number' name="dividend" min="0" value=rb.dividend required)
+                                            input.mb-3.form-control(type='number' name="dividend" min="0" step="0.01" value=rb.dividend required)
                                             .row.text-end
                                                 a(class="btn btn-dark text-light col-lg-3 col-sm-5 ms-auto m-2" href="javascript:history.back()") Go back
                                                 button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit

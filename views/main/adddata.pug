@@ -43,8 +43,9 @@ head
                                                 tr  
                                                     th date
                                                     td
-                                                        input(class="form-control" type="date" name="date" placeholder="date" class="col-12" required)
-                                                
+                                                        input(class="form-control" type="date" name="date" placeholder="date" id='currentDate' class="col-12" required)
+                                                        script.
+                                                            document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
                                                 tr
                                                     th alligner
                                                     td
