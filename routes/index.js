@@ -835,7 +835,6 @@ router.post('/login', function(req, res, next) {
           res.redirect('/index');
         }
         else{
-          console.log("Wrong PW", key.toString('base64'), results[0].password)
           res.redirect('/login')
         }
       });
