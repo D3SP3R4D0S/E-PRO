@@ -9,3 +9,6 @@ https://getbootstrap.com/
 
 Adminkit
 https://github.com/adminkit/adminkit
+
+datatables.js
+chart.js
