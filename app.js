@@ -1,19 +1,16 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session');
-var indexRouter = require('./routes/index');
-var projectRouter = require('./routes/project');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
+let session = require('express-session');
+const indexRouter = require('./routes/index');
+const projectRouter = require('./routes/project');
+const sessionconfig = require('./routes/config/options');
 
-var app = express();
+let app = express();
 
-app.use(session({
-  secret: '@#@$MYSIGN#@$#$',
-  resave: false,
-  saveUninitialized: true
- }));
+app.use(session(sessionconfig));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
