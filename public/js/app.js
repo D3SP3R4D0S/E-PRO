@@ -18505,11 +18505,11 @@
                     return s(ge, e) ? ge[e](t._strict, t._locale) : new RegExp(Fe(e))
                 }
 
-                function Fe(e) {
-                    return Ie(e.replace("\\", "").replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, (function (e, t, n, i, a) {
-                        return t || n || i || a
-                    })))
-                }
+                // function Fe(e) {
+                //     return Ie(e.replace("\\", "").replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, (function (e, t, n, i, a) {
+                //         return t || n || i || a
+                //     })))
+                // }
 
                 function Ie(e) {
                     return e.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")
