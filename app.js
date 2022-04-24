@@ -6,11 +6,22 @@ let logger = require('morgan');
 let session = require('express-session');
 const indexRouter = require('./routes/index');
 const projectRouter = require('./routes/project');
-const sessionconfig = require('./routes/config/options');
+const {
+  secret, resave, saveUninitialized
+} = require('./routes/config/options');
+const csrf = require("csurf");
 
 let app = express();
 
-app.use(session(sessionconfig));
+app.use(session({
+  secret : secret,
+  resave : resave,
+  saveUninitialized :saveUninitialized,
+  cookie: {
+    secure: true,
+    httpOnly: true
+  }
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,6 +29,7 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(csrf({ cookie: true }))
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
