@@ -20,5 +20,8 @@
     "pm2": "^5.1.2",
     "pug": "3.0.1",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "csurf": "^1.11.0"
   }
 }

@@ -1,5 +1,9 @@
 head
     include compara/head
+    script.
+        $(document).ready(function(){
+            document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
+        });
 .wrapper
     include compara/sidebar
     .main
@@ -44,8 +48,7 @@ head
                                                     th date
                                                     td
                                                         input(class="form-control" type="date" name="date" placeholder="date" id='currentDate' class="col-12" required)
-                                                        script.
-                                                            document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
+
                                                 tr
                                                     th alligner
                                                     td
