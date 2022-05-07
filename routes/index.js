@@ -4,7 +4,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
-const request = require('request')
+const request = require('request');
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
 connection.connect(function(err){
@@ -19,6 +19,7 @@ connection.close
 router.get('/', function(req, res, next) {
   res.redirect('/index');
 });
+
 router.get('/index', function(req, res, next) {
   let idnum = req.session.idn
   let selector = req.query.yearmonth // 연-월 (YYYY-MM) 형식
@@ -32,6 +33,7 @@ router.get('/index', function(req, res, next) {
   }
   req.session.indexdate = selector
   let controldate = new Date(selector.split('-')[0], parseInt(selector.split('-')[1])-1);
+  console.log(req.session.user);
   if(req.session.user){
     let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
       where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? group by alligner order by alligner;
@@ -813,28 +815,30 @@ router.get('/financialobligationremove', function(req, res, next){
 });
 // Login
 router.get('/login', function(req, res, next) {
-  res.render('main/login/login');
+  res.render('main/login/login', {csrfToken:req.csrfToken()});
 });
+
 router.post('/login', function(req, res, next) {
   let rb = req.body
   let inpw = rb.pw
   const sql = 'SELECT * FROM nodedb.account where id = ?'
   const params = [rb.id];
+  console.log(`SELECT * FROM nodedb.account where id = ${rb.id}`);
   connection.query(sql,params,function (err, results, fields) {
     if(err){
       console.log(err);
     }else{
       crypto.pbkdf2(inpw, results[0].salt, 100000, 64, 'sha512', (err, key) => {
-        if (key.toString('base64') === results[0].password, results[0].permission >= 1){
+        if (key.toString('base64') === results[0].password && results[0].permission >= 1){
           req.session.idname = rb.id;
           req.session.idn = results[0].number;
           req.session.user = results[0].name;
           req.session.permission = results[0].permission;
           req.session.setting = JSON.parse(results[0].settings);
+          
           req.session.save();
           res.redirect('/index');
-        }
-        else{
+        }else{
           res.redirect('/login')
         }
       });
@@ -866,7 +870,7 @@ router.get('/account', function(req, res, next){
   }
 });
 router.get('/register', function(req, res, next) {
-  res.render('main/login/register');
+  res.render('main/login/register', {csrfToken:req.csrfToken()});
 });
 router.post('/register', function(req, res, next){
   let rb = req.body
