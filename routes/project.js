@@ -31,7 +31,7 @@ router.get('/projects', function(req, res, next) {
 });
 router.get('/projectadd', function(req, res, next) {
     if(req.session.user){
-        res.render('main/projects/projectadd',{name:req.session.user});
+        res.render('main/projects/projectadd',{csrfToken:req.csrfToken(),name:req.session.user});
     }else{
         res.redirect('login')
     }
@@ -100,7 +100,7 @@ router.get('/projectdetail', function(req, res, next) {
 
 router.get('/projectaddtask', function(req, res, next) {
     if(req.session.user){
-        res.render('main/projects/projectaddtask',{name:req.session.user});
+        res.render('main/projects/projectaddtask',{csrfToken:req.csrfToken(),name:req.session.user});
     }else{
         res.redirect('login')
     }
@@ -134,7 +134,7 @@ router.get('/projecttaskdetail', function(req, res,next){
         connection.query(sql, [taskid, pid, taskid], function (err,results, fields){
             res.render('main/projects/projecttaskdetail',{
                 task: results[0][0], pmember: results[1],
-                comments:results[2], name:req.session.user
+                csrfToken:req.csrfToken(), comments:results[2], name:req.session.user
             });
         })
     }else{
@@ -186,7 +186,7 @@ router.post('/projectaddtask', function(req, res, next) {
 });
 router.get('/projectaddfundreq', function(req, res, next) {
     if(req.session.user){
-        res.render('main/projects/projectaddfundreq',{name:req.session.user});
+        res.render('main/projects/projectaddfundreq',{csrfToken:req.csrfToken(),name:req.session.user});
     }else{
         res.redirect('login')
     }
@@ -222,7 +222,7 @@ router.get('/projectfunddetail', function(req, res, next){
         connection.query(sql, [fundid, pid, fundid], function (err,results, fields){
             res.render('main/projects/projectfunddetail',{
                 fund: results[0][0], pmember: results[1],
-                comments:results[2], name:req.session.user
+                csrfToken:req.csrfToken(), comments:results[2], name:req.session.user
             });
         })
     }else{
@@ -263,7 +263,7 @@ router.get('/projectaddmember', function(req, res, next) {
         connection.query(sql,id,function (err, result, fields) {
             if (err) {console.log(err);
             } else {
-                res.render('main/projects/projectaddmember', {id, result, name: req.session.user});
+                res.render('main/projects/projectaddmember', {id, result,csrfToken:req.csrfToken(), name: req.session.user});
             }
         });
     }else{

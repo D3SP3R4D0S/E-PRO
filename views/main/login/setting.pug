@@ -19,6 +19,7 @@ include ../compara/head
                                 .col-lg-6
                                     table.table.table-sm
                                         form(action="removesetting" method="post")
+                                            input(type="hidden" name="_csrf" value=csrfToken)
                                             thead
                                                 th
                                                     button.btn.btn-danger.btn-sm(type="submit") Remove
@@ -32,11 +33,13 @@ include ../compara/head
                                                             input(type="radio" name="value" value=line)
                                                         td= line
                                     form(action="addsettingmethod" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         .input-group.mb-2
                                             input.form-control(type="text" name="value" placeholder="value" required)
                                             button.btn.btn-primary.text-light(type="submit") Add
                                     table.table.table-sm
                                         form(action="removesetting" method="post")
+                                            input(type="hidden" name="_csrf" value=csrfToken)
                                             thead
                                                 th
                                                     button.btn.btn-danger.btn-sm(type="submit") Remove
@@ -49,11 +52,13 @@ include ../compara/head
                                                             input(type="radio" name="value" value=line)
                                                         td= line
                                     form(action="addsettingpaidfor" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         .input-group.mb-2
                                             input.form-control(type="text" name="value" placeholder="value" required)
                                             button.btn.btn-primary.text-light(type="submit") Add
                                     table.table.table-sm
                                         form(action="removesetting" method="post")
+                                            input(type="hidden" name="_csrf" value=csrfToken)
                                             thead
                                                 th
                                                     button.btn.btn-danger.btn-sm(type="submit") Remove
@@ -66,6 +71,7 @@ include ../compara/head
                                                             input(type="radio" name="value" value=line)
                                                         td= line
                                     form(action="addsettingalligner" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         .input-group.mb-2
                                             input.form-control(type="text" name="value" placeholder="value" required)
                                             button.btn.btn-primary.text-light(type="submit") Add

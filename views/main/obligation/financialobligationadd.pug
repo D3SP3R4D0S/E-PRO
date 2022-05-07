@@ -30,6 +30,7 @@ head
                             .card-body
                                 .container.col-xl-8.col-lg-12
                                     form(action="financialobligationadd" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         h4 Loaner
                                         h6 채무자
                                         input.mb-3(class="form-control" type="text" name="loaner" placeholder="loaner" class="col-12" required)

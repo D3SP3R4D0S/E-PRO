@@ -19,6 +19,7 @@ include ../compara/head.pug
                             div(class='card-body')
                                 div(class="container col-lg-8")
                                     form(action="fixedexpenseeditapply" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         h4 Title
                                         input.mb-2(class="form-control" type="text" name="title" value=rb.title placeholder="Title" class="col-12" required)
                                         h4 Category

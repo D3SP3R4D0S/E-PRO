@@ -54,6 +54,7 @@ include ../compara/head.pug
                                                             span= line.item
                                                         .col.text-end.text-sm
                                                             form.me-auto(action="investmentedit" method="POST")
+                                                                input(type="hidden" name="_csrf" value=csrfToken)
                                                                 input(type="hidden" name="id" value=line.id)
                                                                 input(type="hidden" name="item" value=line.item)
                                                                 input(type="hidden" name="buying" value=line.buying)

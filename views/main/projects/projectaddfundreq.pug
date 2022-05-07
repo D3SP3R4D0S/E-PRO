@@ -17,6 +17,7 @@ head
                             .card-body
                                 .container.col-lg-8
                                     form(action="projectaddfundreq" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         //[rb.tasktitle, req.session.idn, rb.worker, rb.detail, rb.status];
                                         table(class="table table-hover table-borderless text-center")
                                             tr

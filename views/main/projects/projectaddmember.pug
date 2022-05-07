@@ -18,6 +18,7 @@ head
                             .card-body
                                 .container.col-lg-8
                                     form(action="projectaddmember" method="GET")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         .input-group
                                             input.form-control(type="text" name="memberid" value=id placeholder="Member ID" required)
                                             button.btn.btn-dark.text-light(type="submit") Submit
@@ -36,6 +37,7 @@ head
                                                             td= line.name
                                                             td.m-0.p-0
                                                                 form(name="apply" action="projectaddmember" method="POST")
+                                                                    input(type="hidden" name="_csrf" value=csrfToken)
                                                                     input(type="hidden" name="id" value=line.number)
                                                                     button.btn.btn-primary.mt-3(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Add member
                                                                     .modal.text-start#removeModal

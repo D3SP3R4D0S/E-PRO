@@ -112,12 +112,14 @@ include ../compara/head.pug
                                                     else
                                                         a.btn.btn-dark.disabled.btn-sm.ms-auto Link
                                                     form(action="fixedexpensepurchase" method="POST")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input(type="hidden" name="method" value=line.paymethod)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Add")
                                                     form.me-auto(action="fixedexpenseedit" method="POST")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="category" value=line.category)
