@@ -6,6 +6,9 @@ let logger = require('morgan');
 let session = require('express-session');
 const indexRouter = require('./routes/index');
 const projectRouter = require('./routes/project');
+const { config } = require("dotenv");
+config();
+
 process.env.NODE_ENV = 
   ( process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production' ) 
   ? 'production' 
