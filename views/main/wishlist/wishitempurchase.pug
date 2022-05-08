@@ -30,6 +30,7 @@ head
                             .card-body
                                 .container.col-xl-8.col-lg-12
                                     form(action="wishitempurchaseapply" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         table(class="table table-hover table-borderless text-center")
                                             tr
                                                 th cost

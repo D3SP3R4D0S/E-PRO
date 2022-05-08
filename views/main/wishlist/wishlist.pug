@@ -88,11 +88,13 @@ include ../compara/head
                                                         else
                                                             a.btn.btn-sm.btn-dark.disabled(type="button") Link
                                                     form(name="apply" action="wishitempurchase" method="POST" type="button")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="cost" value=line.cost)
                                                         input.btn.btn-sm.btn-primary(type="submit" value="Buy")
                                                     form.me-auto(name="apply" action="wishitemedit" method="POST" type="button")
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
                                                         input(type="hidden" name="id" value=line.id)
                                                         input(type="hidden" name="title" value=line.title)
                                                         input(type="hidden" name="cost" value=line.cost)
@@ -138,6 +140,7 @@ include ../compara/head
                                                             strong No data
                                                     td
                                                         form.me-auto(name="apply" action="wishitemedit" method="POST")
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
                                                             input(type="hidden" name="id" value=line.id)
                                                             input(type="hidden" name="title" value=line.title)
                                                             input(type="hidden" name="cost" value=line.cost)
@@ -180,6 +183,7 @@ include ../compara/head
                                                             strong No data
                                                     td
                                                         form.me-auto(name="apply" action="wishitemedit" method="POST")
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
                                                             input(type="hidden" name="id" value=line.id)
                                                             input(type="hidden" name="title" value=line.title)
                                                             input(type="hidden" name="cost" value=line.cost)

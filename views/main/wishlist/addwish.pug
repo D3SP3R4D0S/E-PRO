@@ -31,6 +31,7 @@ head
                             .card-body
                                 .container.col-xl-8.col-lg-12
                                     form(action="addwish" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         h4 Title
                                         input.mb-3(class="form-control" type="text" name="title" placeholder="Title" class="col-12" required)
                                         h4 Cost

@@ -4,7 +4,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
-const request = require('request')
+const request = require('request');
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
 connection.connect(function(err){
@@ -19,6 +19,7 @@ connection.close
 router.get('/', function(req, res, next) {
   res.redirect('/index');
 });
+
 router.get('/index', function(req, res, next) {
   let idnum = req.session.idn
   let selector = req.query.yearmonth // 연-월 (YYYY-MM) 형식
@@ -32,6 +33,7 @@ router.get('/index', function(req, res, next) {
   }
   req.session.indexdate = selector
   let controldate = new Date(selector.split('-')[0], parseInt(selector.split('-')[1])-1);
+  console.log(req.session.user);
   if(req.session.user){
     let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
       where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? group by alligner order by alligner;
@@ -241,7 +243,7 @@ router.get('/removedata', function(req, res, next){
 });
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
-    res.render('main/finance/adddata',{setting:req.session.setting, name:req.session.user});
+    res.render('main/finance/adddata',{csrfToken:req.csrfToken(),setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -277,7 +279,7 @@ router.get('/fixedexpense', function(req, res, next) {
         sum(if(payment_num=12, cost, 0)) as monthbill, sum(if(payment_num=1, cost, 0)) as yearbill
         FROM finance.fixedexpense where userid = ?;`
     connection.query(sql, [req.session.idn, req.session.idn] , function (error, results) {
-      res.render('main/finance/fixedexpense', {result:results[0], sum:results[1], name:req.session.user});
+      res.render('main/finance/fixedexpense', {csrfToken:req.csrfToken(),result:results[0], sum:results[1], name:req.session.user});
     });
   }else{
     res.redirect('login')
@@ -285,7 +287,7 @@ router.get('/fixedexpense', function(req, res, next) {
 });
 router.get('/fixedexpenseadd', function(req, res, next) {
   if(req.session.user){
-    res.render('main/finance/fixedexpenseadd', {name:req.session.user});
+    res.render('main/finance/fixedexpenseadd', {csrfToken:req.csrfToken(),name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -313,7 +315,7 @@ router.post('/fixedexpensepurchase', function (req, res, next){
     let title = req.body.title
     let cost = req.body.cost
     let method = req.body.method
-    res.render('main/finance/fixedexpensepurchase', {title, cost, method, setting:req.session.setting, name:req.session.user});
+    res.render('main/finance/fixedexpensepurchase', {title, cost, method,csrfToken:req.csrfToken(), setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -342,7 +344,7 @@ router.post('/fixedexpensepurchaseadd', function (req, res, next){
 router.post('/fixedexpenseedit', function(req, res, next) {
   if(req.session.user){
     req.session.fixedexpenseid = req.body.id
-    res.render('main/finance/fixedexpenseedit', {rb:req.body, name:req.session.user});
+    res.render('main/finance/fixedexpenseedit', {csrfToken:req.csrfToken(),rb:req.body, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -432,7 +434,7 @@ router.get('/wishlist', function(req, res, next) {
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
       else{
-        res.render('main/wishlist/wishlist', {result:results[0], summary:results[1][0], name:req.session.user});
+        res.render('main/wishlist/wishlist', {result:results[0], summary:results[1][0], csrfToken:req.csrfToken(),name:req.session.user});
       }
     });
   }else{
@@ -441,7 +443,7 @@ router.get('/wishlist', function(req, res, next) {
 });
 router.get('/addwish', function (req, res,next){
   if(req.session.user){
-    res.render('main/wishlist/addwish',{name:req.session.user});
+    res.render('main/wishlist/addwish',{csrfToken:req.csrfToken(),name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -470,7 +472,7 @@ router.post('/wishitemedit', function (req, res,next){
     let detail = req.body.detail
     let priority = req.body.priority
     let stat = req.body.stat
-    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate, detail, priority, stat, name:req.session.user});
+    res.render('main/wishlist/wishitemedit',{title, cost, link, duedate, detail, priority, stat, csrfToken:req.csrfToken(), name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -504,7 +506,7 @@ router.post('/wishitempurchase', function (req, res,next){
     req.session.wishid = req.body.id
     let title = req.body.title
     let cost = req.body.cost.replace(/,/g, '')
-    res.render('main/wishlist/wishitempurchase',{title, cost, setting:req.session.setting, name:req.session.user});
+    res.render('main/wishlist/wishitempurchase',{title, cost, csrfToken:req.csrfToken(),setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -534,7 +536,7 @@ router.get('/expendables', function (req, res, next){
     connection.query(sql, val, function (err, results, fields) {
       if(err) throw err;
       else{
-        res.render('main/finance/expendables', {result:results, name:req.session.user});
+        res.render('main/finance/expendables', {csrfToken:req.csrfToken(),result:results, name:req.session.user});
       }
     });
   }else{
@@ -546,7 +548,7 @@ router.post('/expendablepurchase', function (req, res, next){
     req.session.expendableitemid = req.body.id
     let title = req.body.title
     let cost = req.body.cost
-    res.render('main/finance/expendablepurchase', {title, cost,setting:req.session.setting, name:req.session.user});
+    res.render('main/finance/expendablepurchase', {title, cost,csrfToken:req.csrfToken(), setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -573,7 +575,7 @@ router.post('/expendableedit', function (req, res){
     let title = req.body.title
     let description = req.body.description
     let link = req.body.link
-    res.render('main/finance/expendableedit', {title, description, link, name:req.session.user});
+    res.render('main/finance/expendableedit', {csrfToken:req.csrfToken(),title, description, link, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -594,7 +596,7 @@ router.post('/expendableeditapply', function (req, res, next){
 })
 router.get('/expendableadd', function(req, res, next) {
   if(req.session.user){
-    res.render('main/finance/expendableadd',{setting:req.session.setting, name:req.session.user});
+    res.render('main/finance/expendableadd',{csrfToken:req.csrfToken(),setting:req.session.setting, name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -623,7 +625,7 @@ router.get('/investment', function(req, res, next){
       } else{
         let url = 'https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD'
         request({url: url,method: "GET"}, function(err,response, body){
-          res.render('main/investment/investmgmt', {currency:JSON.parse(body)[0], result:results, name: req.session.user});
+          res.render('main/investment/investmgmt', {csrfToken:req.csrfToken(),currency:JSON.parse(body)[0], result:results, name: req.session.user});
         })
       }
     })
@@ -633,7 +635,7 @@ router.get('/investment', function(req, res, next){
 });
 router.get('/investmentadd', function(req, res){
   if(req.session.user){
-    res.render('main/investment/investmentadd', {name:req.session.user});
+    res.render('main/investment/investmentadd', {csrfToken:req.csrfToken(),name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -659,7 +661,7 @@ router.post('/investmentedit', function (req, res){
   if(req.session.user){
     req.session.investid = req.body.id
     let rb = req.body
-    res.render('main/investment/investmentedit', {rb, name:req.session.user});
+    res.render('main/investment/investmentedit', {rb,csrfToken:req.csrfToken(), name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -700,7 +702,7 @@ router.get('/addvehicle', function(req, res){
     connection.query(sql, val, function (err, results) {
       if(err) throw err;
       else if(results.length === 0) {
-        res.render('main/vehicle/addvehicle', {name: req.session.user});
+        res.render('main/vehicle/addvehicle', {csrfToken:req.csrfToken(), name: req.session.user});
       }else{
         res.redirect('vehiclemanage')
       }
@@ -733,7 +735,7 @@ router.get('/financialobligation', function(req, res, next){
     connection.query(sql, val, function (err, results) {
       if(err) throw err;
       else{
-        res.render('main/obligation/financialobligation',{result:results, name:req.session.user});
+        res.render('main/obligation/financialobligation',{csrfToken:req.csrfToken(),result:results, name:req.session.user});
       }
     });
   }else{
@@ -745,7 +747,7 @@ router.post('/financialobligationedit', function (req, res){
     req.session.financialobligationid = req.body.id
     let rb = req.body
     let duedate = rb.duedate
-    res.render('main/obligation/financialobligationedit', {rb, duedate, name:req.session.user});
+    res.render('main/obligation/financialobligationedit', {rb, duedate,csrfToken:req.csrfToken(), name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -775,7 +777,7 @@ router.post('/financialobligationapply', function (req, res, next){
 });
 router.get('/financialobligationadd', function(req, res, next) {
   if(req.session.user){
-    res.render('main/obligation/financialobligationadd',{setting:req.session.setting, name:req.session.user});
+    res.render('main/obligation/financialobligationadd',{setting:req.session.setting,csrfToken:req.csrfToken(), name:req.session.user});
   }else{
     res.redirect('login')
   }
@@ -813,28 +815,30 @@ router.get('/financialobligationremove', function(req, res, next){
 });
 // Login
 router.get('/login', function(req, res, next) {
-  res.render('main/login/login');
+  res.render('main/login/login', {csrfToken:req.csrfToken()});
 });
+
 router.post('/login', function(req, res, next) {
   let rb = req.body
   let inpw = rb.pw
   const sql = 'SELECT * FROM nodedb.account where id = ?'
   const params = [rb.id];
+  console.log(`SELECT * FROM nodedb.account where id = ${rb.id}`);
   connection.query(sql,params,function (err, results, fields) {
     if(err){
       console.log(err);
     }else{
       crypto.pbkdf2(inpw, results[0].salt, 100000, 64, 'sha512', (err, key) => {
-        if (key.toString('base64') === results[0].password, results[0].permission >= 1){
+        if (key.toString('base64') === results[0].password && results[0].permission >= 1){
           req.session.idname = rb.id;
           req.session.idn = results[0].number;
           req.session.user = results[0].name;
           req.session.permission = results[0].permission;
           req.session.setting = JSON.parse(results[0].settings);
+          
           req.session.save();
           res.redirect('/index');
-        }
-        else{
+        }else{
           res.redirect('/login')
         }
       });
@@ -866,7 +870,7 @@ router.get('/account', function(req, res, next){
   }
 });
 router.get('/register', function(req, res, next) {
-  res.render('main/login/register');
+  res.render('main/login/register', {csrfToken:req.csrfToken()});
 });
 router.post('/register', function(req, res, next){
   let rb = req.body
@@ -894,7 +898,7 @@ router.get('/settings', function(req, res, next){
     connection.query(sql, [req.session.idn], function (error, results, fields) {
       let result = JSON.parse(results[0].settings)
       req.session.setting = result
-      res.render('main/login/setting', {result, name:req.session.user });
+      res.render('main/login/setting', {result, csrfToken:req.csrfToken(), name:req.session.user });
     });
   }else{
     res.redirect('login')

@@ -74,6 +74,7 @@ include ../compara/head.pug
                                                td= line.comment
                                         tr
                                             form(action="taskaddcomment" method="post")
+                                                input(type="hidden" name="_csrf" value=csrfToken)
                                                 td(colspan="2")
                                                     .input-group
                                                         button(class="form-control btn btn-dark text-light " type="submit") Submit

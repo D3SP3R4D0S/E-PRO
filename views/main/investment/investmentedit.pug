@@ -20,6 +20,7 @@ include ../compara/head.pug
                         .card
                             .card-body
                                 form(action="investmentapply" method="post")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
                                     .row.justify-content-center
                                         .col-lg-4
                                             h5.fw-bold 종목

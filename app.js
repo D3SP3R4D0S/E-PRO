@@ -6,19 +6,27 @@ let logger = require('morgan');
 let session = require('express-session');
 const indexRouter = require('./routes/index');
 const projectRouter = require('./routes/project');
+const { config } = require("dotenv");
+config();
+
+process.env.NODE_ENV = 
+  ( process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production' ) 
+  ? 'production' 
+  : 'development';
+
 const {
-  secret, resave, saveUninitialized
+  secureFlag, secret, resave, saveUninitialized
 } = require('./routes/config/options');
+
 const csrf = require("csurf");
 
 let app = express();
-
 app.use(session({
   secret : secret,
   resave : resave,
   saveUninitialized :saveUninitialized,
   cookie: {
-    secure: true,
+    secure: secureFlag,
     httpOnly: true
   }
 }));
@@ -26,6 +34,7 @@ app.use(session({
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
 
 app.use(logger('dev'));
 app.use(express.json());

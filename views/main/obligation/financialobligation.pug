@@ -48,6 +48,7 @@ include ../compara/head
                                                             span No data
                                                     td
                                                         form.me-auto(action="financialobligationedit" method="POST")
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
                                                             input(type="hidden" name="id" value=line.id)
                                                             input(type="hidden" name="title" value=line.title)
                                                             input(type="hidden" name="cost" value=line.cost)

@@ -17,6 +17,7 @@ head
                             div(class='card-body')
                                 div(class="container col-lg-8")
                                     form(action="expendableeditapply" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         h3 Title
                                         input.mb-3(class="form-control" type="text" name="title" value=title placeholder="cost" class="col-12" required)
                                         h3 Link

@@ -32,6 +32,7 @@ head
                                 //추가해야하는항목 - 차량별칭, 현제km - mileage, 차량번호(number)- 필요시, detail, 출고일
                                 .container.col-xl-8.col-lg-12
                                     form(action="addvehicle" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
                                         h4 Vehicle name
                                         input.mb-3.form-control( type="text" name="title" placeholder="Title" class="col-12" required)
                                         h4 Number
