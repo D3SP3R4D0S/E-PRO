@@ -390,7 +390,7 @@ router.get('/report', function (req, res,next){
     res.redirect('login')
   }
 })
-router.post('/reportchart', function (req, res){
+router.get('/reportchart', function (req, res){
   let responseData = {};
   let idn = req.session.idn
   let sql = `Select 
