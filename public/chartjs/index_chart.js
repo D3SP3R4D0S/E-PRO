@@ -66,7 +66,7 @@ sendAjax('/alpha');
 function sendAjax(url) {
     var oReq = new XMLHttpRequest();
 
-    oReq.open('POST', url);
+    oReq.open('get', url);
     oReq.setRequestHeader('Content-Type', "application/json") // json 형태로 보낸다
     oReq.send();
 
