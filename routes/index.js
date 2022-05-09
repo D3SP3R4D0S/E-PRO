@@ -48,7 +48,7 @@ router.get('/index', function(req, res, next) {
     res.redirect('login')
   }
 });
-router.post('/alpha', function(req, res, next){
+router.get('/alpha', function(req, res, next){
   let responseData = {};
   let responseData1 = {};
   let idn = req.session.idn
@@ -181,7 +181,7 @@ router.get('/latestdatanmonth', function (req,res){
     res.redirect('login')
   }
 });
-router.post('/latestdatachart', function (req, res){
+router.get('/latestdatachart', function (req, res){
   let responseData = {};
   let responseData1 = {};
   let idn = req.session.idn
