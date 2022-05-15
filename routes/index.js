@@ -681,12 +681,14 @@ router.post('/investmentapply', function (req, res, next){
 //Vehicle management
 router.get('/vehiclemanage', function(req, res, next){
   if(req.session.user){
-    let sql = 'SELECT * FROM vehicle WHERE userid = ?;'
+    let sql = `SELECT * FROM vehicle WHERE userid = ?;
+                SELECT * FROM vexpendables WHERE userid = ?`
     let val = [req.session.idn]
-    connection.query(sql, val, function (err, results) {
+    connection.query(sql, [val, val], function (err, results) {
       if(err) throw err;
-      else if(results.length > 0) {
-        res.render('main/vehicle/vehiclemgmt', {result:results[0], name: req.session.user});
+      else if(results[0].length > 0) {
+        console.log(results)
+        res.render('main/vehicle/vehiclemgmt', {result:results[0][0], data3:results[1], name: req.session.user});
       }else{
         res.redirect('addvehicle')
       }
@@ -716,6 +718,28 @@ router.post('/addvehicle', function(req, res){
     let rb = req.body
     let sql = "INSERT INTO vehicle (userid, title, number, mileage, detail, produced) VALUES (?, ?, ?, ?, ?, ?);"
     let params = [req.session.idn, rb.title, rb.number, rb.mileage, rb.detail, rb.produced];
+    connection.query(sql, params, function (err, results) {
+      if(err) throw err;
+      else{
+        res.redirect('vehiclemanage');
+      }
+    })
+  }else{
+    res.redirect('login')
+  }
+});
+router.get('/veadd', function(req, res){
+  if(req.session.user){
+    res.render('main/vehicle/veadd', {csrfToken:req.csrfToken(), name: req.session.user});
+  }else{
+    res.redirect('login')
+  }
+});
+router.post('/veadd', function(req, res){
+  if(req.session.user){
+    let rb = req.body
+    let sql = "INSERT INTO vexpendables (userid, title, lifecycle, lastdate, cost, comment) VALUES (?, ?, ?, ?, ?, ?);"
+    let params = [req.session.idn, rb.title, rb.lifecycle, rb.lastdate, rb.cost, rb.comment];
     connection.query(sql, params, function (err, results) {
       if(err) throw err;
       else{

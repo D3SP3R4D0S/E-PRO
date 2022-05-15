@@ -32,7 +32,11 @@ include ../compara/head.pug
                                 //span= result.detail
                         .card
                             .card-body
-                                h3 Vehicle Expendables
+                                .row
+                                    .col
+                                        h3 Vehicle Expendables
+                                    .col.text-end
+                                        a.btn.btn-primary(href="veadd") Add data
                                 table.table
                                     thead
                                         tr
@@ -42,11 +46,23 @@ include ../compara/head.pug
                                             th 비용
                                             th control
                                     tbody
+                                        // @todo Require to fill data with sql
+                                        for line in data3
+                                            tr
+                                                td= line.title
+                                                td= line.lifecycle
+                                                td= line.lastdate.toLocaleDateString()
+                                                td= line.cost.toLocaleString() + " KRW"
+                                                td= line.comment
+
+
+
                     .col-lg-4
                         .card
                             .card-header
                                 h4 suggest maintenance
                             .card-body
+                                span under construction
 
 
         include ../compara/footer.pug
