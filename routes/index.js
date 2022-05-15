@@ -717,7 +717,7 @@ router.post('/addvehicle', function(req, res){
   if(req.session.user){
     let rb = req.body
     let sql = "INSERT INTO vehicle (userid, title, number, mileage, detail, produced) VALUES (?, ?, ?, ?, ?, ?);"
-    let params = [req.session.idn, rb.title, rb.number, rb.mileage, rb.detail, rb.produced];
+    let params = [req.session.idn, rb.title, rb.number, rb.mileage.replace(',', ''), rb.detail, rb.produced];
     connection.query(sql, params, function (err, results) {
       if(err) throw err;
       else{
