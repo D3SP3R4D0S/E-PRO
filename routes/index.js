@@ -33,7 +33,7 @@ router.get('/index', function(req, res, next) {
   }
   req.session.indexdate = selector
   let controldate = new Date(selector.split('-')[0], parseInt(selector.split('-')[1])-1);
-  console.log(req.session.user);
+  // console.log(req.session.user);
   if(req.session.user){
     let sql = `SELECT DATE_FORMAT(now(), "%m") as month, alligner,sum(cost) as total FROM finance.account
       where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? group by alligner order by alligner;
@@ -41,7 +41,7 @@ router.get('/index', function(req, res, next) {
       SELECT sum(if(income=1, cost, -cost))+0 as total, sum(if(income=1, cost, 0)) as income, sum(if(income=0, cost, 0)) as outcome
       from finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ?;`
     connection.query(sql, [idnum,selector,idnum,idnum, selector], function (error, results, fields) {
-      console.log(results)
+      // console.log(results)
       res.render('main/index', {controldate, yearmonth:selector, result1:results[0], result2:results[1], result3:results[2], name:req.session.user});
     });
   }else{
@@ -258,7 +258,7 @@ router.post('/adddata', function(req, res, next) {
   if(req.session.user){
     let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
     let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
-    console.log(params);
+    // console.log(params);
     connection.query(sql,params,function (err, results, fields) {
       if(err){
         console.log(err);
@@ -847,7 +847,7 @@ router.post('/login', function(req, res, next) {
   let inpw = rb.pw
   const sql = 'SELECT * FROM nodedb.account where id = ?'
   const params = [rb.id];
-  console.log(`SELECT * FROM nodedb.account where id = ${rb.id}`);
+  // console.log(`SELECT * FROM nodedb.account where id = ${rb.id}`);
   connection.query(sql,params,function (err, results, fields) {
     if(err){
       console.log(err);
