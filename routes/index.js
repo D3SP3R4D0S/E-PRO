@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
 const request = require('request');
+const knex = require('./config/knex');
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
 connection.connect(function(err){
@@ -374,11 +375,7 @@ router.get('/fixedexpenseremove', function(req, res, next) {
 router.get('/report', function (req, res,next){
   let idn = req.session.idn
   if(req.session.user) {
-    let sql =`SELECT 
-    sum(if(income='1' and date_format(time, '%Y-%m-%d') <= 
-    date_format(DATE_SUB(now(), INTERVAL 1 YEAR),'%Y-%m-%d'), cost, -cost)) as yearbefore, 
-    sum(if(income='1' and date_format(time, '%Y-%m-%d') <= date_format(now(),'%Y-%m-%d'), cost, -cost)) as todaytotal
-    from account where userid = ?;`
+    let sql =`SELECT sum(if(income='1', cost, -cost)) as yearbefore from account where userid = ?  and time >= DATE_SUB(now(), INTERVAL 1 YEAR);`
     connection.query(sql, [idn], function(err, result){
       if(err) {
         throw err
@@ -398,7 +395,7 @@ router.get('/reportchart', function (req, res){
         (SELECT sum(if(income='1', cost, 0)) from account where userid = ? and time <= date_val) as income,
         (SELECT sum(if(income='0', cost, 0)) from account where userid = ? and time <= date_val) as expense,
         date_format(date_val, '%Y-%m-%d') as date_val from date_all
-        where date_val <= date(now()) group by date_val`
+        where date_val <= date(now()) and date_val >= date_add(now(), interval -1 year) group by date_val`
   connection.query(sql,[idn,idn,idn] , function(err,result){
     responseData.value = [];
     responseData.income = [];
@@ -837,11 +834,11 @@ router.get('/financialobligationremove', function(req, res, next){
     res.redirect('login')
   }
 });
+
 // Login
 router.get('/login', function(req, res, next) {
   res.render('main/login/login', {csrfToken:req.csrfToken()});
 });
-
 router.post('/login', function(req, res, next) {
   let rb = req.body
   let inpw = rb.pw

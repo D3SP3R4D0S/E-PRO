@@ -13,9 +13,9 @@ include ../compara/head.pug
                 .row.justify-content-start
                     .col
                         h1
-                            strong Report
+                            strong Report (1year)
                             //a.btn.btn-dark.ms-3.disabled(href="projectadd") new project
-                        h6 재정 수지 보고
+                        h6 연간 재정 수지 변화 보고
                 .row
                     .col-lg-12
                         .card
@@ -25,12 +25,12 @@ include ../compara/head.pug
                         .card
                             .card-body
                                 h4 1년기준 변동액
-                                h4= (result[0].todaytotal-result[0].yearbefore).toLocaleString()  + "KRW"
+                                h4= (result[0].yearbefore).toLocaleString()  + "KRW"
                     .col-lg-6
                         .card
                             .card-body
                                 h4 1억을 모으는데 걸리는 시간
-                                h4= (Math.round(10000000000/(result[0].todaytotal - result[0].yearbefore))/100) + " 년"
+                                h4= (Math.round(10000000000/(result[0].yearbefore))/100) + " 년"
             script(src="https://cdn.jsdelivr.net/npm/chart.js")
             script(src="/chartjs/report_chart.js")
         include ../compara/footer

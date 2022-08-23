@@ -80,3 +80,5 @@ public/vendor
 routes/config
 routes/account
 public/images/construction.*
+
+package-lock.json

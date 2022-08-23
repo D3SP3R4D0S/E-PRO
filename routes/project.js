@@ -72,27 +72,41 @@ router.get('/projectdetail', function(req, res, next) {
     let idnum = req.session.idn
     req.session.pid = req.query.pid
     let pid = req.session.pid
-    if(req.session.user){
-        let sql = `SELECT * FROM finance.project where id = ?;
-                SELECT * FROM finance.project_task where projectid = ?;
-                SELECT project_member.memberid as idnum, account.id as userid, account.name as name 
-                FROM finance.project_member JOIN nodedb.account 
-                ON project_member.memberid = account.number where projectid = ?;
-                SELECT * FROM finance.project_fundreq where projectid = ?;`
-        connection.query(sql, [pid, pid, pid, pid] ,function (error, results) {
+    if (req.session.user) {
+        let sql = 'SELECT * FROM finance.project_member where projectid = ? and memberid = ?'
+        connection.query(sql, [pid, idnum] ,function (error, results) {
             if(error){
                 console.log(error)
             }
             else {
-                res.render('main/projects/projectdetail', {
-                    project: results[0][0],
-                    tasks:results[1],
-                    pmember: results[2],
-                    fundreq: results[3],
-                    name: req.session.user, id: idnum});
+                if(results[0]) {
+
+                    let sql = `SELECT * FROM finance.project where id = ?;
+                    SELECT * FROM finance.project_task where projectid = ?;
+                    SELECT project_member.memberid as idnum, account.id as userid, account.name as name 
+                    FROM finance.project_member JOIN nodedb.account 
+                    ON project_member.memberid = account.number where projectid = ?;
+                    SELECT * FROM finance.project_fundreq where projectid = ?;`
+                    connection.query(sql, [pid, pid, pid, pid], function (error, results) {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            res.render('main/projects/projectdetail', {
+                                project: results[0][0],
+                                tasks: results[1],
+                                pmember: results[2],
+                                fundreq: results[3],
+                                name: req.session.user, id: idnum
+                            });
+                        }
+                    });
+
+                }else{
+                    res.redirect('/projects');
+                }
             }
         });
-    }else{
+    } else {
         res.redirect('login')
     }
 });
