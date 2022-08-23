@@ -1,13 +1,23 @@
-doctype html
-include ../compara/head
+head
+    include ../compara/head
+    script.
+        function numberWithCommas(num) {
+            var parts = num.toString().split(".");
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        }
+        function chkNumber(obj) {
+            var tmpValue = $(obj).val().replace(/[^0-9,]/g, '');
+            tmpValue = tmpValue.replace(/[,]/g, '');
+            obj.value = numberWithCommas(tmpValue);
+        }
 .wrapper
     include ../compara/sidebar
+    .main
+        include ../compara/navbar
         script.
             $(document).ready(function () {
                 $('#latestdata').addClass('active');
             });
-    .main
-        include ../compara/navbar
         main.content
             .container-fluid.p-0
                 .row.justify-content-start
@@ -24,33 +34,35 @@ include ../compara/head
                                         .col-lg-6
 
                                                 .row.align-content-end
-                                                    .col.h4 Usage
+                                                    .col.h4.fw-bold Usage
                                                     .col.h6.mt-1 사용처
                                                     .col
-                                                input.text-end.mb-2(class="form-control" type="text" name="detail" placeholder="detail" value=result[0].detail)
+                                                input.mb-2(class="form-control" type="text" name="detail" placeholder="detail" value=result[0].detail)
                                                 .row.align-content-end
-                                                    .col.h4 Cost
+                                                    .col.h4.fw-bold Cost
                                                     .col.h6.mt-1 비용
                                                     .col
-                                                input.text-end.mb-2(class="form-control" type="number" name="cost" placeholder="cost" value=result[0].cost)
+                                                .input-group.mb-2
+                                                    input.form-control.text-end( type="text" onkeyup="chkNumber(this)" name="cost" placeholder="cost" value=result[0].cost.toLocaleString() class="col-12" required)
+                                                    span(class="input-group-text" id="basic-addon2") KRW
                                                 .row.align-content-end
-                                                    .col.h4 method
+                                                    .col.h4.fw-bold method
                                                     .col.h6.mt-1 지불방법
                                                     .col
                                                 input.mb-2(class="form-control" type="text" name="title" placeholder="title" value=result[0].title)
                                                 .row.align-content-end
-                                                    .col.h4 Large category
+                                                    .col.h4.fw-bold Large category
                                                     .col.h6.mt-1 대분류
                                                     .col
                                                 input.mb-2(class="form-control" type="text" name="details" placeholder="detail" value=result[0].subord)
                                                 .row.align-content-end
-                                                    .col.h4 Small category
+                                                    .col.h4.fw-bold Small category
                                                     .col.h6.mt-1 소분류
                                                     .col
                                                 input.mb-2(class="form-control" type="text" name="details" placeholder="date" value=result[0].alligner)
                                                 .row.align-content-end
-                                                    .col.h4 Time
-                                                    .col.h6.mt-1 소분류
+                                                    .col.h4.fw-bold Date
+                                                    .col.h6.mt-1 사용일
                                                     .col
                                                 input.mb-2(class="form-control" type="date" name="details" placeholder="date" value=result[0].time)
                                     div.text-end
