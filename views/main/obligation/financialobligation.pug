@@ -40,10 +40,10 @@ include ../compara/head
                                                     td= line.title
                                                     td.text-end= line.cost.toLocaleString() + " KRW"
                                                     td= line.loaner
-                                                    td= line.created.toISOString().split('T')[0]
+                                                    td= line.created
                                                     td
                                                         if line.duedate
-                                                            span= line.duedate.toISOString().split('T')[0]
+                                                            span= line.duedate
                                                         else
                                                             span No data
                                                     td
@@ -54,7 +54,7 @@ include ../compara/head
                                                             input(type="hidden" name="cost" value=line.cost)
                                                             input(type="hidden" name="loaner" value=line.loaner)
                                                             if line.duedate
-                                                                input(type="hidden" name="duedate" value=line.duedate.toISOString().split('T')[0])
+                                                                input(type="hidden" name="duedate" value=line.duedate)
                                                             input(type="hidden" name="complete" value=line.complete)
                                                             input.btn.btn-info.btn-sm(type="submit" value="Edit")
                         .card
@@ -75,7 +75,7 @@ include ../compara/head
                                                     td= line.title
                                                     td= line.cost
                                                     td= line.loaner
-                                                    td= line.created.toISOString().split('T')[0]
-                                                    td= line.complete.toISOString().split('T')[0]
+                                                    td= line.created
+                                                    td= line.complete
         include ../compara/footer
     include ../compara/footer_script

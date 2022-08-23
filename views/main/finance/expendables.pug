@@ -37,7 +37,7 @@ include ../compara/head.pug
                                             td
                                                 a.btn.btn-sm.btn-success(href=line.link target="_blank") Link
                                             if(line.lastbought)
-                                                td= line.lastbought.toISOString().split('T')[0]
+                                                td= line.lastbought.split(' ')[0]
                                             else
                                                 td No record
                                             td
