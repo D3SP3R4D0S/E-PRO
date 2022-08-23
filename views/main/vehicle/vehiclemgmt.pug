@@ -28,7 +28,7 @@ include ../compara/head.pug
                                         p.fw-bold.text-end= result.mileage.toLocaleString() + " KM"
                                     .col
                                         h4= "Date produced"
-                                        p.fw-bold.text-end= result.produced.toISOString().split('T')[0]
+                                        p.fw-bold.text-end= result.produced
                                 //span= result.detail
                         .card
                             .card-body
@@ -51,7 +51,7 @@ include ../compara/head.pug
                                             tr
                                                 td= line.title
                                                 td= line.lifecycle
-                                                td= line.lastdate.toLocaleDateString()
+                                                td= line.lastdate
                                                 td= line.cost.toLocaleString() + " KRW"
                                                 td= line.comment
 

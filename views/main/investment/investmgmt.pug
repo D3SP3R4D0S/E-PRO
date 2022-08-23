@@ -61,7 +61,7 @@ include ../compara/head.pug
                                                                 input(type="hidden" name="currency" value=line.currency)
                                                                 input(type="hidden" name="count" value=line.count)
                                                                 if(line.boughtdate)
-                                                                    input(type="hidden" name="boughtdate" value=line.boughtdate.toISOString().split('T')[0])
+                                                                    input(type="hidden" name="boughtdate" value=line.boughtdate)
                                                                 input(type="hidden" name="dividendo" value=line.dividendo)
                                                                 input(type="hidden" name="dividend" value=line.dividend)
                                                                 input.btn.btn-info.btn-xs(type="submit" value="Edit")
@@ -83,7 +83,7 @@ include ../compara/head.pug
                                                                 span.fw-bold Date
                                                         .col.text-end
                                                             if(line.boughtdate)
-                                                                span= line.boughtdate.toISOString().split('T')[0]
+                                                                span= line.boughtdate.split(' ')[0]
                                                     .row
                                                         .col
                                                             span.fw-bold Total

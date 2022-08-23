@@ -10,40 +10,63 @@ include ../compara/head
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                    div(class="col-lg-12")
-                        div(class='card shadow')
-                            div(class='card-header py-3')
-                                h6(class="m-0 font-weight-bold") Latest List
-                            div(class='card-body')
-                                table(class="table table-bordered table-sm")
-                                    thead(class="table-dark")
-                                        tr(class="text-center")
-                                            th Assortment
-                                            th Cost
-                                            th Count
-                                            th Example
-                                            th Date
-                                    tbody(class="text-center")
-                                        for line in result
-                                            tr  
-                                                td= line.alligner
-                                                td(class="text-right")= line.cost + '₩'
-                                                td= line.times
-                                                td= line.detail
-                                                td= line.date
-                                div.text-end
-                                    button.btn.btn-danger(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
-                                        .modal.text-start#removeModal
-                                            .modal-dialog
-                                                .modal-content.text-dark
-                                                    .modal-header
-                                                        .modal-title Warning
-                                                    .modal-body
-                                                        p Remove action is not recoverable
-                                                        p will you continue?
-                                                        .text-end
-                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
-                                                            a.btn.btn-danger.ms-2(href="removedata?id=" + result[0].id) Remove Data
-                                    a.btn.btn-dark.ms-2(href="index") Go Back
+                .row.justify-content-start
+                    .col.mb-2
+                        h1
+                            strong= "Expenditure Detail"
+                        h6 지출 내역 상세
+                .row
+                    .col-lg-12
+                        .card.shadow
+                            .card-body
+                                form(class="data")
+                                    .row.justify-content-md-center
+                                        .col-lg-6
+
+                                                .row.align-content-end
+                                                    .col.h4 Usage
+                                                    .col.h6.mt-1 사용처
+                                                    .col
+                                                input.text-end.mb-2(class="form-control" type="text" name="detail" placeholder="detail" value=result[0].detail)
+                                                .row.align-content-end
+                                                    .col.h4 Cost
+                                                    .col.h6.mt-1 비용
+                                                    .col
+                                                input.text-end.mb-2(class="form-control" type="number" name="cost" placeholder="cost" value=result[0].cost)
+                                                .row.align-content-end
+                                                    .col.h4 method
+                                                    .col.h6.mt-1 지불방법
+                                                    .col
+                                                input.mb-2(class="form-control" type="text" name="title" placeholder="title" value=result[0].title)
+                                                .row.align-content-end
+                                                    .col.h4 Large category
+                                                    .col.h6.mt-1 대분류
+                                                    .col
+                                                input.mb-2(class="form-control" type="text" name="details" placeholder="detail" value=result[0].subord)
+                                                .row.align-content-end
+                                                    .col.h4 Small category
+                                                    .col.h6.mt-1 소분류
+                                                    .col
+                                                input.mb-2(class="form-control" type="text" name="details" placeholder="date" value=result[0].alligner)
+                                                .row.align-content-end
+                                                    .col.h4 Time
+                                                    .col.h6.mt-1 소분류
+                                                    .col
+                                                input.mb-2(class="form-control" type="date" name="details" placeholder="date" value=result[0].time)
+                                    div.text-end
+                                        button.btn.btn-primary.disabled(type="submit") submit
+                                        button.btn.btn-danger.ms-2(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
+                                            .modal.text-start#removeModal
+                                                .modal-dialog
+                                                    .modal-content.text-dark
+                                                        .modal-header
+                                                            .modal-title Warning
+                                                        .modal-body
+                                                            p Remove action is not recoverable
+                                                            p will you continue?
+                                                            .text-end
+                                                                a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                                a.btn.btn-danger.ms-2(href="removedata?id=" + result[0].id) Remove Data
+                                        a.btn.btn-dark.ms-2(href="index") Go Back
         include ../compara/footer
 include ../compara/footer_script

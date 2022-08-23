@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
 const request = require('request');
-const knex = require('./config/knex');
+const knex = require('./config/knex.js');
 // const bodyParser = require('body-parser')
 // app.use(bodyParser.json());
 connection.connect(function(err){
@@ -220,28 +220,40 @@ router.get('/latestdatachart', function (req, res){
     res.json([responseData, responseData1]);
   });
 })
-
+// detail for object ( knex applied)
 router.get('/detail', function(req, res, next) {
   if(req.session.user){
-    let assort = req.query.id;
-    let sql = 'SELECT * FROM finance.account  where id = ?'
-    connection.query(sql, [assort] , function (error, results, fields) {
-      res.render('main/finance/detail', {result:results, name:req.session.user});
-    });
+    knex.select('*')
+        .from('account')
+        .where('id', req.query.id)
+        .then((results)=>{
+          res.render('main/finance/detail', {result:results, name:req.session.user});
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
   }else{
     res.redirect('login')
   }
 });
+// remove expenditure data ( knex )
 router.get('/removedata', function(req, res, next){
   if(req.session.user){
-    let sql = 'DELETE FROM `finance`.`account` WHERE `id` = ?;'
-    connection.query(sql, req.query.id , function (error, results, fields) {
-      res.redirect('latestdata');
-    });
+    knex.delete()
+        .from('account')
+        .where('id', req.query.id)
+        .then((results)=>{
+          console.log(results)
+          res.redirect('latestdata');
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
   }else{
     res.redirect('login')
   }
 });
+// add data form
 router.get('/adddata', function(req, res, next) {
   if(req.session.user){
     res.render('main/finance/adddata',{csrfToken:req.csrfToken(),setting:req.session.setting, name:req.session.user});
@@ -250,24 +262,30 @@ router.get('/adddata', function(req, res, next) {
   }
 });
 router.post('/adddata', function(req, res, next) {
-  let rb = req.body;
-  let cost = rb.cost.replace(/,/g, '');
-  let income = 0;
-  if(rb.income === "1"){
-    income = 1;
-  };
   if(req.session.user){
-    let sql = "INSERT INTO finance.account(title, cost, detail, time, alligner, subord, userid, income)VALUES(?,?,?,?,?,?,?,?);"
-    let params = [rb.title, cost, rb.details, rb.date, rb.alligner, rb.subord, req.session.idn, income];
-    // console.log(params);
-    connection.query(sql,params,function (err, results, fields) {
-      if(err){
-        console.log(err);
-      }else{
-        console.log(results.insertId);
-      }
-    });
-    res.redirect('/latestdata');
+    let rb = req.body;
+    let cost = rb.cost.replace(/,/g, '');
+    let income = 0;
+    if(rb.income === "1"){
+      income = 1;
+    };
+    knex('account').insert({
+      title:rb.title,
+      cost:cost,
+      detail:rb.details,
+      time:rb.date,
+      alligner:rb.alligner,
+      subord:rb.subord,
+      userid:req.session.idn,
+      income:income
+    })
+        .then((results)=>{
+          console.log(results);
+          res.redirect('/latestdata');
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
   }else{
     res.redirect('login')
   }

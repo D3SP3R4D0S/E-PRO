@@ -101,7 +101,7 @@ include ../compara/head.pug
                                                     span= ' ' + line.payday
                                                 if(line.lastpaid)
                                                     br
-                                                    span= "Paid" + line.lastpaid.toISOString().split('T')[0]
+                                                    span= "Paid " + line.lastpaid
                                                 else
                                                     br
                                                     span No paid data
