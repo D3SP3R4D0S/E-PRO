@@ -20,9 +20,13 @@ head
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                row(class="row justify-content-center")
-                    H2(class="m-4 text-dark") Add data
-                    div(class="col-12")
+                .row.justify-content-start.mb-2
+                    .col-auto
+                        h1
+                            strong= "Add data"
+                        h6 수입 / 지출 항목 추가
+                .row
+                    .col-12
                         div(class='card border-0 shadow-lg')
                             div(class='card-body')
                                 div(class="container col-lg-8")
@@ -33,7 +37,7 @@ head
                                                 th cost
                                                 td
                                                     .input-group
-                                                        input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" placeholder="cost" class="col-12" required)
+                                                        input.form-control.text-end(type="text" onkeyup="chkNumber(this)" name="cost" placeholder="cost" class="col-12" required)
                                                         span(class="input-group-text" id="basic-addon2") KRW
                                             tr
                                                 th(class="col-6") detail
