@@ -5,73 +5,73 @@ head
             var groupColumn = 2;
             var table = $('#table1').DataTable({
                 autoWidth: true,
-                "columnDefs": [
-                    {"visible": false, "targets": groupColumn}
-                ],
+                // "columnDefs": [
+                //     {"visible": false, "targets": groupColumn}
+                // ],
                 "order": [[groupColumn, 'desc']],
                 "displayLength": 10,
-                "drawCallback": function (settings) {
-                    var api = this.api();
-                    var rows = api.rows({page: 'current'}).nodes();
-                    var last = null;
-
-                    api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
-                        if (last !== group) {
-                            $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
-                            );
-
-                            last = group;
-                        }
-                    });
-                }
+                // "drawCallback": function (settings) {
+                    // var api = this.api();
+                    // var rows = api.rows({page: 'current'}).nodes();
+                    // var last = null;
+                    //
+                    // api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                    //     if (last !== group) {
+                    //         $(rows).eq(i).before(
+                    //             '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                    //         );
+                    //
+                    //         last = group;
+                    //     }
+                    // });
+                // }
             });
 
             // Order by the grouping
-            $('#example tbody').on('click', 'tr.group', function () {
-                var currentOrder = table.order()[0];
-                if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-                    table.order([groupColumn, 'desc']).draw();
-                } else {
-                    table.order([groupColumn, 'asc']).draw();
-                }
-            });
+            // $('#example tbody').on('click', 'tr.group', function () {
+            //     var currentOrder = table.order()[0];
+            //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+            //         table.order([groupColumn, 'desc']).draw();
+            //     } else {
+            //         table.order([groupColumn, 'asc']).draw();
+            //     }
+            // });
         });
     script.
         $(document).ready(function () {
             var groupColumn = 2;
             var table = $('#table2').DataTable({
-                "columnDefs": [
-                    {"visible": false, "targets": groupColumn}
-                ],
+            //     "columnDefs": [
+            //         {"visible": false, "targets": groupColumn}
+            //     ],
                 "order": [[groupColumn, 'desc']],
-                "displayLength": 10,
-                "drawCallback": function (settings) {
-                    var api = this.api();
-                    var rows = api.rows({page: 'current'}).nodes();
-                    var last = null;
-
-                    api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
-                        if (last !== group) {
-                            $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
-                            );
-
-                            last = group;
-                        }
-                    });
-                }
+            //     "displayLength": 10,
+            //     "drawCallback": function (settings) {
+            //         var api = this.api();
+            //         var rows = api.rows({page: 'current'}).nodes();
+            //         var last = null;
+            //
+            //         api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+            //             if (last !== group) {
+            //                 $(rows).eq(i).before(
+            //                     '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+            //                 );
+            //
+            //                 last = group;
+            //             }
+            //         });
+            //     }
             });
-
-            // Order by the grouping
-            $('#example tbody').on('click', 'tr.group', function () {
-                var currentOrder = table.order()[0];
-                if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-                    table.order([groupColumn, 'desc']).draw();
-                } else {
-                    table.order([groupColumn, 'asc']).draw();
-                }
-            });
+            //
+            // // Order by the grouping
+            // $('#example tbody').on('click', 'tr.group', function () {
+            //     var currentOrder = table.order()[0];
+            //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+            //         table.order([groupColumn, 'desc']).draw();
+            //     } else {
+            //         table.order([groupColumn, 'asc']).draw();
+            //     }
+            // });
         });
 
 .wrapper
