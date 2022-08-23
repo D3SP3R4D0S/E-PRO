@@ -11,18 +11,18 @@ include compara/head.pug
         main.content
             .container-fluid.p-0
                 .row.justify-content-start
-                    .col
+                    .col-auto
                         h1
                             strong= "Financial index "
                             = yearmonth
-                .row
-                    .col
-                        span.me-3
-                            a(class="mb-2 mr-2 btn btn-primary" href="indexpmonth") Previous month
-                        span.me-3
-                            a(class="mb-2 mr-2 btn btn-primary" href="index") Today
-                        span.me-3
-                            a(class="mb-2 mr-2 btn btn-primary" href="indexnmonth") Next month
+                        h6 월간 재정 현황 보고서
+                    .col-auto.mt-auto
+                        span.me-2
+                            a(class="mb-2 mr-2 btn btn-primary" href="indexpmonth") <
+                        span.me-2
+                            a(class="mb-2 mr-2 btn btn-primary" href="index") Now
+                        span
+                            a(class="mb-2 mr-2 btn btn-primary" href="indexnmonth") >
                 .row
                     .col-lg-6
                         .row

@@ -84,20 +84,23 @@ head
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.justify-content-start
-                    .col
+                .row.justify-content-start.mb-2
+                    .col-auto
                         h1
                             strong= "Expenditure List "
                             = yearmonth
-                            a.btn.btn-dark.ms-4(href="adddata") Add data
+
                         h6 지출 내역
-                    .col
-                        span.ms-3
-                            a(class="mb-2 mr-2 btn btn-primary" href="latestdatapmonth") Previous month
-                        span.ms-3
-                            a(class="mb-2 mr-2 btn btn-primary" href="latestdata") Today
-                        span.ms-3
-                            a(class="mb-2 mr-2 btn btn-primary" href="latestdatanmonth") Next month
+
+                    .col-auto.mt-auto
+                        span.me-2
+                            a.btn.btn-success(href="adddata") Add data
+                        span.me-2
+                            a.btn.btn-primary(href="latestdatapmonth") <
+                        span.me-2
+                            a.btn.btn-primary(href="latestdata") Now
+                        span
+                            a.btn.btn-primary(href="latestdatanmonth") >
                 .row
                     .col-lg-8
                         .card
