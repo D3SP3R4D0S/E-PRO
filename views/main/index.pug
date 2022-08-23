@@ -11,16 +11,17 @@ include compara/head.pug
         main.content
             .container-fluid.p-0
                 .row.justify-content-start
-                    .col-xl-4.col-lg-6.col-md-12
+                    .col
                         h1
-                            strong= "Financial Index "
+                            strong= "Financial index "
                             = yearmonth
-                    .col-xl-4.col-lg-6.col-md-12
-                        span.ms-3
+                .row
+                    .col
+                        span.me-3
                             a(class="mb-2 mr-2 btn btn-primary" href="indexpmonth") Previous month
-                        span.ms-3
+                        span.me-3
                             a(class="mb-2 mr-2 btn btn-primary" href="index") Today
-                        span.ms-3
+                        span.me-3
                             a(class="mb-2 mr-2 btn btn-primary" href="indexnmonth") Next month
                 .row
                     .col-lg-6
