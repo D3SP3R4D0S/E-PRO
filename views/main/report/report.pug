@@ -1,0 +1,75 @@
+doctype html
+include ../compara/head
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#report').addClass('active');
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+
+                .row.justify-content-start
+                    .col
+                        h1
+                            strong Report (1year)
+                            //a.btn.btn-dark.ms-3.disabled(href="projectadd") new project
+                        h6 연간 재정 수지 변화 보고
+                .row
+                    .col-lg-3.col-sm-6
+                        .card.border-primary.border-2.border-end
+                            .card-body
+                                .row
+                                    h4.fw-bold Year diff
+                                    h6 연간 변동
+                                h4.text-end= (result[0].yearbefore).toLocaleString() + " KRW"
+                    .col-lg-3.col-sm-6
+                        .card.border-success.border-2.border-end
+                            .card-body
+                                .row
+                                    h4.fw-bold Income
+                                    h6 연간 수입
+                                h4.text-end= (result[0].income).toLocaleString() + " KRW"
+                    .col-lg-3.col-sm-6
+                        .card.border-warning.border-2.border-end
+                            .card-body
+                                .row
+                                    h4.fw-bold Spend
+                                    h6 연간 지출
+                                h4.text-end= (result[0].spend).toLocaleString() + " KRW"
+                    .col-lg-3.col-sm-6
+                        .card.border-info.border-2.border-end
+                            .card-body
+                                .row
+                                    h4.fw-bold Unill 100M
+                                    h6 1억까지
+                                h4.text-end= (Math.round(10000000000 / (result[0].yearbefore)) / 100) + " 년"
+                    .col-xl-6.col-lg-12
+                        .card
+                            .card-body
+                                canvas(id="reportchart")
+                    .col-xl-6.col-lg-12
+                        .card
+                            .card-body
+                                h4.fw-bold Monthly report
+                                table.table.table-sm
+                                    thead
+                                        tr
+                                            th Month
+                                            th Value
+                                            th Income
+                                            th Spend
+                                    tbody
+                                        for line in table
+                                            tr
+                                                td.text-center= line.month
+                                                td.text-end= line.value.toLocaleString() + " ₩"
+                                                td.text-end= line.income.toLocaleString() + " ₩"
+                                                td.text-end= line.spend.toLocaleString() + " ₩"
+
+            script(src="https://cdn.jsdelivr.net/npm/chart.js")
+            script(src="/chartjs/report_chart.js")
+        include ../compara/footer
+    include ../compara/footer_script
