@@ -389,18 +389,27 @@ router.get('/fixedexpenseremove', function(req, res, next) {
     res.redirect('login')
   }
 });
-
+//knex raw
 router.get('/report', function (req, res,next){
   let idn = req.session.idn
   if(req.session.user) {
-    let sql =`SELECT sum(if(income='1', cost, -cost)) as yearbefore from account where userid = ?  and time >= DATE_SUB(now(), INTERVAL 1 YEAR);`
-    connection.query(sql, [idn], function(err, result){
-      if(err) {
-        throw err
-      }else {
-        res.render('main/finance/report', {result, name: req.session.user})
-      }
-    })
+    let sql = `SELECT sum(if(income='1', cost, -cost)) as yearbefore,
+        sum(if(income='1', cost, 0)) as income,
+        sum(if(income='0', cost, 0)) as spend 
+        from account where userid = ?  and time >= DATE_SUB(now(), INTERVAL 1 YEAR);
+        SELECT date_format(time, '%Y-%m') as month, sum(if(income='1', cost, -cost)) as value,
+        sum(if(income='1', cost, 0)) as income, sum(if(income='0', cost, 0)) as spend 
+        from finance.account where userid = ? and time >= DATE_SUB(now(), INTERVAL 1 YEAR)
+        group by month order by month desc;`
+    knex.raw(sql, [idn, idn])
+        .then((results) => {
+          let result = results[0][0]
+          let table  = results[0][1]
+          res.render('main/report/report', {result, table, name: req.session.user})
+        })
+        .catch((err) => {
+          console.log(err)
+        })
   }else{
     res.redirect('login')
   }
