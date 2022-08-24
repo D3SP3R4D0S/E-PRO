@@ -3,34 +3,37 @@ var data1 = {
     datasets: [
         {
             label: 'Total Account',
+            yAxisID: 'y2',
             data: [],
             backgroundColor: [
-                'rgba(0,255,6,0.2)',
+                '#2980B940',
             ],
             borderColor: [
-                'rgb(9,238,0)',
+                '#2980B9',
             ],
             borderWidth: 2
         },
         {
             label: 'Income',
+            yAxisID: 'y2',
             data: [],
             backgroundColor: [
-                'rgba(0,18,154,0.2)',
+                '#27AE6040',
             ],
             borderColor: [
-                'rgb(0,3,160)',
+                '#27AE60',
             ],
             borderWidth: 2
         },
         {
             label: 'Expense',
+            yAxisID: 'y',
             data: [],
             backgroundColor: [
-                'rgb(168,0,0)',
+                '#D3540040',
             ],
             borderColor: [
-                'rgb(158,0,0)',
+                '#D35400',
             ],
             borderWidth: 2
         }
@@ -40,7 +43,29 @@ var data1 = {
 var options = {
     elements:{
         point : {
-            radius : 0
+            radius : 2
+        }
+    },
+    scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Date'
+            }
+        },
+        y: {
+            type: 'linear',
+
+            position: 'left',
+            stack: 'demo',
+            stackWeight: 1,
+        },
+        y2: {
+            type: 'linear',
+            offset: true,
+            position: 'left',
+            stack: 'demo',
+            stackWeight: 2,
         }
     }
 };
