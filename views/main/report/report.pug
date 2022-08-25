@@ -24,28 +24,28 @@ include ../compara/head
                                 .row
                                     h4.fw-bold Year diff
                                     h6 연간 변동
-                                h4.text-end= (result[0].yearbefore).toLocaleString() + " KRW"
+                                h4.text-end= (temp = result[0].yearbefore ? temp : 0).toLocaleString() + " KRW"
                     .col-lg-3.col-sm-6
                         .card.border-success.border-2.border-end
                             .card-body
                                 .row
                                     h4.fw-bold Income
                                     h6 연간 수입
-                                h4.text-end= (result[0].income).toLocaleString() + " KRW"
+                                h4.text-end= (temp = result[0].income ? temp : 0).toLocaleString() + " KRW"
                     .col-lg-3.col-sm-6
                         .card.border-warning.border-2.border-end
                             .card-body
                                 .row
                                     h4.fw-bold Spend
                                     h6 연간 지출
-                                h4.text-end= (result[0].spend).toLocaleString() + " KRW"
+                                h4.text-end= (temp = result[0].spend ? temp : 0).toLocaleString() + " KRW"
                     .col-lg-3.col-sm-6
                         .card.border-info.border-2.border-end
                             .card-body
                                 .row
                                     h4.fw-bold Until 100M
                                     h6 1억까지
-                                h4.text-end= (Math.round(10000000000 / (result[0].yearbefore)) / 100) + " 년"
+                                h4.text-end= (Math.round(10000000000 / (temp = result[0].yearbefore ? temp : 0)) / 100) + " 년"
                     .col-xl-6.col-lg-12
                         .card
                             .card-body
