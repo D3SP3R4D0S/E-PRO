@@ -24,8 +24,10 @@ include ../compara/head.pug
                                     .card-body
                                         .row
                                             .col
-                                                h3
-                                                    a(href="projectdetail?pid=" + line.pid)= line.title
+                                                form(action="projectdetail" method="post").mb-2
+                                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                                    input(type="hidden" name="pid" value=line.pid)
+                                                    input.btn.btn-outline-primary(type="submit" value=line.title)
                                                 h6= line.description
                                                 h6= "Created : " + line.created.toLocaleString('en-US')
                                             .col.text-end
