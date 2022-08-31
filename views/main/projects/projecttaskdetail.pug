@@ -10,21 +10,32 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.justify-content-start
-                    .col.mb-3.align-middle
-                        a.btn.btn-dark.mb-2(href="projectdetail?pid="+task.projectid) Back
-                        strong.h2.ms-3= task.tasktitle
-                            if task.status === 0
-                                .ms-3.badge.bg-warning PENDING
-                            else if task.status === 1
-                                .ms-3.badge.bg-primary ON GOING
-                            else if task.status === 2
-                                .ms-3.badge.bg-danger REJECTED
-                            else if task.status === 3
-                                .ms-3.badge.bg-success COMPLETE
+                .row.justify-content-start.mb-3
+                    .col-auto.m-0.p-0.ms-3
+                        h2.fw-bold= task.tasktitle
+                    .col.text-start.p-0
+                        if task.status === 0
+                            .ms-3.badge.bg-warning PENDING
+                        else if task.status === 1
+                            .ms-3.badge.bg-primary ON GOING
+                        else if task.status === 2
+                            .ms-3.badge.bg-danger REJECTED
+                        else if task.status === 3
+                            .ms-3.badge.bg-success COMPLETE
                     //    h6= project.description
                     //        if(project.creator == id)
                     //            span.ms-3.badge.bg-danger owner
+                    .col-auto.ms-auto.me-3.text-end.p-0
+                        form(action="projectdetail" method="post").mb-2
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            input(type="hidden" name="pid" value=task.projectid)
+                            input.btn.btn-secondary(type="submit" value='Back')
+                    if(task.creator === id)
+                        .col-auto.p-0.me-3
+                            form(action="projecttaskedit" method="post").mb-2
+                                input(type="hidden" name="_csrf" value=csrfToken)
+                                input(type="hidden" name="tid" value=task.id)
+                                input.btn.btn-primary(type="submit" value="Edit")
                 .row
                     .col-lg-8
                         .card
@@ -75,15 +86,15 @@ include ../compara/head.pug
                                         tr
                                             form(action="taskaddcomment" method="post")
                                                 input(type="hidden" name="_csrf" value=csrfToken)
-                                                td(colspan="2")
-                                                    .input-group
-                                                        button(class="form-control btn btn-dark text-light " type="submit") Submit
-                                                        select(class="form-control" name="status" placeholder="status" required)
-                                                            option(value="" selected) No change
-                                                            option(value="0") PENDING
-                                                            option(value="1") ON GOING
-                                                            option(value="2") REJECTED
-                                                            option(value="3") COMPLETE
+                                                td
+                                                    button(class="form-control btn btn-dark text-light " type="submit") Submit
+                                                td
+                                                    select(class="form-control" name="status" placeholder="status")
+                                                        option(value="" selected) No change
+                                                        option(value="0") PENDING
+                                                        option(value="1") ON GOING
+                                                        option(value="2") REJECTED
+                                                        option(value="3") COMPLETE
                                                 td
                                                     input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
 
