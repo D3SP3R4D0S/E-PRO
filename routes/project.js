@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mysql      = require('./config/mysql.js')();
 const connection = mysql.init();
+const knex = require('./config/knex.js');
 const request = require('request')
 
 connection.connect(function(err){
@@ -36,7 +37,7 @@ router.get('/projectadd', function(req, res, next) {
         res.redirect('login')
     }
 });
-//@todo please add pool or other option to cope multiple connection
+
 router.post('/projectadd', function(req, res, next) {
     let rb = req.body
     if(req.session.user){
@@ -111,7 +112,6 @@ router.get('/projectdetail', function(req, res, next) {
     }
 });
 
-
 router.get('/projectaddtask', function(req, res, next) {
     if(req.session.user){
         res.render('main/projects/projectaddtask',{csrfToken:req.csrfToken(),name:req.session.user});
@@ -136,6 +136,7 @@ router.post('/projectaddtask', function(req, res, next) {
         res.redirect('login')
     }
 });
+
 router.get('/projecttaskdetail', function(req, res,next){
     let taskid = req.query.taskid
     req.session.tid = taskid
@@ -145,12 +146,14 @@ router.get('/projecttaskdetail', function(req, res,next){
                    SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
                 ON project_member.memberid = account.number where projectid = ?;
                 SELECT * FROM project_task_comment WHERE taskid = ?`
-        connection.query(sql, [taskid, pid, taskid], function (err,results, fields){
-            res.render('main/projects/projecttaskdetail',{
-                task: results[0][0], pmember: results[1],
-                csrfToken:req.csrfToken(), comments:results[2], name:req.session.user
-            });
-        })
+        knex.raw(sql,[taskid, pid, taskid])
+            .then((rawres)=> {
+                let results = rawres[0]
+                res.render('main/projects/projecttaskdetail', {
+                    task: results[0][0], pmember: results[1],
+                    csrfToken: req.csrfToken(), comments: results[2], name: req.session.user
+                });
+            })
     }else{
         res.redirect('login')
     }
@@ -198,6 +201,7 @@ router.post('/projectaddtask', function(req, res, next) {
         res.redirect('login')
     }
 });
+
 router.get('/projectaddfundreq', function(req, res, next) {
     if(req.session.user){
         res.render('main/projects/projectaddfundreq',{csrfToken:req.csrfToken(),name:req.session.user});
@@ -311,7 +315,6 @@ router.post('/projectaddmember', function(req, res, next) {
         res.redirect('login')
     }
 });
-
 
 router.get('/projectadd', function (req, res,next){
     if(req.session.user){
