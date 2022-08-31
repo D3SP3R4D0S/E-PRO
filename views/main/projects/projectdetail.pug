@@ -10,7 +10,7 @@ include ../compara/head.pug
         include ../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.justify-content-start
+                .row.justify-content-start.mb-2
                     .col
                         h1
                             strong= project.title
@@ -23,9 +23,9 @@ include ../compara/head.pug
                             .card-body
                                 .row
                                     .col
-                                        .h3 Tasks
+                                        .h4 Tasks
                                     .col.text-end
-                                        a.btn.btn-dark(href="projectaddtask") Add
+                                        a.btn.btn-sm.btn-dark(href="projectaddtask") Add
                                 hr
                                 if(tasks)
                                     table.table
@@ -38,7 +38,11 @@ include ../compara/head.pug
                                             for line in tasks
                                                 tr
                                                     td
-                                                        a(href="projecttaskdetail?taskid="+ line.taskid)= line.tasktitle
+                                                        //a(href="projecttaskdetail?taskid="+ line.taskid)= line.tasktitle
+                                                        form(action="projecttaskdetail" id=line.taskid method="post").mb-2
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                                            input(type="hidden" name="tid" value=line.taskid)
+                                                            a(href="javascript:$('#"+line.taskid+"').submit()")= line.tasktitle
                                                     td= line.detail
                                                     if line.status === 0
                                                         td
@@ -62,9 +66,9 @@ include ../compara/head.pug
                             .card-body
                                 .row
                                     .col
-                                        .h3 Request of fund
+                                        .h4 Request of fund
                                     .col.text-end
-                                        a.btn.btn-dark(href="projectaddfundreq") Add
+                                        a.btn.btn-sm.btn-dark(href="projectaddfundreq") Add
                                 hr
                                 table.table
                                     thead
@@ -106,9 +110,9 @@ include ../compara/head.pug
                             .card-body
                                 .row
                                     .col
-                                        .h3 Members
+                                        .h4 Members
                                     .col.text-end
-                                        a.btn.btn-dark(href="projectaddmember") Add
+                                        a.btn.btn-sm.btn-dark(href="projectaddmember") Add
                                 hr
                                 table.table
                                     thead
@@ -124,7 +128,7 @@ include ../compara/head.pug
                             .card-body
                                 .row
                                     .col
-                                        .h3 Fund total
+                                        .h4 Fund total
                                 table.table
                                     thead
                                         tr
