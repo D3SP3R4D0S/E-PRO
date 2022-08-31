@@ -70,13 +70,11 @@ router.post('/projectadd', function(req, res, next) {
 });
 
 router.post('/projectdetail', function(req, res, next) {
-    let idnum = req.session.idn
-    // req.session.pid = req.query.pid
     req.session.pid = req.body.pid
     let pid = req.session.pid
     if (req.session.user) {
         let sql = 'SELECT * FROM finance.project_member where projectid = ? and memberid = ?'
-        connection.query(sql, [pid, idnum] ,function (error, results) {
+        connection.query(sql, [req.session.pid, req.session.idn] ,function (error, results) {
             if(error){
                 console.log(error)
             }
@@ -98,7 +96,9 @@ router.post('/projectdetail', function(req, res, next) {
                                 tasks: results[1],
                                 pmember: results[2],
                                 fundreq: results[3],
-                                name: req.session.user, id: idnum
+                                name: req.session.user,
+                                id: req.session.idn,
+                                csrfToken: req.csrfToken()
                             });
                         }
                     });
@@ -140,9 +140,10 @@ router.post('/projectaddtask', function(req, res, next) {
 
 // project/taskdetail // knex raw
 router.route('/projecttaskdetail')
-    .get(function(req, res,next){
-        let taskid = req.query.taskid
+    .post(function(req, res,next){
+        let taskid = req.body.tid
         req.session.tid = taskid
+        console.log(taskid)
         let pid = req.session.pid
         if(req.session.user){
             let sql = `SELECT * FROM finance.project_task where taskid = ?;
@@ -153,14 +154,42 @@ router.route('/projecttaskdetail')
                 .then((rawres)=> {
                     let results = rawres[0]
                     res.render('main/projects/projecttaskdetail', {
-                        task: results[0][0], pmember: results[1],
-                        csrfToken: req.csrfToken(), comments: results[2], name: req.session.user
+                        task: results[0][0],
+                        pmember: results[1],
+                        csrfToken: req.csrfToken(),
+                        comments: results[2],
+                        name: req.session.user,
+                        id: req.session.idn
                     });
                 })
         }else{
             res.redirect('login')
         }
-});
+    })
+    .get(function(req, res,next){
+        let taskid = req.session.tid
+        let pid = req.session.pid
+        if(req.session.user){
+            let sql = `SELECT * FROM finance.project_task where taskid = ?;
+                           SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
+                        ON project_member.memberid = account.number where projectid = ?;
+                        SELECT * FROM project_task_comment WHERE taskid = ?`
+            knex.raw(sql,[taskid, pid, taskid])
+                .then((rawres)=> {
+                    let results = rawres[0]
+                    res.render('main/projects/projecttaskdetail', {
+                        task: results[0][0],
+                        pmember: results[1],
+                        csrfToken: req.csrfToken(),
+                        comments: results[2],
+                        name: req.session.user,
+                        id: req.session.idn
+                    });
+                })
+        }else{
+            res.redirect('login')
+        }
+    });
 // project / task / commentadd // knex
 router.post('/taskaddcomment', function(req, res, next) {
     let rb = req.body
@@ -173,17 +202,25 @@ router.post('/taskaddcomment', function(req, res, next) {
                 .catch((err)=>{
                     console.log(err)
                 })
-        }
-        let sql = "INSERT INTO finance.project_task_comment(taskid, userid, comment, status)VALUES(?,?,?,?);"
-        knex('project_task_comment').insert({
+            knex('project_task_comment').insert({
                 taskid:req.session.tid,
                 userid:req.session.idn,
                 comment:rb.comment,
                 status:rb.status
             })
-            .then((result)=>{console.log(result)})
-            .catch((err)=>{console.log(err)})
-        res.redirect('/projecttaskdetail?taskid='+req.session.tid);
+                .then((result)=>{console.log(result)})
+                .catch((err)=>{console.log(err)})
+        }else{
+            knex('project_task_comment').insert({
+                taskid:req.session.tid,
+                userid:req.session.idn,
+                comment:rb.comment
+            })
+                .then((result)=>{console.log(result)})
+                .catch((err)=>{console.log(err)})
+        }
+
+        res.redirect('/projecttaskdetail');
     }else{
         res.redirect('login')
     }
@@ -211,9 +248,10 @@ router.post('/projectaddtask', function(req, res, next) {
 
 //@todo add modify task detail option
 //projectedittask
-router.route('/projectedittask')
+router.route('/projecttaskedit')
     .get(function(req, res){
-        let taskid = req.session.tid
+        let taskid = req.body.tid
+        console.log(taskid)
 
     })
     .post(function(req, res){
