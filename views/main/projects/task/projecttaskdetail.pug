@@ -1,13 +1,13 @@
 doctype html
-include ../compara/head.pug
+include ../../compara/head
 .wrapper
-    include ../compara/sidebar
+    include ../../compara/sidebar
     script.
         $(document).ready(function () {
             $('#projects').addClass('active');
         });
     .main
-        include ../compara/navbar
+        include ../../compara/navbar
         main.content
             .container-fluid.p-0
                 .row.justify-content-start.mb-3
@@ -99,5 +99,5 @@ include ../compara/head.pug
                                                     input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
 
 
-        include ../compara/footer.pug
-    include ../compara/footer_script.pug
+        include ../../compara/footer
+    include ../../compara/footer_script
