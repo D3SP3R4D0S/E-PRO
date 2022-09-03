@@ -82,3 +82,5 @@ routes/account
 public/images/construction.*
 
 package-lock.json
+
+.idea
