@@ -1,0 +1,21 @@
+doctype html
+include head
+.wrapper
+    include sidebar
+    script.
+        $(document).ready(function () {
+            $('#projects').addClass('active');
+        });
+    .main
+        include navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start
+                    .col.mb-3.align-middle
+                        .card
+                            .card-header
+                            .card-body.text-center.mb-5
+                                h1 SNIPPING DETECTED
+                                h3 PLEASE SELECT PROPER TASK / FUND
+        include footer
+    include footer_script
