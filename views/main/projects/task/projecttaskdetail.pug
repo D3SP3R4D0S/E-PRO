@@ -32,7 +32,7 @@ include ../../compara/head
                             form(action="projecttaskedit" method="post").mb-2
                                 input(type="hidden" name="_csrf" value=csrfToken)
                                 input(type="hidden" name="tid" value=task.id)
-                                input.btn.btn-primary(type="submit" value="Edit")
+                                input.btn.btn-primary.disabled(type="submit" value="Edit")
                 .row
                     .col-lg-8
                         .card
