@@ -1,18 +1,18 @@
 doctype html
-include ../compara/head.pug
+include ../../compara/head
 .wrapper
-    include ../compara/sidebar
+    include ../../compara/sidebar
     script.
         $(document).ready(function () {
             $('#projects').addClass('active');
         });
     .main
-        include ../compara/navbar
+        include ../../compara/navbar
         main.content
             .container-fluid.p-0
                 .row.justify-content-start
                     .col.mb-3.align-middle
-                        a.btn.btn-dark.mb-2(href="projectdetail?pid="+fund.projectid) Back
+                        //a.btn.btn-dark.mb-2(href="projectdetail?pid="+fund.projectid) Back
                         strong.h2.ms-3= fund.title
                             if fund.status === 0
                                 .ms-3.badge.bg-warning PENDING
@@ -22,9 +22,14 @@ include ../compara/head.pug
                                 .ms-3.badge.bg-danger REJECTED
                             else if fund.status === 3
                                 .ms-3.badge.bg-success COMPLETE
-                    //    h6= project.description
-                    //        if(project.creator == id)
-                    //            span.ms-3.badge.bg-danger owner
+                    .col-auto.ms-auto.me-3.text-end.p-0
+                        a.btn.btn-secondary(href="projectdetail?pid="+fund.projectid) Back
+                    if(fund.requester === id)
+                        .col-auto.p-0.me-3
+                            form(action="projectfundedit" method="post").mb-2
+                                input(type="hidden" name="_csrf" value=csrfToken)
+                                input(type="hidden" name="fid" value=fund.id)
+                                input.btn.btn-primary.disabled(type="submit" value="Edit")
                 .row
                     .col-lg-8
                         .card
@@ -89,5 +94,5 @@ include ../compara/head.pug
                                                     input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
 
 
-        include ../compara/footer.pug
-    include ../compara/footer_script.pug
+        include ../../compara/footer
+    include ../../compara/footer_script

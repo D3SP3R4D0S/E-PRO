@@ -1,13 +1,13 @@
 head
-    include ../compara/head.pug
+    include ../../compara/head
 .wrapper
-    include ../compara/sidebar
+    include ../../compara/sidebar
     script.
         $(document).ready(function () {
             $('#projects').addClass('active');
         });
     .main
-        include ../compara/navbar
+        include ../../compara/navbar
         main.content
             .container-fluid.p-0
                 .row.justify-content-center
@@ -37,4 +37,4 @@ head
                                             a(class="btn btn-dark text-light col-lg-3 col-sm-5 ms-auto m-2" href="javascript:history.back()") go back
                                             button(class="btn btn-dark text-light col-lg-3 col-sm-5 m-2" type="submit") Submit
 
-    include ../compara/footer_script.pug
+    include ../../compara/footer_script
