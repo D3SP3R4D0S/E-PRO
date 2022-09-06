@@ -73,9 +73,9 @@ router.route('/projectadd')
             res.redirect('login')
         }
     });
-
-router.post('/projectdetail', function(req, res, next) {
-    req.session.pid = req.body.pid
+// projectdetail // mysql
+router.get('/projectdetail', function(req, res, next) {
+    req.session.pid = req.query.pid
     let pid = req.session.pid
     if (req.session.user) {
         let sql = 'SELECT * FROM finance.project_member where projectid = ? and memberid = ?'
@@ -174,55 +174,43 @@ router.route('/projectaddmember')
 
 // project/taskdetail // knex raw
 router.route('/projecttaskdetail')
-    .post(function(req, res,next){
-        let taskid = req.body.tid
-        req.session.tid = taskid
-        console.log(taskid)
-        let pid = req.session.pid
-        if(req.session.user){
-            let sql = `SELECT * FROM finance.project_task where taskid = ?;
-                       SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
-                    ON project_member.memberid = account.number where projectid = ?;
-                    SELECT * FROM project_task_comment WHERE taskid = ?`
-            knex.raw(sql,[taskid, pid, taskid])
-                .then((rawres)=> {
-                    let results = rawres[0]
-                    res.render('main/projects/task/projecttaskdetail', {
-                        task: results[0][0],
-                        pmember: results[1],
-                        csrfToken: req.csrfToken(),
-                        comments: results[2],
-                        name: req.session.user,
-                        id: req.session.idn
-                    });
-                })
-        }else{
-            res.redirect('login')
-        }
-    })
     .get(function(req, res,next){
-        let taskid = req.session.tid
+        let tid = req.query.tid
+        req.session.tid = tid
         let pid = req.session.pid
         if(req.session.user){
-            let sql = `SELECT * FROM finance.project_task where taskid = ?;
-                           SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
-                        ON project_member.memberid = account.number where projectid = ?;
-                        SELECT * FROM project_task_comment WHERE taskid = ?`
-            knex.raw(sql,[taskid, pid, taskid])
-                .then((rawres)=> {
-                    let results = rawres[0]
-                    res.render('main/projects/projecttaskdetail', {
-                        task: results[0][0],
-                        pmember: results[1],
-                        csrfToken: req.csrfToken(),
-                        comments: results[2],
-                        name: req.session.user,
-                        id: req.session.idn
-                    });
-                })
-        }else{
-            res.redirect('login')
-        }
+        knex.select("*")
+            .from("project_task")
+            .where('taskid', tid)
+            .andWhere('projectid', pid)
+            .then((results)=>{
+                if(results[0]) {
+                    let sql = `SELECT * FROM finance.project_task where taskid = ?;
+                               SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
+                            ON project_member.memberid = account.number where projectid = ?;
+                            SELECT * FROM project_task_comment WHERE taskid = ?`
+                    knex.raw(sql, [tid, pid, tid])
+                        .then((rawres) => {
+                            let results = rawres[0]
+                            res.render('main/projects/task/projecttaskdetail', {
+                                task: results[0][0],
+                                pmember: results[1],
+                                csrfToken: req.csrfToken(),
+                                comments: results[2],
+                                name: req.session.user,
+                                id: req.session.idn
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            res.render('main/compara/defender')
+                        })
+                }else{
+                    res.render('main/compara/defender')
+                }
+            })
+            .catch((err)=>{console.log(err)})
+        }else{res.redirect('login')}
     })
 
 router.route('/projectaddtask')
@@ -280,8 +268,7 @@ router.post('/taskaddcomment', function(req, res, next) {
                 .then((result)=>{console.log(result)})
                 .catch((err)=>{console.log(err)})
         }
-
-        res.redirect('/projecttaskdetail');
+        res.redirect('/projecttaskdetail?tid'+req.session.tid);
     }else{
         res.redirect('login')
     }
