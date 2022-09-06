@@ -38,11 +38,11 @@ include ../compara/head.pug
                                             for line in tasks
                                                 tr
                                                     td
-                                                        //a(href="projecttaskdetail?taskid="+ line.taskid)= line.tasktitle
-                                                        form(action="projecttaskdetail" id=line.taskid method="post").mb-2
-                                                            input(type="hidden" name="_csrf" value=csrfToken)
-                                                            input(type="hidden" name="tid" value=line.taskid)
-                                                            a(href="javascript:$('#"+line.taskid+"').submit()")= line.tasktitle
+                                                        a(href="projecttaskdetail?tid="+ line.taskid)= line.tasktitle
+                                                        //form(action="projecttaskdetail" id=line.taskid method="post").mb-2
+                                                        //    input(type="hidden" name="_csrf" value=csrfToken)
+                                                        //    input(type="hidden" name="tid" value=line.taskid)
+                                                        //    a(href="javascript:$('#"+line.taskid+"').submit()")= line.tasktitle
                                                     td= line.detail
                                                     if line.status === 0
                                                         td

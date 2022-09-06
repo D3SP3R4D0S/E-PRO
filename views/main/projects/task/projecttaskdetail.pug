@@ -26,10 +26,7 @@ include ../../compara/head
                     //        if(project.creator == id)
                     //            span.ms-3.badge.bg-danger owner
                     .col-auto.ms-auto.me-3.text-end.p-0
-                        form(action="projectdetail" method="post").mb-2
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            input(type="hidden" name="pid" value=task.projectid)
-                            input.btn.btn-secondary(type="submit" value='Back')
+                        a.btn.btn-secondary(href="projectdetail?pid="+task.projectid) Back
                     if(task.creator === id)
                         .col-auto.p-0.me-3
                             form(action="projecttaskedit" method="post").mb-2

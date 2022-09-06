@@ -25,10 +25,7 @@ include ../compara/head.pug
                                         .row
                                             .col
                                                 h3.fw-bold
-                                                    form(action="projectdetail" id=line.pid method="post").mb-2
-                                                        input(type="hidden" name="_csrf" value=csrfToken)
-                                                        input(type="hidden" name="pid" value=line.pid)
-                                                        a.text-info(href="javascript:$('#"+line.pid+"').submit()")= line.title
+                                                    a(href="projectdetail?pid=" + line.pid)= line.title
                                                 h6= line.description
                                                 h6= "Created : " + line.created.toLocaleString('en-US')
                                             .col.text-end
