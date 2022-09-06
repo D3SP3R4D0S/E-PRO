@@ -179,65 +179,68 @@ router.route('/projecttaskdetail')
         req.session.tid = tid
         let pid = req.session.pid
         if(req.session.user){
-        knex.select("*")
-            .from("project_task")
-            .where('taskid', tid)
-            .andWhere('projectid', pid)
-            .then((results)=>{
-                if(results[0]) {
-                    let sql = `SELECT * FROM finance.project_task where taskid = ?;
-                               SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
-                            ON project_member.memberid = account.number where projectid = ?;
-                            SELECT * FROM project_task_comment WHERE taskid = ?`
-                    knex.raw(sql, [tid, pid, tid])
-                        .then((rawres) => {
-                            let results = rawres[0]
-                            res.render('main/projects/task/projecttaskdetail', {
-                                task: results[0][0],
-                                pmember: results[1],
-                                csrfToken: req.csrfToken(),
-                                comments: results[2],
-                                name: req.session.user,
-                                id: req.session.idn
-                            });
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                            res.render('main/compara/defender')
-                        })
-                }else{
+            knex.select("*")
+                .from("project_task")
+                .where('taskid', tid)
+                .andWhere('projectid', pid)
+                .then((results)=>{
+                    if(results[0]) {
+                        let sql = `SELECT * FROM finance.project_task where taskid = ?;
+                                   SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
+                                ON project_member.memberid = account.number where projectid = ?;
+                                SELECT * FROM project_task_comment WHERE taskid = ?`
+                        knex.raw(sql, [tid, pid, tid])
+                            .then((rawres) => {
+                                let results = rawres[0]
+                                res.render('main/projects/task/projecttaskdetail', {
+                                    task: results[0][0],
+                                    pmember: results[1],
+                                    csrfToken: req.csrfToken(),
+                                    comments: results[2],
+                                    name: req.session.user,
+                                    id: req.session.idn
+                                });
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                                res.render('main/compara/defender')
+                            })
+                    }else{
+                        res.render('main/compara/defender')
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
                     res.render('main/compara/defender')
-                }
-            })
-            .catch((err)=>{console.log(err)})
+                })
         }else{res.redirect('login')}
-    })
+        })
 
 router.route('/projectaddtask')
     .get(function(req, res, next) {
-    if(req.session.user){
-        res.render('main/projects/task/projectaddtask',{csrfToken:req.csrfToken(),name:req.session.user});
-    }else{
-        res.redirect('login')
-    }
-})
+        if(req.session.user){
+            res.render('main/projects/task/projectaddtask',{csrfToken:req.csrfToken(),name:req.session.user});
+        }else{
+            res.redirect('login')
+        }
+    })
     .post(function(req, res, next) {
-    let rb = req.body
-    if(req.session.user){
-        let sql = "INSERT INTO finance.project_task(projectid, tasktitle, creator, duedate, detail)VALUES(?,?,?,?,?);"
-        let params = [req.session.pid, rb.tasktitle, req.session.idn, rb.duedate, rb.detail];
-        console.log(params);
-        connection.query(sql,params,function (err, results, fields) {
-            if(err){
-                console.log(err);
-            }else{
-                res.redirect('/projectdetail?pid='+req.session.pid);
-            }
-        });
-    }else{
-        res.redirect('login')
-    }
-})
+        let rb = req.body
+        if(req.session.user){
+            let sql = "INSERT INTO finance.project_task(projectid, tasktitle, creator, duedate, detail)VALUES(?,?,?,?,?);"
+            let params = [req.session.pid, rb.tasktitle, req.session.idn, rb.duedate, rb.detail];
+            console.log(params);
+            connection.query(sql,params,function (err, results, fields) {
+                if(err){
+                    console.log(err);
+                }else{
+                    res.redirect('/projectdetail?pid='+req.session.pid);
+                }
+            });
+        }else{
+            res.redirect('login')
+        }
+    })
 
 // project / task / commentadd // knex
 router.post('/taskaddcomment', function(req, res, next) {
@@ -309,23 +312,33 @@ router.route('/projecttaskedit')
 
 //fund detail // mysql
 router.get('/projectfunddetail', function(req, res, next){
-    let fundid = req.query.fundid
-    req.session.fid = fundid
+    let fid = req.query.fundid
+    req.session.fid = fid
     let pid = req.session.pid
     if(req.session.user){
-        let sql = `SELECT * FROM finance.project_fundreq where id = ?;
-                   SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
-                ON project_member.memberid = account.number where projectid = ?;
-                SELECT * FROM project_fund_comment WHERE fundid = ?`
-        connection.query(sql, [fundid, pid, fundid], function (err,results, fields){
-            res.render('main/projects/fund/projectfunddetail',{
-                fund: results[0][0], pmember: results[1],
-                csrfToken:req.csrfToken(), comments:results[2], name:req.session.user
-            });
-        })
-    }else{
-        res.redirect('login')
-    }
+        knex.select("*")
+            .from("project_fundreq")
+            .where('id', fid)
+            .andWhere('projectid', pid)
+            .then((results)=>{
+                if(results[0]) {
+                    let sql = `SELECT * FROM finance.project_fundreq where id = ?;
+                               SELECT project_member.memberid as idnum, account.id as userid, account.name as name FROM finance.project_member JOIN nodedb.account 
+                            ON project_member.memberid = account.number where projectid = ?;
+                            SELECT * FROM project_fund_comment WHERE fundid = ?`
+                    connection.query(sql, [fid, pid, fid], function (err, results, fields) {
+                        res.render('main/projects/fund/projectfunddetail', {
+                            fund: results[0][0], pmember: results[1],
+                            csrfToken: req.csrfToken(), comments: results[2], name: req.session.user
+                        });
+                    })
+                }else{res.render('main/compara/defender')}
+            })
+            .catch((err)=>{
+                console.log(err)
+                res.render('main/compara/defender')
+            })
+    }else{res.redirect('login')}
 });
 
 // add fund request
