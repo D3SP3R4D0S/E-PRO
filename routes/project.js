@@ -271,7 +271,7 @@ router.post('/taskaddcomment', function(req, res, next) {
                 .then((result)=>{console.log(result)})
                 .catch((err)=>{console.log(err)})
         }
-        res.redirect('/projecttaskdetail?tid'+req.session.tid);
+        res.redirect('/projecttaskdetail?tid='+req.session.tid);
     }else{
         res.redirect('login')
     }
