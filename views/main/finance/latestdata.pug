@@ -2,76 +2,75 @@ head
     include ../compara/head
     script.
         $(document).ready(function () {
-            var groupColumn = 2;
+            var groupColumn = 0;
             var table = $('#table1').DataTable({
                 autoWidth: true,
-                // "columnDefs": [
-                //     {"visible": false, "targets": groupColumn}
-                // ],
+                "columnDefs": [
+                    {"visible": false, "targets": groupColumn}
+                ],
                 "order": [[groupColumn, 'desc']],
                 "displayLength": 10,
-                // "drawCallback": function (settings) {
-                    // var api = this.api();
-                    // var rows = api.rows({page: 'current'}).nodes();
-                    // var last = null;
-                    //
-                    // api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
-                    //     if (last !== group) {
-                    //         $(rows).eq(i).before(
-                    //             '<tr class="group"><td colspan="5">' + group + '</td></tr>'
-                    //         );
-                    //
-                    //         last = group;
-                    //     }
-                    // });
-                // }
-            });
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({page: 'current'}).nodes();
+                    var last = null;
 
+                    api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
             // Order by the grouping
-            // $('#example tbody').on('click', 'tr.group', function () {
-            //     var currentOrder = table.order()[0];
-            //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-            //         table.order([groupColumn, 'desc']).draw();
-            //     } else {
-            //         table.order([groupColumn, 'asc']).draw();
-            //     }
-            // });
+            $('#example tbody').on('click', 'tr.group', function () {
+                var currentOrder = table.order()[0];
+                if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                    table.order([groupColumn, 'desc']).draw();
+                } else {
+                    table.order([groupColumn, 'asc']).draw();
+                }
+            });
         });
     script.
         $(document).ready(function () {
-            var groupColumn = 2;
+            var groupColumn = 0;
             var table = $('#table2').DataTable({
-            //     "columnDefs": [
-            //         {"visible": false, "targets": groupColumn}
-            //     ],
+                "columnDefs": [
+                    {"visible": false, "targets": groupColumn}
+                ],
                 "order": [[groupColumn, 'desc']],
-            //     "displayLength": 10,
-            //     "drawCallback": function (settings) {
-            //         var api = this.api();
-            //         var rows = api.rows({page: 'current'}).nodes();
-            //         var last = null;
-            //
-            //         api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
-            //             if (last !== group) {
-            //                 $(rows).eq(i).before(
-            //                     '<tr class="group"><td colspan="5">' + group + '</td></tr>'
-            //                 );
-            //
-            //                 last = group;
-            //             }
-            //         });
-            //     }
+                "displayLength": 10,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({page: 'current'}).nodes();
+                    var last = null;
+
+                    api.column(groupColumn, {page: 'current'}).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
             });
-            //
-            // // Order by the grouping
-            // $('#example tbody').on('click', 'tr.group', function () {
-            //     var currentOrder = table.order()[0];
-            //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-            //         table.order([groupColumn, 'desc']).draw();
-            //     } else {
-            //         table.order([groupColumn, 'asc']).draw();
-            //     }
-            // });
+
+            // Order by the grouping
+            $('#example tbody').on('click', 'tr.group', function () {
+                var currentOrder = table.order()[0];
+                if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                    table.order([groupColumn, 'desc']).draw();
+                } else {
+                    table.order([groupColumn, 'asc']).draw();
+                }
+            });
         });
 
 .wrapper
@@ -85,7 +84,7 @@ head
         main.content
             .container-fluid.p-0
                 .row.justify-content-start.mb-2
-                    .col-auto
+                    .col-auto.ms-2
                         h1
                             strong= "Expenditure List "
                             = yearmonth
@@ -109,19 +108,20 @@ head
                                 table.table.table-sm#table1
                                     thead
                                         tr(class="text-center")
+                                            th Date
                                             th Title
                                             th Method
-                                            th Date
-                                            th Aligner
+                                            th category
                                             th Cost
                                     tbody
                                         for line in result
                                             if line.income === 0
                                                 tr
                                                     td.text-center
+                                                        span.ms-3.badge.bg-info= line.date
+                                                    td.text-center
                                                         a(href="detail?id="+line.id)= line.detail
                                                     td.text-center= line.title
-                                                    td= line.date
                                                     td.text-center= line.subord + '-' + line.alligner
                                                     td.text-end= line.cost.toLocaleString() + '₩'
                                 hr
@@ -130,22 +130,21 @@ head
                                 table.table.table-sm#table2
                                     thead
                                         tr(class="text-center")
+                                            th Date
                                             th Title
                                             th Method
-                                            th Date
-                                            th Cat
-                                            th Subord
+                                            th Category
                                             th Cost
                                     tbody
                                         for line in result
                                             if line.income === 1
                                                 tr
                                                     td.text-center
+                                                        span.ms-3.badge.bg-info= line.date
+                                                    td.text-center
                                                         a(href="detail?id=" + line.id)= line.detail
                                                     td.text-center= line.title
-                                                    td= line.date
                                                     td.text-center= line.subord + '-' + line.alligner
-                                                    td.text-center= line.subord
                                                     td.text-end= line.cost.toLocaleString() + '₩'
                     .col-lg-4
                         .card

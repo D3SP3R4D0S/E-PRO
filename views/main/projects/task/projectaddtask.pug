@@ -10,8 +10,12 @@ head
         include ../../compara/navbar
         main.content
             .container-fluid.p-0
-                .row.justify-content-center
-                    H2.m-4 Add Task
+                .row.justify-content-start.mb-2
+                    .col-auto
+                        h1
+                            strong= "Add Task "
+                        h6 작업 내역 추가
+                .row
                     .col-12
                         .card
                             .card-body

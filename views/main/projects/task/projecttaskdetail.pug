@@ -29,10 +29,21 @@ include ../../compara/head
                         a.btn.btn-secondary(href="projectdetail?pid="+task.projectid) Back
                     if(task.creator === id)
                         .col-auto.p-0.me-3
-                            form(action="projecttaskedit" method="post").mb-2
-                                input(type="hidden" name="_csrf" value=csrfToken)
-                                input(type="hidden" name="tid" value=task.id)
-                                input.btn.btn-primary.disabled(type="submit" value="Edit")
+                            form(action="projecttaskedit" method="get").mb-2
+                                input(type="hidden" name="tid" value=tid)
+                                input.btn.btn-primary(type="submit" value="Edit")
+                    .col-auto.p-0.me-3
+                        button.btn.btn-danger.disabled(type='button' data-toggle='modal' data-target='#removemodal') Remove
+                        .modal.fade(tabindex='-1' aria-labelledby='myModal' aria-hidden='true' id="removemodal")
+                            .modal-dialog
+                                .modal-content
+                                    .modal-header
+                                        h5#exampleModalLabel.modal-title Modal title
+                                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                                    .modal-body
+                                    .modal-footer
+                                        button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Close
+                                        button.btn.btn-primary(type='button') Save changes
                 .row
                     .col-lg-8
                         .card

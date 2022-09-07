@@ -26,7 +26,7 @@ include ../../compara/head
                         a.btn.btn-secondary(href="projectdetail?pid="+fund.projectid) Back
                     if(fund.requester === id)
                         .col-auto.p-0.me-3
-                            form(action="projectfundedit" method="post").mb-2
+                            form(action="projectfundedit" method="get").mb-2
                                 input(type="hidden" name="_csrf" value=csrfToken)
                                 input(type="hidden" name="fid" value=fund.id)
                                 input.btn.btn-primary.disabled(type="submit" value="Edit")
