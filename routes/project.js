@@ -193,6 +193,7 @@ router.route('/projecttaskdetail')
                             .then((rawres) => {
                                 let results = rawres[0]
                                 res.render('main/projects/task/projecttaskdetail', {
+                                    tid:tid,
                                     task: results[0][0],
                                     pmember: results[1],
                                     csrfToken: req.csrfToken(),
@@ -300,10 +301,65 @@ router.post('/projectaddtask', function(req, res, next) {
 //projectedittask
 router.route('/projecttaskedit')
     .get(function(req, res){
-        let taskid = req.body.tid
+        let tid = req.query.tid
+        if(req.session.user){
+            knex.select("*")
+                .from("project_task")
+                .where('taskid', tid)
+                .andWhere('creator', req.session.idn)
+                .then((results)=>{
+                    if(results[0]) {
+                        res.render('main/projects/task/projecttaskedit', {
+                            tid:tid,
+                            task: results[0],
+                            csrfToken: req.csrfToken(),
+                            name: req.session.user,
+                            id: req.session.idn
+                        });
+                    }else{
+                        res.render('main/compara/defender')
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                    res.render('main/compara/defender')
+                })
+        }else{res.redirect('login')}
     })
     .post(function(req, res){
-        let taskid = req.body.tid
+        let tid = req.body.tid
+        let rb = req.body
+            if(req.session.user){
+            knex('project_task').update({
+                    tasktitle:rb.tasktitle,
+                    duedate:rb.duedate,
+                    detail:rb.detail
+                })
+                .where('taskid', tid)
+                .then((results)=>{
+                    res.redirect('/projecttaskdetail?tid='+req.session.tid);
+                })
+                .catch((err)=>{console.log(err)})
+        }else{
+            res.redirect('login')
+        }
+    })
+router.route('/projecttaskremove')
+    .post(function(req, res){
+        let tid = req.body.tid
+        if(req.session.user) {
+            knex.delete()
+                .from('project_task')
+                .where('taskid', tid)
+                .then((results) => {
+                    res.redirect('/projecttaskdetail?tid=' + req.session.tid);
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }else{
+            res.redirect('login')
+        }
     })
 
 // #########################################################
