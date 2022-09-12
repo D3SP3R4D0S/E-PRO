@@ -4,8 +4,6 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let session = require('express-session');
-const indexRouter = require('./routes/index');
-const projectRouter = require('./routes/project');
 const { config } = require("dotenv");
 config();
 
@@ -43,8 +41,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(csrf({ cookie: true }));
 
-app.use('/', indexRouter);
-app.use('/', projectRouter);
+app.use('/', require('./routes/index'));
+app.use('/', require('./routes/login'));
+app.use('/', require('./routes/project'));
+app.use('/', require('./routes/wishlist'));
+app.use('/', require('./routes/fixedexpense'));
+app.use('/', require('./routes/expendables'))
+app.use('/', require('./routes/financialobligation'))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
