@@ -44,6 +44,7 @@ app.use(csrf({ cookie: true }));
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/login'));
 app.use('/', require('./routes/project'));
+app.use('/', require('./routes/wishlist'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
