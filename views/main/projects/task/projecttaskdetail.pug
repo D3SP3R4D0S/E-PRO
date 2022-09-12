@@ -4,7 +4,31 @@ include ../../compara/head
     include ../../compara/sidebar
     script.
         $(document).ready(function () {
-            $('#projects').addClass('active');
+            $('#projects').addClass('active')
+            $('#delete').click(function () {
+                var comment_id = [];
+                let _csrf = ($("input[name='_csrf']")[0].getAttribute('value'));
+                $("input[name='checkbox']:checked").each(function () {
+                    comment_id.push($(this)[0].getAttribute('id'));
+                });
+                console.log(comment_id);
+                $.ajax({
+                    type: 'POST',
+                    url: '/taskdeletecomment',
+                    dataType: 'json',
+                    traditional: true,
+                    data: {
+                        _csrf: _csrf,
+                        comment_id: comment_id,
+                    },
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('error');
+                    }
+                });
+            });
         });
     .main
         include ../../compara/navbar
@@ -73,15 +97,15 @@ include ../../compara/head
                                             th Comment
                                     tbody
                                         for line in comments
-                                           tr
-                                               th
-                                                   for member in pmember
-                                                       if(line.userid === member.idnum)
-                                                           span= member.name
-                                                           p.small
-                                                               span= line.created.toLocaleString().split(' ')[0] + ' '
-                                                               span= line.created.toLocaleString().split(' ')[1]
-                                               td
+                                            tr
+                                                th
+                                                    for member in pmember
+                                                        if(line.userid === member.idnum)
+                                                            span= member.name
+                                                            p.small
+                                                                span= line.created.toLocaleString().split(' ')[0] + ' '
+                                                                span= line.created.toLocaleString().split(' ')[1]
+                                                td
                                                     if line.status === 0
                                                         .ms-3.badge.bg-warning PENDING
                                                     else if line.status === 1
@@ -90,12 +114,12 @@ include ../../compara/head
                                                         .ms-3.badge.bg-danger REJECTED
                                                     else if line.status === 3
                                                         .ms-3.badge.bg-success COMPLETE
-                                               td= line.comment
+                                                td= line.comment
+                                                td
+                                                    input(class="checkbox" id=line.commentid name="checkbox" type="checkbox")
                                         tr
                                             form(action="taskaddcomment" method="post")
                                                 input(type="hidden" name="_csrf" value=csrfToken)
-                                                td
-                                                    button(class="form-control btn btn-dark text-light " type="submit") Submit
                                                 td
                                                     select(class="form-control" name="status" placeholder="status")
                                                         option(value="" selected) No change
@@ -105,6 +129,12 @@ include ../../compara/head
                                                         option(value="3") COMPLETE
                                                 td
                                                     input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
+                                                td
+                                                    button(class="form-control btn btn-dark text-light " type="submit") Submit
+                                            td
+                                                button(class="form-control btn btn-dark text-light " id="edit" type="submit") 수정
+                                            td
+                                                button(class="form-control btn btn-dark text-light " id="delete" type="submit") 삭제
 
 
         include ../../compara/footer
