@@ -278,6 +278,21 @@ router.post('/taskaddcomment', function(req, res, next) {
     }
 });
 
+router.post('/taskeditcomment', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        knex('project_task_comment').update({
+            comment:rb.eidt_comment
+        })
+            .where('commentid', rb.c_id)
+            .catch((err)=>{
+                console.log(err)
+            })
+        res.redirect('/projecttaskdetail?tid='+req.session.tid);
+    }else{
+        res.redirect('login')
+    }
+});
 
 router.post('/taskdeletecomment', function(req,  res) {
     let rb = req.body;
