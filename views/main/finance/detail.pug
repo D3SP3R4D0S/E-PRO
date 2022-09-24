@@ -93,34 +93,34 @@ head
                                                 .modal-content.text-dark
                                                     .modal-header
                                                         .modal-title Edit Spend
-                                                    .modal-body
+                                                    .modal-body.text-center
                                                         script.
                                                             document.getElementById("editbutton").onclick = function checkdiff() {
                                                                 console.log("Edit button prassed")
                                                                 $('#valuechanged').text("not changed \n");
                                                                 //detail, cost, title, subord, alligner, time
                                                                 if (document.getElementById("orgdetail").value !== document.getElementById("detail").value) {
-                                                                    document.getElementById('valuechanged').innerText += document.getElementById("detail").value + '\n'
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgdetail") + ' > ' + document.getElementById("detail").value + '\n'
                                                                     $('#applybtn').removeClass("disabled")
                                                                 }
                                                                 if (document.getElementById("orgcost").value !== document.getElementById("cost").value) {
-                                                                    document.getElementById('valuechanged').innerText += document.getElementById("cost").value + '\n'
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgcost") + ' > ' + document.getElementById("cost").value + '\n'
                                                                     $('#applybtn').removeClass("disabled")
                                                                 }
                                                                 if (document.getElementById("orgtitle").value !== document.getElementById("title").value) {
-                                                                    document.getElementById('valuechanged').innerText += document.getElementById("title").value + '\n'
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgtitle") + ' > ' + document.getElementById("title").value + '\n'
                                                                     $('#applybtn').removeClass("disabled")
                                                                 }
                                                                 if (document.getElementById("orgsubord").value !== document.getElementById("subord").value) {
-                                                                    document.getElementById('valuechanged').innerText += document.getElementById("subord").value + '\n'
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgsubord") + ' > ' + document.getElementById("subord").value + '\n'
                                                                     $('#applybtn').removeClass("disabled")
                                                                 }
                                                                 if (document.getElementById("orgalligner").value !== document.getElementById("alligner").value) {
-                                                                    document.getElementById('valuechanged').innerText += document.getElementById("alligner").value + '\n'
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgalligner") + ' > ' + document.getElementById("alligner").value + '\n'
                                                                     $('#applybtn').removeClass("disabled")
                                                                 }
                                                                 if (document.getElementById("orgtime").value !== document.getElementById("time").value) {
-                                                                    document.getElementById('valuechanged').innerText += document.getElementById("time").value + '\n'
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgtime") + ' > ' + document.getElementById("time").value + '\n'
                                                                     $('#applybtn').removeClass("disabled")
                                                                 }
 
