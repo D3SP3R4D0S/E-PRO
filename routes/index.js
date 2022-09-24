@@ -217,21 +217,46 @@ router.get('/latestdatachart', function (req, res){
   });
 })
 // detail for object ( knex applied)
-router.get('/detail', function(req, res, next) {
-  if(req.session.user){
-    knex.select('*')
-        .from('account')
-        .where('id', req.query.id)
-        .then((results)=>{
-          res.render('main/finance/detail', {result:results, name:req.session.user});
-        })
-        .catch((err)=>{
-          console.log(err)
-        })
-  }else{
-    res.redirect('login')
-  }
-});
+router.route('/detail')
+    .get(function(req, res, next) {
+        if(req.session.user){
+          knex.select('*')
+              .from('account')
+              .where('id', req.query.id)
+              .then((results)=>{
+                res.render('main/finance/detail', {csrfToken:req.csrfToken(), id:req.query.id, result:results, name:req.session.user});
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+        }else{
+          res.redirect('login')
+        }
+    })
+    .post(function(req, res, next){
+        if(req.session.user){
+            knex.update({
+                    title:req.body.title,
+                    cost:req.body.cost.replace(',', ''),
+                    detail:req.body.detail,
+                    time:req.body.time,
+                    alligner:req.body.alligner,
+                    subord:req.body.subord
+                })
+                .from('account')
+                .where('id', req.body.id)
+                .then((results)=>{
+                  console.log(results)
+                  res.redirect('/detail?id=' + req.body.id)
+                })
+                .catch((err)=>{
+                  console.log(err)
+                })
+        }else{
+          res.redirect('login')
+        }
+    })
+
 // remove expenditure data ( knex )
 router.get('/removedata', function(req, res, next){
   if(req.session.user){

@@ -29,56 +29,105 @@ head
                     .col-lg-12
                         .card.shadow
                             .card-body
-                                form(class="data")
+                                form(class="data" action="detail" method="post")
                                     .row.justify-content-md-center
                                         .col-lg-6
-
-                                                .row.align-content-end
-                                                    .col.h4.fw-bold Usage
-                                                    .col.h6.mt-1 사용처
-                                                    .col
-                                                input.mb-2(class="form-control" type="text" name="detail" placeholder="detail" value=result[0].detail)
-                                                .row.align-content-end
-                                                    .col.h4.fw-bold Cost
-                                                    .col.h6.mt-1 비용
-                                                    .col
-                                                .input-group.mb-2
-                                                    input.form-control.text-end( type="text" onkeyup="chkNumber(this)" name="cost" placeholder="cost" value=result[0].cost.toLocaleString() class="col-12" required)
-                                                    span(class="input-group-text" id="basic-addon2") KRW
-                                                .row.align-content-end
-                                                    .col.h4.fw-bold method
-                                                    .col.h6.mt-1 지불방법
-                                                    .col
-                                                input.mb-2(class="form-control" type="text" name="title" placeholder="title" value=result[0].title)
-                                                .row.align-content-end
-                                                    .col.h4.fw-bold Large category
-                                                    .col.h6.mt-1 대분류
-                                                    .col
-                                                input.mb-2(class="form-control" type="text" name="details" placeholder="detail" value=result[0].subord)
-                                                .row.align-content-end
-                                                    .col.h4.fw-bold Small category
-                                                    .col.h6.mt-1 소분류
-                                                    .col
-                                                input.mb-2(class="form-control" type="text" name="details" placeholder="date" value=result[0].alligner)
-                                                .row.align-content-end
-                                                    .col.h4.fw-bold Date
-                                                    .col.h6.mt-1 사용일
-                                                    .col
-                                                input.mb-2(class="form-control" type="date" name="details" placeholder="date" value=result[0].time)
+                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                            input(type="hidden" name="id" value=id)
+                                            .row.align-content-end
+                                                .col.h4.fw-bold Usage
+                                                .col.h6.mt-1 사용처
+                                                .col
+                                            input.mb-2(class="form-control" type="text" name="detail" placeholder="detail" id="detail" value=result[0].detail)
+                                            input(type="hidden" id="orgdetail" value=result[0].detail)
+                                            .row.align-content-end
+                                                .col.h4.fw-bold Cost
+                                                .col.h6.mt-1 비용
+                                                .col
+                                            .input-group.mb-2
+                                                input.form-control.text-end( type="text" onkeyup="chkNumber(this)" name="cost" id="cost" placeholder="cost" value=result[0].cost.toLocaleString() class="col-12" required)
+                                                span(class="input-group-text" id="basic-addon2") KRW
+                                                input(type="hidden" id="orgcost" value=result[0].cost)
+                                            .row.align-content-end
+                                                .col.h4.fw-bold method
+                                                .col.h6.mt-1 지불방법
+                                                .col
+                                            input.mb-2(class="form-control" type="text" name="title" placeholder="title" id="title" value=result[0].title)
+                                            input(type="hidden" id="orgtitle" value=result[0].title)
+                                            .row.align-content-end
+                                                .col.h4.fw-bold Large category
+                                                .col.h6.mt-1 대분류
+                                                .col
+                                            input.mb-2(class="form-control" type="text" name="subord" placeholder="detail" id="subord" value=result[0].subord)
+                                            input(type="hidden" id="orgsubord" value=result[0].subord)
+                                            .row.align-content-end
+                                                .col.h4.fw-bold Small category
+                                                .col.h6.mt-1 소분류
+                                                .col
+                                            input.mb-2(class="form-control" type="text" name="alligner" placeholder="alligner" id="alligner" value=result[0].alligner)
+                                            input(type="hidden" id="orgalligner" value=result[0].alligner)
+                                            .row.align-content-end
+                                                .col.h4.fw-bold Date
+                                                .col.h6.mt-1 사용일
+                                                .col
+                                            input.mb-2(class="form-control" type="date" name="time" placeholder="date" id="time" value=result[0].time)
+                                            input(type="hidden" id="orgtime" value=result[0].time)
                                     div.text-end
-                                        button.btn.btn-primary.disabled(type="submit") submit
+                                        button.btn.btn-primary.ms-2(type="button" id="editbutton" data-bs-toggle="modal" onclick='checkdiff()' data-bs-target="#EditModal") Edit
                                         button.btn.btn-danger.ms-2(type="button" data-bs-toggle="modal" data-bs-target="#removeModal") Remove
-                                            .modal.text-start#removeModal
-                                                .modal-dialog
-                                                    .modal-content.text-dark
-                                                        .modal-header
-                                                            .modal-title Warning
-                                                        .modal-body
-                                                            p Remove action is not recoverable
-                                                            p will you continue?
-                                                            .text-end
-                                                                a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
-                                                                a.btn.btn-danger.ms-2(href="removedata?id=" + result[0].id) Remove Data
-                                        a.btn.btn-dark.ms-2(href="index") Go Back
+                                        a.btn.btn-dark.ms-2(href="latestdata") Go Back
+
+                                        .modal.text-start#removeModal
+                                            .modal-dialog
+                                                .modal-content.text-dark
+                                                    .modal-header
+                                                        .modal-title Warning
+                                                    .modal-body
+                                                        p Remove action is not recoverable
+                                                        p will you continue?
+                                                        .text-end
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            a.btn.btn-danger.ms-2(href="removedata?id=" + result[0].id) Remove Data
+                                        .modal.text-start#EditModal
+                                            .modal-dialog
+                                                .modal-content.text-dark
+                                                    .modal-header
+                                                        .modal-title Edit Spend
+                                                    .modal-body.text-center
+                                                        script.
+                                                            document.getElementById("editbutton").onclick = function checkdiff() {
+                                                                console.log("Edit button prassed")
+                                                                $('#valuechanged').text("not changed \n");
+                                                                //detail, cost, title, subord, alligner, time
+                                                                if (document.getElementById("orgdetail").value !== document.getElementById("detail").value) {
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgdetail") + ' > ' + document.getElementById("detail").value + '\n'
+                                                                    $('#applybtn').removeClass("disabled")
+                                                                }
+                                                                if (document.getElementById("orgcost").value !== document.getElementById("cost").value) {
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgcost") + ' > ' + document.getElementById("cost").value + '\n'
+                                                                    $('#applybtn').removeClass("disabled")
+                                                                }
+                                                                if (document.getElementById("orgtitle").value !== document.getElementById("title").value) {
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgtitle") + ' > ' + document.getElementById("title").value + '\n'
+                                                                    $('#applybtn').removeClass("disabled")
+                                                                }
+                                                                if (document.getElementById("orgsubord").value !== document.getElementById("subord").value) {
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgsubord") + ' > ' + document.getElementById("subord").value + '\n'
+                                                                    $('#applybtn').removeClass("disabled")
+                                                                }
+                                                                if (document.getElementById("orgalligner").value !== document.getElementById("alligner").value) {
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgalligner") + ' > ' + document.getElementById("alligner").value + '\n'
+                                                                    $('#applybtn').removeClass("disabled")
+                                                                }
+                                                                if (document.getElementById("orgtime").value !== document.getElementById("time").value) {
+                                                                    document.getElementById('valuechanged').innerText += document.getElementById("orgtime") + ' > ' + document.getElementById("time").value + '\n'
+                                                                    $('#applybtn').removeClass("disabled")
+                                                                }
+
+                                                            }
+                                                        p(id="valuechanged") not changed
+                                                        .text-end
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            button.btn.btn-primary.ms-2.disabled(type="submit" id="applybtn") submit
         include ../compara/footer
 include ../compara/footer_script

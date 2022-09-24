@@ -140,32 +140,32 @@ router.route('/projectaddmember')
         }
     })
     .post(function(req, res, next) {
-    if(req.session.user){
-        let rb = req.body
-        let sql = "SELECT * FROM project_member WHERE projectid = ? AND memberid = ?"
-        let params = [req.session.pid, rb.id]
-        connection.query(sql,params,function (err, results, fields) {
-            if(err) {
-                throw err;
-            }else if(results.length === 0){
-                console.log(results.length)
-                sql = "INSERT INTO project_member(projectid, memberid)VALUES(?,?);"
-                params = [req.session.pid, rb.id];
-                connection.query(sql,params,function (err, results, fields) {
-                    if(err){
-                        console.log(err);
-                    }else{
-                        res.redirect('/projectdetail?pid='+req.session.pid);
-                    }
-                });
-            }else{
-                res.redirect('/projectdetail?pid='+req.session.pid);
-            }
-        });
-    }else{
-        res.redirect('login')
-    }
-})
+        if(req.session.user){
+            let rb = req.body
+            let sql = "SELECT * FROM project_member WHERE projectid = ? AND memberid = ?"
+            let params = [req.session.pid, rb.id]
+            connection.query(sql,params,function (err, results, fields) {
+                if(err) {
+                    throw err;
+                }else if(results.length === 0){
+                    console.log(results.length)
+                    sql = "INSERT INTO project_member(projectid, memberid)VALUES(?,?);"
+                    params = [req.session.pid, rb.id];
+                    connection.query(sql,params,function (err, results, fields) {
+                        if(err){
+                            console.log(err);
+                        }else{
+                            res.redirect('/projectdetail?pid='+req.session.pid);
+                        }
+                    });
+                }else{
+                    res.redirect('/projectdetail?pid='+req.session.pid);
+                }
+            });
+        }else{
+            res.redirect('login')
+        }
+    })
 
 // #########################################################
 // TASK REQUEST PART
@@ -215,7 +215,7 @@ router.route('/projecttaskdetail')
                     res.render('main/compara/defender')
                 })
         }else{res.redirect('login')}
-        })
+    })
 
 router.route('/projectaddtask')
     .get(function(req, res, next) {
@@ -278,6 +278,45 @@ router.post('/taskaddcomment', function(req, res, next) {
     }
 });
 
+router.post('/taskeditcomment', function(req, res, next) {
+    let rb = req.body
+    if(req.session.user){
+        knex('project_task_comment').update({
+            comment:rb.eidt_comment
+        })
+            .where('commentid', rb.c_id)
+            .catch((err)=>{
+                console.log(err)
+            })
+        res.redirect('/projecttaskdetail?tid='+req.session.tid);
+    }else{
+        res.redirect('login')
+    }
+});
+
+router.post('/taskdeletecomment', function(req,  res) {
+    let rb = req.body;
+    console.log(typeof(rb.comment_id));
+    if(typeof(rb.comment_id) === "string") {
+        rb.comment_id = Array(rb.comment_id);
+    }
+    if(req.session.user){
+        console.log(rb.comment_id);
+        for (i in rb.comment_id) {
+            console.log(rb.comment_id[i]);
+            let sql = "DELETE FROM finance.project_task_comment WHERE commentid = ?;"
+            connection.query(sql, [rb.comment_id[i]],function (err, results, fields) {
+                if(err){
+                    console.log(err);
+                }
+            });
+        }
+        res.json({success : "Updated Successfully", status : 200});
+    }else{
+        res.redirect('login')
+    }
+});
+
 //projectaddtask // knex
 router.post('/projectaddtask', function(req, res, next) {
     let rb = req.body
@@ -329,12 +368,12 @@ router.route('/projecttaskedit')
     .post(function(req, res){
         let tid = req.body.tid
         let rb = req.body
-            if(req.session.user){
+        if(req.session.user){
             knex('project_task').update({
-                    tasktitle:rb.tasktitle,
-                    duedate:rb.duedate,
-                    detail:rb.detail
-                })
+                tasktitle:rb.tasktitle,
+                duedate:rb.duedate,
+                detail:rb.detail
+            })
                 .where('taskid', tid)
                 .then((results)=>{
                     res.redirect('/projecttaskdetail?tid='+req.session.tid);

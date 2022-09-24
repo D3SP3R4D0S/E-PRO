@@ -4,7 +4,63 @@ include ../../compara/head
     include ../../compara/sidebar
     script.
         $(document).ready(function () {
-            $('#projects').addClass('active');
+            $('#projects').addClass('active')
+            $('#delete').click(function () {
+                var comment_id = [];
+                let _csrf = ($("input[name='_csrf']")[0].getAttribute('value'));
+                $("input[name='checkbox']:checked").each(function () {
+                    comment_id.push($(this)[0].closest("tr").getAttribute('id'));
+                });
+                console.log(comment_id);
+                $.ajax({
+                    type: 'POST',
+                    url: '/taskdeletecomment',
+                    dataType: 'json',
+                    traditional: true,
+                    data: {
+                        _csrf: _csrf,
+                        comment_id: comment_id,
+                    },
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('error');
+                    }
+                });
+            });
+            $('#edit').click(function () {
+                var comment_id = [];
+                let _csrf = ($("input[name='_csrf']")[0].getAttribute('value'));
+                console.log(_csrf)
+                $("input[name='checkbox']:checked").each(function () {
+                    comment_id.push($(this)[0].closest("tr").getAttribute('id'));
+                    $(this)[0].checked = false;
+                });
+                for (i = 0; i < comment_id.length; i++) {
+                    var comment = $('#' + comment_id[i]).children('.comment')
+                    if (comment.children('.container').length === 1) {
+                        continue;
+                    }
+                    var temp_comment = comment[0].innerText;
+                    comment.empty()
+                    comment.append(
+                        `<div class="container container-sm">
+                            <div class="row">
+                                <form action="taskeditcomment" method="post">
+                                    <input type="hidden" name="_csrf" value=${_csrf}>
+                                    <input type="hidden" name="c_id" value=${comment_id[i]}>
+                                    <div class="row">
+                                        <div class="col"><input id=${"edit" + comment_id[i]} class="form-control col" type="text" name="eidt_comment" placeholder=${temp_comment} required=""></div>
+                                        <div class="col-md-auto"><button class="form-control btn btn-dark text-light " id="delete" type="submit">완료</button></div>
+                                    </div>
+                                </form>
+                            </div>
+                         </div>`
+                    )
+
+                }
+            });
         });
     .main
         include ../../compara/navbar
@@ -68,20 +124,24 @@ include ../../compara/head
                                 table.table.table-sm
                                     thead
                                         tr
+                                            th Check
                                             th User
                                             th Status change
                                             th Comment
                                     tbody
                                         for line in comments
-                                           tr
-                                               th
-                                                   for member in pmember
-                                                       if(line.userid === member.idnum)
-                                                           span= member.name
-                                                           p.small
-                                                               span= line.created.toLocaleString().split(' ')[0] + ' '
-                                                               span= line.created.toLocaleString().split(' ')[1]
-                                               td
+                                            tr(id=line.commentid)
+                                                td.col
+                                                    if(line.userid === id)
+                                                        input(class="checkbox" name="checkbox" type="checkbox")
+                                                th.col
+                                                    for member in pmember
+                                                        if(line.userid === member.idnum)
+                                                            span= member.name
+                                                            p.small
+                                                                span= line.created.toLocaleString().split(' ')[0] + ' '
+                                                                span= line.created.toLocaleString().split(' ')[1]
+                                                td.col
                                                     if line.status === 0
                                                         .ms-3.badge.bg-warning PENDING
                                                     else if line.status === 1
@@ -90,21 +150,30 @@ include ../../compara/head
                                                         .ms-3.badge.bg-danger REJECTED
                                                     else if line.status === 3
                                                         .ms-3.badge.bg-success COMPLETE
-                                               td= line.comment
-                                        tr
-                                            form(action="taskaddcomment" method="post")
-                                                input(type="hidden" name="_csrf" value=csrfToken)
-                                                td
-                                                    button(class="form-control btn btn-dark text-light " type="submit") Submit
-                                                td
+                                                td.col-8.comment= line.comment
+
+                        .col-lg-12
+                            .card
+                                .card-body
+                                    form(action="taskaddcomment" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                        div.container-fluid
+                                            div.row
+                                                div.col
                                                     select(class="form-control" name="status" placeholder="status")
                                                         option(value="" selected) No change
                                                         option(value="0") PENDING
                                                         option(value="1") ON GOING
                                                         option(value="2") REJECTED
                                                         option(value="3") COMPLETE
-                                                td
-                                                    input(class="form-control" type="text" name="comment" placeholder="comment" class="col-12" required)
+                                                div.col-6
+                                                    input(class="form-control" type="text" name="comment" placeholder="comment" required)
+                                                div.col
+                                                    button(class="form-control btn btn-dark text-light " type="submit") Submit
+                                                div.col
+                                                    button(class="form-control btn btn-dark text-light " id="edit" type="button") 수정
+                                                div.col
+                                                    button(class="form-control btn btn-dark text-light " id="delete" type="button") 삭제
 
 
         include ../../compara/footer
