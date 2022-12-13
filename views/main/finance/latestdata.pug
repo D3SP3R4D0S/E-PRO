@@ -117,40 +117,61 @@ head
                                             .modal-body
                                                 .card-body.text-start
                                                     .mb-3
-                                                        label Cost
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Cost
+                                                            .col-auto 비용
                                                         .input-group
                                                             input.form-control.text-end(type="text" onkeyup="chkNumber(this)" name="cost" placeholder="cost" class="col-12" required)
                                                             span(class="input-group-text" id="basic-addon2") KRW
                                                     .mb-3
-                                                        label  detail
-                                                        input(class="form-control" type="text" name="details" placeholder="details" class="col-12" required)
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Detail
+                                                            .col-auto 상세내역
+                                                        .input-group
+                                                            input(class="form-control" type="text" name="details" placeholder="details" class="col-12" required)
                                                     .mb-3
-                                                        label  method
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Method
+                                                            .col-auto 지불수단
                                                         select(class="form-control" name="title" placeholder="title" class="col-12" required)
                                                             for line in setting.method
                                                                 option(value=line)= line
                                                     .mb-3
-                                                        label  Paid for
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Paid for
+                                                            .col-auto 용도
                                                         select(class="form-control" name="subord" placeholder="title" class="col-12" required)
                                                             for line in setting.paidfor
                                                                 option(value=line)= line
                                                     .mb-3
-                                                        label  date
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Date
+                                                            .col-auto 결제일
                                                         input(id="dateinput" class="form-control" type="date" name="date" placeholder="date" class="col-12" required)
                                                     .mb-3
-                                                        label  alligner
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Alligner
+                                                            .col-auto 구분
                                                         select(class="form-control" name="alligner" placeholder="alligner" class="col-12" required)
                                                             for line in setting.alligner
                                                                 option(value=line)= line
                                                     .mb-3
-                                                        label  Income
-                                                        br
-
-                                                        input(type="checkbox" value="1" name="income" placeholder="Income")
-                                                        span= " Income (수입)"
+                                                        .row
+                                                            .col-3
+                                                                label.fw-bold Income
+                                                            .col-auto 수입 여부
+                                                        .m-2
+                                                            input(type="checkbox" value="1" name="income" placeholder="Income" id="cb_income")
+                                                            label.ms-2(for="cb_income")= " Income (수입)"
                                             .modal-footer
                                                 //button.btn.bg-secondary.text-light(type='button' data-bs-dismiss='modal') Close
-                                                button.btn.bg-primary.text-light(type='submit') Apply
+                                                button.btn.bg-primary.text-light(type='submit') Commit
                         span.me-2
                             a.btn.btn-primary(href="latestdatapmonth") <
                         span.me-2
