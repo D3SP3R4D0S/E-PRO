@@ -142,7 +142,7 @@ router.get('/latestdata', function(req, res, next) {
         FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;
         SELECT sum(if(income='0', cost, '0')) as summary FROM finance.account where userid = ? and DATE_FORMAT(time, "%Y-%m") = ? order by time desc;`
     connection.query(sql, [idnum, selector,idnum, selector], function (error, results, fields) {
-      res.render('main/finance/latestdata', {yearmonth:selector, result:results[0], summary:results[1][0], name:req.session.user});
+      res.render('main/finance/latestdata', {csrfToken:req.csrfToken(), setting:req.session.setting, yearmonth:selector, result:results[0], summary:results[1][0], name:req.session.user});
     });
   }else{
     res.redirect('login')
@@ -275,13 +275,6 @@ router.get('/removedata', function(req, res, next){
   }
 });
 // add data form
-router.get('/adddata', function(req, res, next) {
-  if(req.session.user){
-    res.render('main/finance/adddata',{csrfToken:req.csrfToken(),setting:req.session.setting, name:req.session.user});
-  }else{
-    res.redirect('login')
-  }
-});
 router.post('/adddata', function(req, res, next) {
   if(req.session.user){
     let rb = req.body;

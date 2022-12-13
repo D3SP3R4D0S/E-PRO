@@ -38,6 +38,7 @@ head
         });
     script.
         $(document).ready(function () {
+            document.getElementById('dateinput').value = new Date().toISOString().substring(0, 10);
             var groupColumn = 0;
             var table = $('#table2').DataTable({
                 "columnDefs": [
@@ -72,7 +73,16 @@ head
                 }
             });
         });
-
+    script.
+        function numberWithCommas(num) {
+            var parts = num.toString().split(".");
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        }
+        function chkNumber(obj) {
+            var tmpValue = $(obj).val().replace(/[^0-9,]/g, '');
+            tmpValue = tmpValue.replace(/[,]/g, '');
+            obj.value = numberWithCommas(tmpValue);
+        }
 .wrapper
     include ../compara/sidebar
     script.
@@ -92,7 +102,55 @@ head
                         h6 수입 / 지출 내역
                     .col-auto.mt-auto.mb-lg-3.mb-md-0
                         span.me-2
-                            a.btn.btn-success(href="adddata") Add
+                            //a.btn.btn-success(href="adddata") Add
+                            button.btn.bg-success.text-white(type='button' data-bs-toggle='modal' data-bs-target='#exampleModal')
+                                | Add
+                            // Modal
+                            #exampleModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true')
+                                .modal-dialog.modal-dialog-centered(role='document')
+                                    .modal-content
+                                        form(action="adddata" method="post")
+                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                            .modal-header
+                                                h4#exampleModalLabel.modal-title.fw-bold Add data
+                                                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                                            .modal-body
+                                                .card-body.text-start
+                                                    .mb-3
+                                                        label Cost
+                                                        .input-group
+                                                            input.form-control.text-end(type="text" onkeyup="chkNumber(this)" name="cost" placeholder="cost" class="col-12" required)
+                                                            span(class="input-group-text" id="basic-addon2") KRW
+                                                    .mb-3
+                                                        label  detail
+                                                        input(class="form-control" type="text" name="details" placeholder="details" class="col-12" required)
+                                                    .mb-3
+                                                        label  method
+                                                        select(class="form-control" name="title" placeholder="title" class="col-12" required)
+                                                            for line in setting.method
+                                                                option(value=line)= line
+                                                    .mb-3
+                                                        label  Paid for
+                                                        select(class="form-control" name="subord" placeholder="title" class="col-12" required)
+                                                            for line in setting.paidfor
+                                                                option(value=line)= line
+                                                    .mb-3
+                                                        label  date
+                                                        input(id="dateinput" class="form-control" type="date" name="date" placeholder="date" class="col-12" required)
+                                                    .mb-3
+                                                        label  alligner
+                                                        select(class="form-control" name="alligner" placeholder="alligner" class="col-12" required)
+                                                            for line in setting.alligner
+                                                                option(value=line)= line
+                                                    .mb-3
+                                                        label  Income
+                                                        br
+
+                                                        input(type="checkbox" value="1" name="income" placeholder="Income")
+                                                        span= " Income (수입)"
+                                            .modal-footer
+                                                //button.btn.bg-secondary.text-light(type='button' data-bs-dismiss='modal') Close
+                                                button.btn.bg-primary.text-light(type='submit') Apply
                         span.me-2
                             a.btn.btn-primary(href="latestdatapmonth") <
                         span.me-2
