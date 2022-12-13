@@ -10,7 +10,8 @@ module.exports = function () {
                 user: process.env.MYSQL_USER,
                 password: process.env.MYSQL_PASSWD,
                 database: process.env.MYSQL_DB,
-                multipleStatements: true
+                multipleStatements: true,
+                dateStrings: 'date'
             })
         },
         db_open: function (con) {
