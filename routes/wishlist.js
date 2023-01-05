@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mysql      = require('./config/mysql.js')();
-const connection = mysql.init();
 const knex = require('./config/knex.js');
 
 // to but list ( wish list ) // knex raw
@@ -32,23 +30,34 @@ router.get('/wishlist', function(req, res, next) {
 router.route('/addwish')
     // addwish render
     .get(function (req, res,next){
-    if(req.session.user){
-        res.render('main/wishlist/addwish',{csrfToken:req.csrfToken(),name:req.session.user});
-    }else{
-        res.redirect('login')
-    }
-})
+        if(req.session.user){
+            res.render('main/wishlist/addwish',{csrfToken:req.csrfToken(),name:req.session.user});
+        }else{
+            res.redirect('login')
+        }
+    })
     // add wish item
     .post(function (req, res){
     if(req.session.user){
         let rb = req.body
         let cost = rb.cost.replace(/,/g, '')
-        let sql = "INSERT INTO wishlist (title, cost, link, duedate, priority, detail, userid) VALUES (?, ?, ?, ?, ?, ?, ?);"
-        let params = [rb.title, cost, rb.link, rb.duedate, rb.priority, rb.detail, req.session.idn];
-        connection.query(sql,params,function (err) {
-            if(err) console.log(err);
-        });
-        res.redirect('wishlist');
+        knex.insert({
+            title:rb.title,
+            cost:cost,
+            link:rb.link,
+            duedate:rb.duedate,
+            priority:rb.priority,
+            detail:rb.detail,
+            userid:req.session.idn
+        })
+            .into('wishlist')
+            .then((result)=>{
+                console.log(result)
+                res.redirect('wishlist');
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
     }else{
         res.redirect('login')
     }
