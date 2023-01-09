@@ -35,8 +35,24 @@ include ../compara/head.pug
                     .col-lg-6
                         .card
                             .card-body
-                                h3
-                                    a.text-info(href="projectadd") +
+                                h3.fw-bold
+                                    a(type="button" data-bs-toggle="modal" data-bs-target="#projectaddmodal" href="#") + New Project
+                                .modal.text-start#projectaddmodal
+                                    .modal-dialog
+                                        form(action="projectadd" method="post")
+                                        .modal-content.text-dark
+                                            .modal-header.mb-0.pb-2
+                                                .modal-title
+                                                    h4.fw-bold Add Project
+                                            .modal-body
+                                                input(type="hidden" name="_csrf" value=csrfToken)
+                                                .label.fw-bold Title
+                                                input.mb-3(class="form-control" type="text" name="title" placeholder="Title" class="col-12" required)
+                                                .label.fw-bold Description
+                                                textarea.mb-3(class="form-control" type="textarea" name="description" placeholder="Description" class="col-12" required)
+                                            .modal-footer
+                                                a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                button.btn.btn-primary.text-light(type="submit") Submit
                                 h6 Add new project
 
 

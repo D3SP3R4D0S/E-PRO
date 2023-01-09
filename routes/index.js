@@ -438,7 +438,7 @@ router.get('/vehiclemanage', function(req, res, next){
       if(err) throw err;
       else if(results[0].length > 0) {
         console.log(results)
-        res.render('main/vehicle/vehiclemgmt', {result:results[0][0], data3:results[1], name: req.session.user});
+        res.render('main/vehicle/vehiclemgmt', {csrfToken:req.csrfToken(), result:results[0][0], data3:results[1], name: req.session.user});
       }else{
         res.redirect('addvehicle')
       }
@@ -474,13 +474,6 @@ router.post('/addvehicle', function(req, res){
         res.redirect('vehiclemanage');
       }
     })
-  }else{
-    res.redirect('login')
-  }
-});
-router.get('/veadd', function(req, res){
-  if(req.session.user){
-    res.render('main/vehicle/veadd', {csrfToken:req.csrfToken(), name: req.session.user});
   }else{
     res.redirect('login')
   }

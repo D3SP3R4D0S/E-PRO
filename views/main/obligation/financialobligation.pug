@@ -1,5 +1,16 @@
 doctype html
-include ../compara/head
+head
+    include ../compara/head
+    script.
+        function numberWithCommas(num) {
+            var parts = num.toString().split(".");
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        }
+        function chkNumber(obj) {
+            var tmpValue = $(obj).val().replace(/[^0-9,]/g, '');
+            tmpValue = tmpValue.replace(/[,]/g, '');
+            obj.value = numberWithCommas(tmpValue);
+        }
 .wrapper
     include ../compara/sidebar
     script.
@@ -24,7 +35,30 @@ include ../compara/head
                                         h3 Incompleted lend
                                         h6 완료되지 않은 채무
                                     .col.text-end
-                                        a.btn.btn-dark(href="financialobligationadd") Add data
+                                        a.btn.btn-sm.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#financialobligationadd" href="#") Add data
+                                        .modal.text-start#financialobligationadd
+                                            .modal-dialog
+                                                form(action="financialobligationadd" method="post")
+                                                    .modal-content.text-dark
+                                                        .modal-header.mb-0.pb-2
+                                                            .modal-title
+                                                                h4.fw-bold Add Financial obligation
+                                                                label 대부 항목 추가
+                                                        .modal-body
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                                            label.fw-bold.mb-2 Loaner
+                                                            input.mb-2.form-control(type="text" name="loaner" placeholder="loaner" required)
+                                                            label.fw-bold.mb-2 Title
+                                                            input.mb-2.form-control(type="text" name="title" placeholder="Title" required)
+                                                            label.fw-bold.mb-2 Cost
+                                                            .input-group.mb-3
+                                                                input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" placeholder="Cost" required)
+                                                                span(class="input-group-text" id="basic-addon2") KRW
+                                                            label.fw-bold.mb-2 Due date
+                                                            input.mb-2.form-control(type="date" name="duedate" placeholder="duedate")
+                                                        .modal-footer
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            button.btn.btn-primary.text-light(type="submit") Submit
                                 table.table
                                     thead
                                         th Title

@@ -36,7 +36,30 @@ include ../compara/head.pug
                                     .col
                                         h3 Vehicle Expendables
                                     .col.text-end
-                                        a.btn.btn-primary(href="veadd") Add data
+                                        a.btn.btn-sm.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#veadd" href="#") Add data
+                                        .modal.text-start#veadd
+                                            .modal-dialog
+                                                form(action="veadd" method="post")
+                                                    .modal-content.text-dark
+                                                        .modal-header.mb-0.pb-2
+                                                            .modal-title
+                                                                h4.fw-bold Add vehicle expendable
+                                                                label 차량 소모품 추기
+                                                        .modal-body
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                                            label.fw-bold.mb-2 Title
+                                                            input.form-control.mb-3(type="text" name="title" required)
+                                                            label.fw-bold.mb-2 Lifecycle ( km )
+                                                            input.mb-3.form-control(type="number" name="lifecycle" placeholder="Lifecycle" required)
+                                                            label.fw-bold.mb-2 Lastdate
+                                                            input.mb-3.form-control( type="date" name="lastdate" placeholder="Lastdate" required)
+                                                            label.fw-bold.mb-2 Cost
+                                                            input.mb-3.form-control(type="number" name="cost" placeholder="Cost" required)
+                                                            label.fw-bold.mb-2 Comment
+                                                            textarea.mb-3.form-control(type="textarea" name="comment" placeholder="comment" required)
+                                                        .modal-footer
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            button.btn.btn-primary.text-light(type="submit") Submit
                                 table.table
                                     thead
                                         tr

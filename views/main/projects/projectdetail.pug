@@ -25,7 +25,26 @@ include ../compara/head.pug
                                     .col
                                         .h4 Tasks
                                     .col.text-end
-                                        a.btn.btn-sm.btn-dark(href="projectaddtask") Add
+                                        a.btn.btn-sm.btn-dark(type="button" data-bs-toggle="modal" data-bs-target="#projectaddtask" href="#") Add
+                                        .modal.text-start#projectaddtask
+                                            .modal-dialog
+                                                form(action="projectaddtask" method="post")
+                                                    .modal-content.text-dark
+                                                        .modal-header.mb-0.pb-2
+                                                            .modal-title
+                                                                h4.fw-bold Add Project
+                                                        .modal-body
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                                            //[rb.tasktitle, req.session.idn, rb.worker, rb.detail, rb.status];
+                                                            label.fw-bold.mb-2 Title
+                                                            input.form-control.mb-2(type="text" name="tasktitle" required)
+                                                            label.fw-bold.mb-2 Detail
+                                                            input.form-control.mb-2(type="textarea" name="detail" required)
+                                                            label.fw-bold.mb-2 Due date
+                                                            input.form-control.mb-2(type="date" name="duedate"  required)
+                                                        .modal-footer
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            button.btn.btn-primary.text-light(type="submit") Submit
                                 hr
                                 if(tasks)
                                     table.table
@@ -59,7 +78,6 @@ include ../compara/head.pug
                                                     for member in pmember
                                                         if(line.creator === member.idnum)
                                                             td= member.name
-
                                 else
                                     h2 No existing tasks
                         .card
@@ -68,7 +86,26 @@ include ../compara/head.pug
                                     .col
                                         .h4 Request of fund
                                     .col.text-end
-                                        a.btn.btn-sm.btn-dark(href="projectaddfundreq") Add
+                                        a.btn.btn-sm.btn-dark(type="button" data-bs-toggle="modal" data-bs-target="#projectaddfundreq" href="#") Add
+                                        .modal.text-start#projectaddfundreq
+                                            .modal-dialog
+                                                form(action="projectaddfundreq" method="post")
+                                                    .modal-content.text-dark
+                                                        .modal-header.mb-0.pb-2
+                                                            .modal-title
+                                                                h4.fw-bold Add Project
+                                                        .modal-body
+                                                            input(type="hidden" name="_csrf" value=csrfToken)
+                                                            //[rb.tasktitle, req.session.idn, rb.worker, rb.detail, rb.status];
+                                                            label.fw-bold.mb-2 Title
+                                                            input.form-control.mb-2(type="text" name="title" required)
+                                                            label.fw-bold.mb-2 Detail
+                                                            input.form-control.mb-2(type="textarea" name="detail" required)
+                                                            label.fw-bold.mb-2 Cost
+                                                            input.form-control.mb-2(type="number" name="cost" required)
+                                                        .modal-footer
+                                                            a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                            button.btn.btn-primary.text-light(type="submit") Submit
                                 hr
                                 table.table
                                     thead
@@ -139,7 +176,6 @@ include ../compara/head.pug
                                             th Requested
                                             td
                                                 span#requested
-
                                         tr
                                             th Completed
                                             td

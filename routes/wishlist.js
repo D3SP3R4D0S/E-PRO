@@ -28,14 +28,6 @@ router.get('/wishlist', function(req, res, next) {
 });
 // add wish page
 router.route('/addwish')
-    // addwish render
-    .get(function (req, res,next){
-        if(req.session.user){
-            res.render('main/wishlist/addwish',{csrfToken:req.csrfToken(),name:req.session.user});
-        }else{
-            res.redirect('login')
-        }
-    })
     // add wish item
     .post(function (req, res){
     if(req.session.user){

@@ -1,5 +1,15 @@
 doctype html
 include ../compara/head.pug
+    script.
+        function numberWithCommas(num) {
+            var parts = num.toString().split(".");
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        }
+        function chkNumber(obj) {
+            var tmpValue = $(obj).val().replace(/[^0-9,]/g, '');
+            tmpValue = tmpValue.replace(/[,]/g, '');
+            obj.value = numberWithCommas(tmpValue);
+        }
 .wrapper
     include ../compara/sidebar
     script.
@@ -57,6 +67,28 @@ include ../compara/head.pug
                                                         input(type="hidden" name="link" value=line.link)
                                                         input.btn.btn-sm.btn-info(type="submit" value="Edit")
                                 .col.align-self-end
-                                    a.btn.btn-dark.text-light(href="expendableadd") Add data
+                                    a.btn.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#expendableadd" href="#") Add data
+                                    .modal.text-start#expendableadd
+                                        .modal-dialog
+                                            form(action="expendableadd" method="post")
+                                                .modal-content.text-dark
+                                                    .modal-header.mb-0.pb-2
+                                                        .modal-title
+                                                            h4.fw-bold Add Expendable
+                                                    .modal-body
+                                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                                        label.fw-bold.mb-2 Title
+                                                        input.form-control.mb-2(type="text" name="title" required)
+                                                        label.fw-bold.mb-2 Link
+                                                        input.form-control.mb-2(type="url" name="link" required)
+                                                        label.fw-bold.mb-2 Cost
+                                                        .input-group.mb-3
+                                                            input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" placeholder="Cost" class="col-12" required)
+                                                            span(class="input-group-text" id="basic-addon2") KRW
+                                                        label.fw-bold.mb-2 Description
+                                                        textarea.mb-3(class="form-control" type="textarea" name="description" placeholder="Description" class="col-12" required)
+                                                    .modal-footer
+                                                        a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                        button.btn.btn-primary.text-light(type="submit") Submit
         include ../compara/footer.pug
     include ../compara/footer_script.pug

@@ -1,5 +1,15 @@
 doctype html
 include ../compara/head
+    script.
+        function numberWithCommas(num) {
+            var parts = num.toString().split(".");
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+        }
+        function chkNumber(obj) {
+            var tmpValue = $(obj).val().replace(/[^0-9,]/g, '');
+            tmpValue = tmpValue.replace(/[,]/g, '');
+            obj.value = numberWithCommas(tmpValue);
+        }
 .wrapper
     include ../compara/sidebar
     script.
@@ -48,7 +58,38 @@ include ../compara/head
                             .col.text-start
                                 H3 Remain
                             .col.text-end
-                                a.btn.btn-dark.text-light(href="addwish") Add data
+                                a.btn.btn-sm.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#addwish" href="#") Add data
+                                .modal.text-start#addwish
+                                    .modal-dialog
+                                        form(action="addwish" method="post")
+                                            .modal-content.text-dark
+                                                .modal-header.mb-0.pb-2
+                                                    .modal-title
+                                                        h4.fw-bold Add wish item
+                                                        label 구매 예정 항목 추가
+                                                .modal-body
+                                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                                    label.fw-bold.mb-2 Title
+                                                    input.form-control.mb-2(type="text" name="title" required)
+                                                    label.fw-bold.mb-2 Cost
+                                                    .input-group.mb-3
+                                                        input(class="form-control" type="text" onkeyup="chkNumber(this)" name="cost" placeholder="Cost" required)
+                                                        span(class="input-group-text" id="basic-addon2") KRW
+                                                    label.fw-bold.mb-2 Link
+                                                    input.mb-3(class="form-control" type="text" name="link" placeholder="Link")
+                                                    label.fw-bold.mb-2 Due date
+                                                    input.mb-3(class="form-control" type="date" name="duedate" placeholder="duedate" required)
+                                                    label.fw-bold.mb-2 Detail
+                                                    textarea.mb-3(class="form-control" type="textarea" name="detail" placeholder="detail" required)
+                                                    label.fw-bold.mb-2 Priorty
+                                                    select.mb-3.form-select(name="priority" placeholder="priorty" required)
+                                                        option(value='4') Low
+                                                        option(value='3') Medium
+                                                        option(value='2') High
+                                                        option(value='1') Extreme
+                                                .modal-footer
+                                                    a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                    button.btn.btn-primary.text-light(type="submit") Submit
                         hr
                         table.table.table-sm.text-center
                             thead
