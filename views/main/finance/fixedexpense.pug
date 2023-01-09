@@ -129,6 +129,37 @@ include ../compara/head.pug
                                                         input(type="hidden" name="link" value=line.link)
                                                         input.btn.btn-info.btn-sm(type="submit" value="Edit")
                             .text-end
-                                a.btn.btn-dark( href="fixedexpenseadd") Add data
+                                a.btn.btn-sm.btn-primary(type="button" data-bs-toggle="modal" data-bs-target="#fixedexpenseadd" href="#") Add data
+                                .modal.text-start#fixedexpenseadd
+                                    .modal-dialog
+                                        form(action="fixedexpenseadd" method="post")
+                                            .modal-content.text-dark
+                                                .modal-header.mb-0.pb-2
+                                                    .modal-title
+                                                        h4.fw-bold Add fixed expense
+                                                        label 고정 지출 항목 추가
+                                                .modal-body
+                                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                                    label.fw-bold.mb-2 Title
+                                                    input.form-control.mb-2(type="text" name="title" required)
+                                                    label.fw-bold.mb-2 Category
+                                                    select.mb-2.form-select(name="category" placeholder="Category" required)
+                                                        option(value="" selected disabled hidden) Category
+                                                        for line in ['통신비', '교통비', '생활비', '구독', '보험', '세금']
+                                                            option(value=line)= line
+                                                    label.fw-bold.mb-2 Comment
+                                                    input.mb-2(class="form-control" type="text" name="comment" placeholder="Comment" required)
+                                                    label.fw-bold.mb-2 Link
+                                                    input.mb-2(class="form-control" type="text" name="link" placeholder="Link")
+                                                    label.fw-bold.mb-2 Cycle
+                                                    select.mb-2.form-select(name="payment_num" placeholder="payment_num" required)
+                                                        option(value="" selected disabled hidden) Payment Cycle
+                                                        for line in [['12', '매달'],['1', '매년'], ['2', '반기'], ['4', '분기']]
+                                                            option(value=line[0])= line[1]
+                                                    label.fw-bold.mb-2 Cost
+                                                    input.mb-2(class="form-control" type="number" name="price" placeholder="price" required)
+                                                .modal-footer
+                                                    a.btn.btn-secondary.ms-auto(data-bs-dismiss="modal") Close
+                                                    button.btn.btn-primary.text-light(type="submit") Submit
         include ../compara/footer.pug
     include ../compara/footer_script.pug
