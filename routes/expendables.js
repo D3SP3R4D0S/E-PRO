@@ -82,13 +82,6 @@ router.post('/expendableeditapply', function (req, res, next){
         res.redirect('login')
     }
 })
-router.get('/expendableadd', function(req, res, next) {
-    if(req.session.user){
-        res.render('main/finance/expendableadd',{csrfToken:req.csrfToken(),setting:req.session.setting, name:req.session.user});
-    }else{
-        res.redirect('login')
-    }
-});
 router.post('/expendableadd', function(req, res, next) {
     if(req.session.user){
         knex.insert({

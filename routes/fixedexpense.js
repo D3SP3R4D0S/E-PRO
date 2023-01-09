@@ -18,13 +18,6 @@ router.get('/fixedexpense', function(req, res, next) {
         res.redirect('login')
     }
 });
-router.get('/fixedexpenseadd', function(req, res, next) {
-    if(req.session.user){
-        res.render('main/finance/fixedexpenseadd', {csrfToken:req.csrfToken(),name:req.session.user});
-    }else{
-        res.redirect('login')
-    }
-});
 router.post('/fixedexpenseadd', function(req, res, next) {
     if(req.session.user){
         knex.insert({

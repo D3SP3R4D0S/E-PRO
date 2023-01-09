@@ -54,13 +54,6 @@ router.post('/financialobligationapply', function (req, res, next){
         res.redirect('login')
     }
 });
-router.get('/financialobligationadd', function(req, res, next) {
-    if(req.session.user){
-        res.render('main/obligation/financialobligationadd',{setting:req.session.setting,csrfToken:req.csrfToken(), name:req.session.user});
-    }else{
-        res.redirect('login')
-    }
-});
 router.post('/financialobligationadd', function (req, res, next){
     if(req.session.user){
         let duedate = null
