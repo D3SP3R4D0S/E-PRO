@@ -34,14 +34,6 @@ router.get('/projects', function(req, res, next) {
 
 // add project
 router.route('/projectadd')
-    // no requirement
-    .get(function(req, res, next) {
-        if(req.session.user){
-            res.render('main/projects/projectadd',{csrfToken:req.csrfToken(),name:req.session.user});
-        }else{
-            res.redirect('login')
-        }
-    })
     // projectadd // mysql
     .post(function(req, res, next) {
         let rb = req.body
@@ -218,13 +210,6 @@ router.route('/projecttaskdetail')
     })
 
 router.route('/projectaddtask')
-    .get(function(req, res, next) {
-        if(req.session.user){
-            res.render('main/projects/task/projectaddtask',{csrfToken:req.csrfToken(),name:req.session.user});
-        }else{
-            res.redirect('login')
-        }
-    })
     .post(function(req, res, next) {
         let rb = req.body
         if(req.session.user){
@@ -438,13 +423,6 @@ router.get('/projectfunddetail', function(req, res, next){
 
 // add fund request
 router.route('/projectaddfundreq')
-    .get(function(req, res, next) {
-        if(req.session.user){
-            res.render('main/projects/fund/projectaddfundreq',{csrfToken:req.csrfToken(),name:req.session.user});
-        }else{
-            res.redirect('login')
-        }
-    })
     .post(function(req, res, next) {
         let rb = req.body
         if(req.session.user){
