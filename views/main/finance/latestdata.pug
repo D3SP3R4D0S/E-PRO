@@ -83,6 +83,20 @@ head
             tmpValue = tmpValue.replace(/[,]/g, '');
             obj.value = numberWithCommas(tmpValue);
         }
+    script.
+        $(document).ready(function () {
+            console.log('get personal info')
+            $.ajax({
+                type: 'GET',
+                url: 'api/personal_info',
+                success: function (data) {
+                    console.log(data)
+                    $("#default_method").val(data[0].default_method).prop("selected", true)
+                    $("#default_usage").val(data[0].default_usage).prop("selected", true)
+                    $("#default_alligner").val(data[0].default_alligner).prop("selected", true)
+                }
+            });
+        });
 .wrapper
     include ../compara/sidebar
     script.
@@ -135,7 +149,7 @@ head
                                                             .col-3
                                                                 label.fw-bold Method
                                                             .col-auto 지불수단
-                                                        select(class="form-control" name="title" placeholder="title" class="col-12" required)
+                                                        select(class="form-control" name="title" placeholder="title" class="col-12" required)#default_method
                                                             for line in setting.method
                                                                 option(value=line)= line
                                                     .mb-3
@@ -143,7 +157,7 @@ head
                                                             .col-3
                                                                 label.fw-bold Paid for
                                                             .col-auto 용도
-                                                        select(class="form-control" name="subord" placeholder="title" class="col-12" required)
+                                                        select(class="form-control" name="subord" placeholder="title" class="col-12" required)#default_usage
                                                             for line in setting.paidfor
                                                                 option(value=line)= line
                                                     .mb-3
@@ -157,7 +171,7 @@ head
                                                             .col-3
                                                                 label.fw-bold Alligner
                                                             .col-auto 구분
-                                                        select(class="form-control" name="alligner" placeholder="alligner" class="col-12" required)
+                                                        select(class="form-control" name="alligner" placeholder="alligner" class="col-12" required)#default_alligner
                                                             for line in setting.alligner
                                                                 option(value=line)= line
                                                     .mb-3
