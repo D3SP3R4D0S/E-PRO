@@ -8,73 +8,113 @@ include ../compara/head
             });
     .main
         include ../compara/navbar
+        script.
+            $(document).ready(function () {
+                console.log('get personal info')
+                $.ajax({
+                    type: 'GET',
+                    url: 'api/personal_info',
+                    success: function (data) {
+                        console.log(data)
+                        $("#default_method").val(data[0].default_method).prop("selected", true)
+                        $("#default_usage").val(data[0].default_usage).prop("selected", true)
+                        $("#default_alligner").val(data[0].default_alligner).prop("selected", true)
+                    }
+                });
+            });
         main.content
             .container-fluid.p-0
-                .col-lg-12
-                    div(class='card shadow')
-                        .card-header
-                            H2 Personal Setting
-                        .card-body
-                            .container.text-center.row.justify-content-center
-                                .col-lg-6
-                                    table.table.table-sm
-                                        form(action="removesetting" method="post")
-                                            input(type="hidden" name="_csrf" value=csrfToken)
-                                            thead
-                                                th
-                                                    button.btn.btn-danger.btn-sm(type="submit") Remove
-                                                th(colspan='2') 결재방법
+                H2.fw-bold Personal Setting
+                .row
+                    .col-xl-4.col-md-6
+                        .card.shadow
+                            .card-header.pb-0
+                                h4.fw-bold Payment Method
+                            .card-body
+                                table.table.table-sm
+                                    form(action="removesetting" method="post")
+                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                        thead
+                                            th
+                                                button.btn.btn-danger.btn-sm(type="submit") Remove
+                                            th(colspan='2') 결재방법
 
-                                            tbody
-                                                input(type="hidden" name="option" value='method')
-                                                for line in result.method
-                                                    tr
-                                                        td
-                                                            input(type="radio" name="value" value=line)
-                                                        td= line
-                                    form(action="addsettingmethod" method="post")
+                                        tbody
+                                            input(type="hidden" name="option" value='method')
+                                            for line in result.method
+                                                tr
+                                                    td
+                                                        input(type="radio" name="value" value=line)
+                                                    td= line
+                                form(action="addsettingmethod" method="post")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    .input-group.mb-2
+                                        input.form-control(type="text" name="value" placeholder="value" required)
+                                        button.btn.btn-primary.text-light(type="submit") Add
+                    .col-xl-4.col-md-6
+                        .card.shadow
+                            .card-header.pb-0
+                                h4.fw-bold Split (Large)
+                            .card-body
+                                table.table.table-sm
+                                    form(action="removesetting" method="post")
                                         input(type="hidden" name="_csrf" value=csrfToken)
-                                        .input-group.mb-2
-                                            input.form-control(type="text" name="value" placeholder="value" required)
-                                            button.btn.btn-primary.text-light(type="submit") Add
-                                    table.table.table-sm
-                                        form(action="removesetting" method="post")
-                                            input(type="hidden" name="_csrf" value=csrfToken)
-                                            thead
-                                                th
-                                                    button.btn.btn-danger.btn-sm(type="submit") Remove
-                                                th(colspan='2') 대분류
-                                            tbody
-                                                input(type="hidden" name="option" value='paidfor')
-                                                for line in result.paidfor
-                                                    tr
-                                                        td
-                                                            input(type="radio" name="value" value=line)
-                                                        td= line
-                                    form(action="addsettingpaidfor" method="post")
+                                        thead
+                                            th
+                                                button.btn.btn-danger.btn-sm(type="submit") Remove
+                                            th(colspan='2') 대분류
+                                        tbody
+                                            input(type="hidden" name="option" value='paidfor')
+                                            for line in result.paidfor
+                                                tr
+                                                    td
+                                                        input(type="radio" name="value" value=line)
+                                                    td= line
+                                form(action="addsettingpaidfor" method="post")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    .input-group.mb-2
+                                        input.form-control(type="text" name="value" placeholder="value" required)
+                                        button.btn.btn-primary.text-light(type="submit") Add
+                    .col-xl-4.col-md-6
+                        .card.shadow
+                            .card-header.pb-0
+                                h4.fw-bold Split (Small)
+                            .card-body
+                                table.table.table-sm
+                                    form(action="removesetting" method="post")
                                         input(type="hidden" name="_csrf" value=csrfToken)
-                                        .input-group.mb-2
-                                            input.form-control(type="text" name="value" placeholder="value" required)
-                                            button.btn.btn-primary.text-light(type="submit") Add
-                                    table.table.table-sm
-                                        form(action="removesetting" method="post")
-                                            input(type="hidden" name="_csrf" value=csrfToken)
-                                            thead
-                                                th
-                                                    button.btn.btn-danger.btn-sm(type="submit") Remove
-                                                th(colspan='2') 소분류
-                                            tbody
-                                                input(type="hidden" name="option" value='alligner')
-                                                for line in result.alligner
-                                                    tr
-                                                        td
-                                                            input(type="radio" name="value" value=line)
-                                                        td= line
-                                    form(action="addsettingalligner" method="post")
-                                        input(type="hidden" name="_csrf" value=csrfToken)
-                                        .input-group.mb-2
-                                            input.form-control(type="text" name="value" placeholder="value" required)
-                                            button.btn.btn-primary.text-light(type="submit") Add
-
+                                        thead
+                                            th
+                                                button.btn.btn-danger.btn-sm(type="submit") Remove
+                                            th(colspan='2') 소분류
+                                        tbody
+                                            input(type="hidden" name="option" value='alligner')
+                                            for line in result.alligner
+                                                tr
+                                                    td
+                                                        input(type="radio" name="value" value=line)
+                                                    td= line
+                                form(action="addsettingalligner" method="post")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    .input-group.mb-2
+                                        input.form-control(type="text" name="value" placeholder="value" required)
+                                        button.btn.btn-primary.text-light(type="submit") Add
+                    .col-md-6
+                        .card.shadow
+                            .card-header.pb-0
+                                h4.fw-bold Set Default
+                            .card-body.pt-0
+                                form(action="api/personal_info" method="post")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    select.form-select(name="default_method").mb-2#default_method
+                                        for line in result.method
+                                            option(value=line)= line
+                                    select.form-select.mb-2(name="default_usage")#default_usage
+                                        for line in result.paidfor
+                                            option(value=line)= line
+                                    select.form-select.mb-2(name="default_alligner")#default_alligner
+                                        for line in result.alligner
+                                            option(value=line)= line
+                                    button.btn.btn-primary(type="submit") Apply
         include ../compara/footer
     include ../compara/footer_script
