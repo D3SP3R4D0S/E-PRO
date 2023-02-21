@@ -3,7 +3,6 @@ const router = express.Router();
 const crypto = require('crypto');
 const knex = require('./config/knex.js');
 
-
 // Login
 // login page
 router.route('/login')
