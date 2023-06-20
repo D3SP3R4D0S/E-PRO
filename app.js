@@ -47,7 +47,7 @@ app.use('/', require('./routes/project'));
 app.use('/', require('./routes/wishlist'));
 app.use('/', require('./routes/fixedexpense'));
 app.use('/', require('./routes/expendables'))
-app.use('/', require('./routes/financialobligation'))
+app.use('/', require('./routes/loan'))
 app.use('/api', require('./routes/api'))
 
 // catch 404 and forward to error handler
