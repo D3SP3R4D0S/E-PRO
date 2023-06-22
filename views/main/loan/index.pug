@@ -1,0 +1,116 @@
+doctype html
+include ../compara/head
+.wrapper
+    include ../compara/sidebar
+    script.
+        $(document).ready(function () {
+            $('#loan').addClass('active');
+        });
+    script.
+        $(document).ready(function () {
+            $.ajax({
+                url: "/api/loan/summary",
+                success: function (result) {
+                    $("#total_balance").text(`${result[0].total.toLocaleString()} KRW`)
+                    $("#total_interest ").text(`${(result[0].total*0.06).toLocaleString()} KRW`)
+                }
+            });
+            $.ajax({
+                url:"/api/loan/datas",
+                success: function (result) {
+                    for(line of result){
+                        $("#user_loan_table_body").append(`
+                                                <tr>
+                                                    <td>${line.name}</td>
+                                                    <td>${line.cost.toLocaleString()} KRW</td>
+                                                    <td>${line.created}</td>
+                                                    <td>${line.content}</td>
+                                                </tr>
+                                            `)
+                    }
+                }
+            });
+            $.ajax({
+                url: "/api/loan/users",
+                success: function (result) {
+                    for (line of result) {
+                        $("#user_table_tbody").append(`
+                            <tr>
+                                <td class="text-center">${line.name}</td>
+                                <td class="text-end">${line.interest_rate} %</td>
+                                <td class="text-end">${Math.round(line.interest + line.total * ((line.interest_rate/100) * (line.datediff/365))).toLocaleString()} KRW</td>
+                                <td class="text-end">${line.total.toLocaleString()} KRW</td>
+                            </tr>
+                        `)
+                    }
+                }
+            });
+        });
+    .main
+        include ../compara/navbar
+        main.content
+            .container-fluid.p-0
+                .row.justify-content-start.mb-2
+                    .col-auto.ms-2
+                        h1
+                            strong= "Loan"
+                        h6 Personal loan management
+                        h6 개인 대출 관리
+                .row
+                    .col-lg-6
+                        .card
+                            .card-header
+                                h3.fw-bold Total
+                            .card-body.mt-0.pt-0
+                                label total balance
+                                .text-end
+                                    h3.fw-bolder#total_balance
+                                label Estimated yearly interest (referenced 6%)
+                                .text-end
+                                    H3.fw-bolder#total_interest
+                        .card
+                            .card-header
+                                h3.fw-bold In out Log
+                            .card-body
+                                table.table.table-xs#user_loan_table
+                                    thead
+                                        tr
+                                            th.text-center User
+                                            th.text-center Cost
+                                            th.text-center Start Date
+                                            th.text-center Comment
+                                    tbody#user_loan_table_body
+                    .col-lg-6
+                        //.card
+                        //    .card-header
+                        //        h3.fw-bold Next pay off
+                        //    .card-body
+                        //        table.table.table-xs#planned_payoff
+                        //            thead
+                        //                tr
+                        //                    th User
+                        //                    th Interest
+                        //                    th
+                        //            tbody
+                        //                tr
+                        //                    td 고준서
+                        //                    td 600,000 KRW
+                        //                    td 2023-07-01
+                        //                tr
+                        //                    td 고준서
+                        //                    td 600,000 KRW
+                        //                    td 2023-08-01
+                        .card
+                            .card-header
+                                h3.fw-bold Client Status
+                            .card-body
+                                table.table.table-xs
+                                    thead
+                                        tr
+                                            th.text-center Name
+                                            th.text-center Interest rate
+                                            th.text-center Interest
+                                            th.text-center Principal
+                                    tbody#user_table_tbody
+        include ../compara/footer.pug
+    include ../compara/footer_script.pug
